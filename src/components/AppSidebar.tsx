@@ -27,7 +27,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-lg font-bold text-primary mb-4">
-            {!collapsed && "TravelHub"}
+            {!collapsed && "LocalLens"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
