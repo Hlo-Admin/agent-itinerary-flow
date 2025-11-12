@@ -22,11 +22,11 @@ const Settings = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="agency-name">Agency Name</Label>
-                <Input id="agency-name" placeholder="Your Travel Agency" defaultValue="LocalLens Agency" />
+                <Input id="agency-name" placeholder="Your Travel Agency" defaultValue="Codetez" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="contact-email">Contact Email</Label>
-                <Input id="contact-email" type="email" placeholder="contact@agency.com" defaultValue="info@locallens.com" />
+                <Input id="contact-email" type="email" placeholder="contact@agency.com" defaultValue="info@codetez.com" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
