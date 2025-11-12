@@ -85,11 +85,11 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-2xl font-bold text-foreground">Search Results</h3>
-          <p className="text-muted-foreground">
+          <h3 className="text-3xl font-semibold text-foreground">Search Results</h3>
+          <p className="text-muted-foreground text-lg mt-2">
             Found {filteredTours.length} experiences in {searchData?.destination || "your destination"}
           </p>
         </div>
@@ -100,9 +100,9 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
 
       <div className="grid md:grid-cols-4 gap-6">
         {/* Filters Sidebar */}
-        <Card className="p-4 h-fit space-y-6">
+        <Card className="p-6 h-fit space-y-6 border-0">
           <div>
-            <h4 className="font-semibold text-foreground mb-3">Filters</h4>
+            <h4 className="font-semibold text-foreground mb-3 text-lg">Filters</h4>
           </div>
 
           <div className="space-y-2">
@@ -149,14 +149,14 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
         </Card>
 
         {/* Results List */}
-        <div className="md:col-span-3 space-y-4">
+        <div className="md:col-span-3 space-y-5">
           {filteredTours.map((tour) => (
-            <Card key={tour.id} className="p-4 hover:shadow-lg transition-shadow">
-              <div className="flex gap-4">
+            <Card key={tour.id} className="p-6 border-0 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="flex gap-6">
                 <img
                   src={tour.image}
                   alt={tour.name}
-                  className="w-48 h-32 object-cover rounded-lg"
+                  className="w-52 h-36 object-cover rounded-2xl"
                 />
                 <div className="flex-1 space-y-2">
                   <div className="flex items-start justify-between">

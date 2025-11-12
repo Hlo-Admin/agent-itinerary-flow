@@ -47,11 +47,11 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-2xl font-bold text-foreground">{tour.name}</h3>
-          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+          <h3 className="text-3xl font-semibold text-foreground">{tour.name}</h3>
+          <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
               <span className="font-medium text-foreground">{tour.rating}</span>
@@ -137,9 +137,9 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           </Tabs>
         </div>
 
-        <Card className="p-6 h-fit space-y-6">
+        <Card className="p-8 h-fit space-y-8 border-0">
           <div>
-            <h4 className="text-lg font-semibold text-foreground mb-4">Book This Experience</h4>
+            <h4 className="text-xl font-semibold text-foreground mb-4">Book This Experience</h4>
           </div>
 
           <div className="space-y-2">

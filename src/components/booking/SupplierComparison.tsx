@@ -63,11 +63,11 @@ const SupplierComparison = ({ onNext, onBack, bookingData }: SupplierComparisonP
   const totalTickets = tickets.adult + tickets.child + tickets.senior;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-2xl font-bold text-foreground">Compare Suppliers</h3>
-          <p className="text-muted-foreground">
+          <h3 className="text-3xl font-semibold text-foreground">Compare Suppliers</h3>
+          <p className="text-muted-foreground text-lg mt-2">
             Choose the best supplier for {bookingData?.tour?.name}
           </p>
         </div>
@@ -76,7 +76,7 @@ const SupplierComparison = ({ onNext, onBack, bookingData }: SupplierComparisonP
         </Button>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-5">
         {mockSuppliers.map((supplier) => {
           const totalPrice = supplier.price * totalTickets;
           const agentCommission = (totalPrice * supplier.commission) / 100;
@@ -85,8 +85,8 @@ const SupplierComparison = ({ onNext, onBack, bookingData }: SupplierComparisonP
           return (
             <Card
               key={supplier.id}
-              className={`p-6 cursor-pointer transition-all ${
-                isSelected ? "border-primary border-2 bg-primary/5" : "hover:shadow-md"
+              className={`p-8 cursor-pointer transition-all duration-300 border-0 ${
+                isSelected ? "border-2 border-primary bg-primary/5 shadow-lg" : "hover:shadow-md hover:-translate-y-1"
               }`}
               onClick={() => setSelectedSupplier(supplier.id)}
             >

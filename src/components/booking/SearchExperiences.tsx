@@ -37,13 +37,13 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h3 className="text-2xl font-bold text-foreground mb-2">Find Experiences</h3>
-        <p className="text-muted-foreground">Search tours and activities for your clients</p>
+        <h3 className="text-3xl font-semibold text-foreground mb-3">Find Experiences</h3>
+        <p className="text-muted-foreground text-lg">Search tours and activities for your clients</p>
       </div>
 
-      <Card className="p-6">
+      <Card className="p-8 border-0">
         <div className="space-y-4">
           <div className="grid md:grid-cols-3 gap-4">
             <div className="space-y-2">
@@ -88,22 +88,22 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
       </Card>
 
       <div>
-        <h4 className="text-lg font-semibold text-foreground mb-3">Quick Filters</h4>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <h4 className="text-xl font-semibold text-foreground mb-4">Quick Filters</h4>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {categories.map((category) => {
             const Icon = category.icon;
             const isSelected = selectedCategories.includes(category.name);
             return (
               <Card
                 key={category.name}
-                className={`p-4 cursor-pointer transition-all hover:shadow-md ${
-                  isSelected ? "border-primary bg-primary/5" : ""
+                className={`p-5 cursor-pointer transition-all duration-300 border-0 ${
+                  isSelected ? "border-2 border-primary bg-primary/5 shadow-md" : "hover:shadow-md hover:-translate-y-1"
                 }`}
                 onClick={() => toggleCategory(category.name)}
               >
-                <div className="flex flex-col items-center gap-2 text-center">
+                <div className="flex flex-col items-center gap-3 text-center">
                   <Icon
-                    className={`h-6 w-6 ${isSelected ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-7 w-7 ${isSelected ? "text-primary" : "text-muted-foreground"}`}
                   />
                   <span
                     className={`text-sm font-medium ${
