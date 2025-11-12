@@ -27,7 +27,7 @@ export function AppSidebar() {
       <SidebarContent className="bg-transparent">
         <SidebarGroup>
           <SidebarGroupLabel className="text-xl font-bold text-primary mb-6 px-3 tracking-tight">
-            {!collapsed && "LocalLens"}
+            {!collapsed && "B2B"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">
