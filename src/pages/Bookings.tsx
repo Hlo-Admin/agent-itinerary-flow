@@ -47,22 +47,22 @@ const Bookings = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
-      <div>
-        <h2 className="text-3xl font-bold text-foreground">New Booking</h2>
-        <p className="text-muted-foreground mt-1">Create a new travel booking for your clients</p>
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold text-foreground tracking-tight">New Booking</h1>
+        <p className="text-muted-foreground text-lg">Create a new travel booking for your clients</p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <div className="space-y-4">
+      <Card className="p-8">
+        <div className="space-y-8">
+          <div className="space-y-6">
             <div className="flex items-center justify-between">
               {steps.map((step, index) => (
                 <div key={step.number} className="flex items-center">
                   <div
-                    className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-colors ${
+                    className={`flex items-center justify-center w-12 h-12 rounded-xl font-bold text-lg transition-all ${
                       currentStep === step.number
-                        ? "bg-primary text-primary-foreground"
+                        ? "bg-primary text-primary-foreground shadow-md scale-110"
                         : currentStep > step.number
                         ? "bg-success text-success-foreground"
                         : "bg-muted text-muted-foreground"
@@ -72,7 +72,7 @@ const Bookings = () => {
                   </div>
                   {index < steps.length - 1 && (
                     <div
-                      className={`w-16 h-1 mx-2 transition-colors ${
+                      className={`w-16 h-1 mx-2 rounded-full transition-colors ${
                         currentStep > step.number ? "bg-success" : "bg-muted"
                       }`}
                     />
@@ -84,7 +84,7 @@ const Bookings = () => {
               {steps.map((step) => (
                 <div
                   key={step.number}
-                  className={`font-medium ${
+                  className={`font-semibold ${
                     currentStep === step.number ? "text-primary" : "text-muted-foreground"
                   }`}
                 >
@@ -92,20 +92,20 @@ const Bookings = () => {
                 </div>
               ))}
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress} className="h-3" />
           </div>
-        </CardHeader>
-        <CardContent>
-          {currentStep === 1 && <SearchExperiences onNext={handleNext} />}
-          {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
-          {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-          {currentStep === 4 && <SupplierComparison onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-          {currentStep === 5 && <TravelerInfoForm onNext={handleNext} />}
-          {currentStep === 6 && <PriceSummary onNext={handleNext} onBack={handleBack} />}
-          {currentStep === 7 && <PaymentOptions onNext={handleNext} onBack={handleBack} />}
-          {currentStep === 8 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
-          {currentStep === 9 && <EmailTemplate bookingData={bookingData} />}
-        </CardContent>
+          <div>
+            {currentStep === 1 && <SearchExperiences onNext={handleNext} />}
+            {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
+            {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
+            {currentStep === 4 && <SupplierComparison onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+            {currentStep === 5 && <TravelerInfoForm onNext={handleNext} />}
+            {currentStep === 6 && <PriceSummary onNext={handleNext} onBack={handleBack} />}
+            {currentStep === 7 && <PaymentOptions onNext={handleNext} onBack={handleBack} />}
+            {currentStep === 8 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
+            {currentStep === 9 && <EmailTemplate bookingData={bookingData} />}
+          </div>
+        </div>
       </Card>
     </div>
   );

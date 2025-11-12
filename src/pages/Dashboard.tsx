@@ -90,57 +90,56 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      <div>
-        <h2 className="text-3xl font-bold text-foreground">Dashboard</h2>
-        <p className="text-muted-foreground mt-1">Welcome back! Here's your booking overview</p>
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-bold text-foreground tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground text-lg">Welcome back! Here's your booking overview.</p>
       </div>
 
       {/* Credit Limit Card */}
-      <Card className="bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
-        <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            <span>Agent Credit Limit</span>
-            <DollarSign className="h-5 w-5 text-primary" />
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="text-sm text-muted-foreground">Available Credit</p>
-              <p className="text-3xl font-bold text-primary">${creditAvailable.toLocaleString()}</p>
+      <Card className="p-8">
+        <div className="space-y-6">
+          <div>
+            <CardTitle className="text-2xl">Agent Credit Limit</CardTitle>
+            <CardDescription className="text-base mt-1">Track your available credit balance</CardDescription>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground font-medium">Used Credit</span>
+              <span className="text-2xl font-bold">${creditUsed.toLocaleString()}</span>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground">Total Limit</p>
-              <p className="text-xl font-semibold text-foreground">${creditLimit.toLocaleString()}</p>
+            <Progress value={creditPercentage} className="h-4" />
+            <div className="flex items-center justify-between pt-2">
+              <div>
+                <p className="text-sm text-muted-foreground">Available</p>
+                <p className="text-xl font-bold text-success">${creditAvailable.toLocaleString()}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">Total Limit</p>
+                <p className="text-xl font-bold">${creditLimit.toLocaleString()}</p>
+              </div>
             </div>
           </div>
-          <Progress value={creditPercentage} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            ${creditUsed.toLocaleString()} used • {creditPercentage.toFixed(1)}% utilized
-          </p>
-        </CardContent>
+        </div>
       </Card>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {stat.title}
-                </CardTitle>
-                <Icon className={`h-4 w-4 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                <p className="text-xs text-success flex items-center gap-1 mt-1">
+            <Card key={stat.title} className="p-6 space-y-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
+                <Icon className={`h-5 w-5 ${stat.color}`} />
+              </div>
+              <div className="space-y-1">
+                <div className="text-3xl font-bold tracking-tight">{stat.value}</div>
+                <p className="text-xs text-success font-medium flex items-center gap-1">
                   <ArrowUpRight className="h-3 w-3" />
                   {stat.change} from last month
                 </p>
-              </CardContent>
+              </div>
             </Card>
           );
         })}
@@ -149,25 +148,23 @@ const Dashboard = () => {
       {/* Recent Bookings and Top Categories */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent Bookings */}
-        <Card>
-          <CardHeader>
+        <Card className="p-6">
+          <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Recent Bookings</CardTitle>
-                <CardDescription>Latest client reservations</CardDescription>
+                <CardTitle className="text-2xl">Recent Bookings</CardTitle>
+                <CardDescription className="text-base mt-1">Latest client reservations</CardDescription>
               </div>
-              <Button variant="outline" size="sm" asChild>
+              <Button variant="outline" size="sm" asChild className="rounded-xl">
                 <Link to="/bookings">View All</Link>
               </Button>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {recentBookings.map((booking) => (
-                <div key={booking.id} className="flex items-center justify-between pb-3 border-b border-border last:border-0">
+                <div key={booking.id} className="flex items-center justify-between p-5 glass glass-hover rounded-xl">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-foreground">{booking.client}</p>
+                      <p className="font-semibold text-foreground">{booking.client}</p>
                       <Badge
                         variant={booking.status === "confirmed" ? "default" : "secondary"}
                         className="text-xs"
@@ -181,76 +178,71 @@ const Dashboard = () => {
                     </div>
                     <p className="text-xs text-muted-foreground">{booking.date}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-foreground">${booking.amount}</p>
-                    <p className="text-xs text-success">+${booking.commission}</p>
+                  <div className="text-right space-y-1">
+                    <p className="font-bold text-foreground">${booking.amount}</p>
+                    <p className="text-xs text-success font-medium">+${booking.commission}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
+          </div>
         </Card>
 
         {/* Top Categories */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Top Categories</CardTitle>
-            <CardDescription>Best performing experience types</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <Card className="p-6">
+          <div className="space-y-6">
+            <div>
+              <CardTitle className="text-2xl">Top Categories</CardTitle>
+              <CardDescription className="text-base mt-1">Best performing experience types</CardDescription>
+            </div>
             <div className="space-y-4">
               {topCategories.map((category, index) => (
                 <div key={category.name} className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-bold">
                         {index + 1}
                       </div>
-                      <span className="font-medium text-foreground">{category.name}</span>
+                      <span className="font-semibold text-foreground">{category.name}</span>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-foreground">${category.revenue.toLocaleString()}</p>
+                      <p className="font-bold text-foreground">${category.revenue.toLocaleString()}</p>
                       <p className="text-xs text-muted-foreground">{category.bookings} bookings</p>
                     </div>
                   </div>
-                  <Progress value={(category.bookings / 50) * 100} className="h-1.5" />
+                  <Progress value={(category.bookings / 50) * 100} className="h-2" />
                 </div>
               ))}
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common tasks and shortcuts</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Button variant="outline" className="h-auto flex-col gap-2 py-4" asChild>
-              <Link to="/bookings">
-                <Calendar className="h-5 w-5 text-primary" />
-                <span>New Booking</span>
-              </Link>
-            </Button>
-            <Button variant="outline" className="h-auto flex-col gap-2 py-4">
-              <Users className="h-5 w-5 text-secondary" />
-              <span>Manage Clients</span>
-            </Button>
-            <Button variant="outline" className="h-auto flex-col gap-2 py-4">
-              <Star className="h-5 w-5 text-accent" />
-              <span>Reviews</span>
-            </Button>
-            <Button variant="outline" className="h-auto flex-col gap-2 py-4" asChild>
-              <Link to="/settings">
-                <DollarSign className="h-5 w-5 text-success" />
-                <span>Payments</span>
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
+      <Card className="p-6">
+        <CardTitle className="text-2xl mb-6">Quick Actions</CardTitle>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Button className="h-auto py-6 flex flex-col gap-3 rounded-xl" asChild>
+            <Link to="/bookings">
+              <Calendar className="h-7 w-7" />
+              <span className="font-semibold">New Booking</span>
+            </Link>
+          </Button>
+          <Button variant="outline" className="h-auto py-6 flex flex-col gap-3 rounded-xl">
+            <Users className="h-7 w-7" />
+            <span className="font-semibold">Manage Clients</span>
+          </Button>
+          <Button variant="outline" className="h-auto py-6 flex flex-col gap-3 rounded-xl">
+            <Star className="h-7 w-7" />
+            <span className="font-semibold">Reviews</span>
+          </Button>
+          <Button variant="outline" className="h-auto py-6 flex flex-col gap-3 rounded-xl" asChild>
+            <Link to="/settings">
+              <DollarSign className="h-7 w-7" />
+              <span className="font-semibold">Payments</span>
+            </Link>
+          </Button>
+        </div>
       </Card>
     </div>
   );

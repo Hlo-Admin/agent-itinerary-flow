@@ -23,25 +23,25 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarContent>
+    <Sidebar collapsible="icon" className="glass border-r border-border/50">
+      <SidebarContent className="bg-transparent">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-lg font-bold text-primary mb-4">
+          <SidebarGroupLabel className="text-xl font-bold text-primary mb-6 px-3 tracking-tight">
             {!collapsed && "LocalLens"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted"
-                      activeClassName="bg-primary/10 text-primary font-medium"
+                      className="flex items-center gap-3 px-4 py-3 mx-2 rounded-xl transition-all hover:bg-primary/5 hover:translate-x-1"
+                      activeClassName="bg-primary/10 text-primary font-semibold shadow-sm"
                     >
                       <item.icon className="h-5 w-5" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!collapsed && <span className="text-sm">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
