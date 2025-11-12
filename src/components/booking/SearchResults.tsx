@@ -88,8 +88,8 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-3xl font-semibold text-foreground">Search Results</h3>
-          <p className="text-muted-foreground text-lg mt-2">
+          <h3 className="text-2xl font-bold text-foreground">Search Results</h3>
+          <p className="text-base text-muted-foreground font-medium mt-3">
             Found {filteredTours.length} experiences in {searchData?.destination || "your destination"}
           </p>
         </div>
@@ -100,9 +100,9 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
 
       <div className="grid md:grid-cols-4 gap-6">
         {/* Filters Sidebar */}
-        <Card className="p-6 h-fit space-y-6 border-0">
+        <Card className="p-8 h-fit space-y-8 border-0">
           <div>
-            <h4 className="font-semibold text-foreground mb-3 text-lg">Filters</h4>
+            <h4 className="font-bold text-foreground mb-4 text-xl">Filters</h4>
           </div>
 
           <div className="space-y-2">
@@ -151,17 +151,17 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
         {/* Results List */}
         <div className="md:col-span-3 space-y-5">
           {filteredTours.map((tour) => (
-            <Card key={tour.id} className="p-6 border-0 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-              <div className="flex gap-6">
+            <Card key={tour.id} className="p-8 border-0 hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="flex gap-8">
                 <img
                   src={tour.image}
                   alt={tour.name}
-                  className="w-52 h-36 object-cover rounded-2xl"
+                  className="w-56 h-40 object-cover rounded-3xl shadow-md"
                 />
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="text-lg font-semibold text-foreground">{tour.name}</h4>
+                      <h4 className="text-xl font-bold text-foreground">{tour.name}</h4>
                       <Badge variant="secondary" className="mt-1">
                         {tour.category}
                       </Badge>

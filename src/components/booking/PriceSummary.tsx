@@ -26,14 +26,14 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h3 className="text-xl font-semibold text-foreground mb-2">Price Summary</h3>
-        <p className="text-sm text-muted-foreground">Review your booking charges</p>
+        <h3 className="text-2xl font-bold text-foreground mb-3">Price Summary</h3>
+        <p className="text-base text-muted-foreground font-medium">Review your booking charges</p>
       </div>
 
-      <Card className="p-6 bg-muted/30">
-        <div className="space-y-4">
+      <Card className="p-8 bg-gradient-to-br from-muted/20 to-transparent border-0">
+        <div className="space-y-5">
           <div className="flex justify-between items-center">
             <span className="text-foreground">Base Ticket Price</span>
             <span className="font-semibold text-foreground">${basePrice.toFixed(2)}</span>
@@ -60,7 +60,7 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
       </Card>
 
       <div>
-        <h3 className="text-lg font-semibold text-foreground mb-3">Have a Promo Code?</h3>
+        <h3 className="text-xl font-bold text-foreground mb-4">Have a Promo Code?</h3>
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />

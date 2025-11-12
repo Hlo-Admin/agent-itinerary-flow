@@ -6,17 +6,17 @@ import { Switch } from "@/components/ui/switch";
 
 const Settings = () => {
   return (
-    <div className="space-y-8 animate-fade-in">
-      <div className="space-y-2">
-        <h1 className="text-4xl font-semibold text-foreground tracking-tight">Settings</h1>
-        <p className="text-muted-foreground text-lg">Manage your account and preferences.</p>
+    <div className="space-y-8">
+      <div className="space-y-3">
+        <h1 className="text-5xl font-bold text-foreground tracking-tight">Settings</h1>
+        <p className="text-muted-foreground text-lg font-medium">Manage your account and preferences.</p>
       </div>
 
-      <Card className="p-10 border-0">
+      <Card className="p-12 border-0">
         <div className="space-y-8">
           <div>
-            <CardTitle className="text-2xl font-semibold">Agency Information</CardTitle>
-            <CardDescription className="text-base mt-2">Update your travel agency details</CardDescription>
+            <CardTitle className="text-3xl font-bold">Agency Information</CardTitle>
+            <CardDescription className="text-base mt-3 font-medium">Update your travel agency details</CardDescription>
           </div>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -44,11 +44,11 @@ const Settings = () => {
         </div>
       </Card>
 
-      <Card className="p-10 border-0">
+      <Card className="p-12 border-0">
         <div className="space-y-8">
           <div>
-            <CardTitle className="text-2xl font-semibold">Notifications</CardTitle>
-            <CardDescription className="text-base mt-2">Configure your notification preferences</CardDescription>
+            <CardTitle className="text-3xl font-bold">Notifications</CardTitle>
+            <CardDescription className="text-base mt-3 font-medium">Configure your notification preferences</CardDescription>
           </div>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-6 rounded-2xl bg-muted/20 hover:bg-muted/30 transition-colors duration-300">
@@ -76,11 +76,11 @@ const Settings = () => {
         </div>
       </Card>
 
-      <Card className="p-10 border-0">
+      <Card className="p-12 border-0">
         <div className="space-y-8">
           <div>
-            <CardTitle className="text-2xl font-semibold">Payment Settings</CardTitle>
-            <CardDescription className="text-base mt-2">Configure payment methods and commission rates</CardDescription>
+            <CardTitle className="text-3xl font-bold">Payment Settings</CardTitle>
+            <CardDescription className="text-base mt-3 font-medium">Configure payment methods and commission rates</CardDescription>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">

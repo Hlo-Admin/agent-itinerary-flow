@@ -50,7 +50,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-3xl font-semibold text-foreground">{tour.name}</h3>
+          <h3 className="text-2xl font-bold text-foreground">{tour.name}</h3>
           <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -137,9 +137,9 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           </Tabs>
         </div>
 
-        <Card className="p-8 h-fit space-y-8 border-0">
+        <Card className="p-10 h-fit space-y-8 border-0 bg-gradient-to-br from-primary/5 to-transparent">
           <div>
-            <h4 className="text-xl font-semibold text-foreground mb-4">Book This Experience</h4>
+            <h4 className="text-2xl font-bold text-foreground mb-4">Book This Experience</h4>
           </div>
 
           <div className="space-y-2">

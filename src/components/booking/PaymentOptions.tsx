@@ -18,16 +18,16 @@ const PaymentOptions = ({ onNext, onBack }: PaymentOptionsProps) => {
   const remainingAmount = totalAmount - walletAmount;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h3 className="text-xl font-semibold text-foreground mb-2">Payment Method</h3>
-        <p className="text-sm text-muted-foreground">Choose how you'd like to pay</p>
+        <h3 className="text-2xl font-bold text-foreground mb-3">Payment Method</h3>
+        <p className="text-base text-muted-foreground font-medium">Choose how you'd like to pay</p>
       </div>
 
-      <Card className="p-4 bg-primary/5 border-primary/20">
+      <Card className="p-6 bg-gradient-to-r from-primary/10 to-transparent border-primary/30">
         <div className="flex justify-between items-center">
-          <span className="text-foreground font-medium">Total Amount</span>
-          <span className="text-2xl font-bold text-primary">${totalAmount.toFixed(2)}</span>
+          <span className="text-foreground font-bold text-lg">Total Amount</span>
+          <span className="text-3xl font-extrabold text-primary">${totalAmount.toFixed(2)}</span>
         </div>
       </Card>
 

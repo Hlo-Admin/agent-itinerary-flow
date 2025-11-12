@@ -66,8 +66,8 @@ const SupplierComparison = ({ onNext, onBack, bookingData }: SupplierComparisonP
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-3xl font-semibold text-foreground">Compare Suppliers</h3>
-          <p className="text-muted-foreground text-lg mt-2">
+          <h3 className="text-2xl font-bold text-foreground">Compare Suppliers</h3>
+          <p className="text-base text-muted-foreground font-medium mt-3">
             Choose the best supplier for {bookingData?.tour?.name}
           </p>
         </div>
@@ -85,15 +85,15 @@ const SupplierComparison = ({ onNext, onBack, bookingData }: SupplierComparisonP
           return (
             <Card
               key={supplier.id}
-              className={`p-8 cursor-pointer transition-all duration-300 border-0 ${
-                isSelected ? "border-2 border-primary bg-primary/5 shadow-lg" : "hover:shadow-md hover:-translate-y-1"
+              className={`p-10 cursor-pointer transition-all duration-300 border-0 ${
+                isSelected ? "border-2 border-primary bg-gradient-to-r from-primary/10 to-transparent shadow-2xl scale-[1.02]" : "hover:shadow-xl hover:scale-[1.01]"
               }`}
               onClick={() => setSelectedSupplier(supplier.id)}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <h4 className="text-lg font-semibold text-foreground">{supplier.name}</h4>
+                  <div className="flex items-center gap-3 mb-4">
+                    <h4 className="text-xl font-bold text-foreground">{supplier.name}</h4>
                     {supplier.verified && (
                       <Badge variant="secondary" className="gap-1">
                         <CheckCircle2 className="h-3 w-3" />

@@ -36,10 +36,10 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h3 className="text-xl font-semibold text-foreground mb-2">Lead Passenger Information</h3>
-        <p className="text-sm text-muted-foreground">Enter details for the primary traveler</p>
+        <h3 className="text-2xl font-bold text-foreground mb-3">Lead Passenger Information</h3>
+        <p className="text-base text-muted-foreground font-medium">Enter details for the primary traveler</p>
       </div>
 
       <div className="grid gap-4">
@@ -59,11 +59,11 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
         </div>
       </div>
 
-      <div className="border-t border-border pt-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="border-t border-border/50 pt-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-semibold text-foreground">Additional Adults</h3>
-            <p className="text-sm text-muted-foreground">Add other adult travelers</p>
+            <h3 className="text-xl font-bold text-foreground">Additional Adults</h3>
+            <p className="text-base text-muted-foreground font-medium">Add other adult travelers</p>
           </div>
           <Button onClick={addAdult} variant="outline" size="sm">
             <Plus className="h-4 w-4 mr-2" />
@@ -88,11 +88,11 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
         </div>
       </div>
 
-      <div className="border-t border-border pt-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="border-t border-border/50 pt-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-xl font-semibold text-foreground">Children</h3>
-            <p className="text-sm text-muted-foreground">Add child travelers (under 18)</p>
+            <h3 className="text-xl font-bold text-foreground">Children</h3>
+            <p className="text-base text-muted-foreground font-medium">Add child travelers (under 18)</p>
           </div>
           <Button onClick={addChild} variant="outline" size="sm">
             <Plus className="h-4 w-4 mr-2" />
@@ -117,15 +117,15 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
         </div>
       </div>
 
-      <div className="border-t border-border pt-6">
-        <h3 className="text-xl font-semibold text-foreground mb-2">Discount Documents (Optional)</h3>
-        <p className="text-sm text-muted-foreground mb-4">
+      <div className="border-t border-border/50 pt-8">
+        <h3 className="text-xl font-bold text-foreground mb-3">Discount Documents (Optional)</h3>
+        <p className="text-base text-muted-foreground mb-6 font-medium">
           Upload student ID, senior citizen, or military documents for potential discounts
         </p>
-        <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer">
-          <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Click to upload or drag and drop</p>
-          <p className="text-xs text-muted-foreground mt-1">PDF, JPG, PNG up to 10MB</p>
+        <div className="border-2 border-dashed border-border/50 rounded-3xl p-10 text-center hover:border-primary hover:bg-primary/5 transition-all cursor-pointer">
+          <Upload className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+          <p className="text-base text-foreground font-semibold">Click to upload or drag and drop</p>
+          <p className="text-sm text-muted-foreground mt-2">PDF, JPG, PNG up to 10MB</p>
         </div>
       </div>
 

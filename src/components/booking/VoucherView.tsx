@@ -12,18 +12,18 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
   const bookingRef = "TRV" + Math.random().toString(36).substr(2, 9).toUpperCase();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-success/10">
-          <CheckCircle2 className="h-6 w-6 text-success" />
+    <div className="space-y-8">
+      <div className="flex items-center gap-4">
+        <div className="flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-success/20 to-success/10 shadow-lg">
+          <CheckCircle2 className="h-8 w-8 text-success" />
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-foreground">Booking Confirmed!</h3>
-          <p className="text-sm text-muted-foreground">Reference: {bookingRef}</p>
+          <h3 className="text-2xl font-bold text-foreground">Booking Confirmed!</h3>
+          <p className="text-base text-muted-foreground font-semibold mt-1">Reference: {bookingRef}</p>
         </div>
       </div>
 
-      <Card className="p-6 bg-gradient-to-br from-primary/5 to-secondary/5 border-primary/20">
+      <Card className="p-8 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 border-primary/30">
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div>
@@ -53,8 +53,8 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
         </div>
       </Card>
 
-      <Card className="p-6">
-        <h4 className="font-semibold text-foreground mb-4">Financial Summary</h4>
+      <Card className="p-8 border-0">
+        <h4 className="font-bold text-xl text-foreground mb-6">Financial Summary</h4>
         <div className="space-y-3">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Ticket Price</span>

@@ -37,15 +37,15 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
-        <h3 className="text-3xl font-semibold text-foreground mb-3">Find Experiences</h3>
-        <p className="text-muted-foreground text-lg">Search tours and activities for your clients</p>
+        <h3 className="text-2xl font-bold text-foreground mb-3">Find Experiences</h3>
+        <p className="text-base text-muted-foreground font-medium">Search tours and activities for your clients</p>
       </div>
 
-      <Card className="p-8 border-0">
-        <div className="space-y-4">
-          <div className="grid md:grid-cols-3 gap-4">
+      <Card className="p-10 border-0">
+        <div className="space-y-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <div className="space-y-2">
               <Label htmlFor="destination" className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
@@ -88,7 +88,7 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
       </Card>
 
       <div>
-        <h4 className="text-xl font-semibold text-foreground mb-4">Quick Filters</h4>
+        <h4 className="text-xl font-bold text-foreground mb-5">Quick Filters</h4>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {categories.map((category) => {
             const Icon = category.icon;
@@ -96,17 +96,17 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
             return (
               <Card
                 key={category.name}
-                className={`p-5 cursor-pointer transition-all duration-300 border-0 ${
-                  isSelected ? "border-2 border-primary bg-primary/5 shadow-md" : "hover:shadow-md hover:-translate-y-1"
+                className={`p-6 cursor-pointer transition-all duration-300 border-0 ${
+                  isSelected ? "border-2 border-primary bg-gradient-to-br from-primary/10 to-transparent shadow-xl scale-110" : "hover:shadow-lg hover:scale-105"
                 }`}
                 onClick={() => toggleCategory(category.name)}
               >
                 <div className="flex flex-col items-center gap-3 text-center">
                   <Icon
-                    className={`h-7 w-7 ${isSelected ? "text-primary" : "text-muted-foreground"}`}
+                    className={`h-8 w-8 ${isSelected ? "text-primary" : "text-muted-foreground"}`}
                   />
                   <span
-                    className={`text-sm font-medium ${
+                    className={`text-sm font-bold ${
                       isSelected ? "text-primary" : "text-foreground"
                     }`}
                   >

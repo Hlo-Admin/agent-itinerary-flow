@@ -23,25 +23,26 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
 
   return (
-    <Sidebar collapsible="icon" className="glass border-r border-border/30 backdrop-blur-xl">
-      <SidebarContent className="bg-transparent">
+    <Sidebar collapsible="icon" className="glass border-r border-border/20 backdrop-blur-2xl">
+      <SidebarContent className="bg-transparent p-3">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xl font-semibold text-foreground mb-8 px-3 tracking-tight">
+          <SidebarGroupLabel className="text-xl font-bold text-primary mb-10 px-4 tracking-tight">
             {!collapsed && "LocalLens"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-2">
+            <SidebarMenu className="space-y-1">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="flex items-center gap-3 px-4 py-3 mx-2 rounded-2xl transition-all duration-300 hover:bg-primary/5 hover:translate-x-1"
-                      activeClassName="bg-primary/10 text-primary font-semibold shadow-sm"
+                      className="flex items-center gap-3 px-5 py-3.5 mx-1 rounded-2xl transition-all duration-300 hover:bg-primary/8 hover:shadow-sm hover:translate-x-0.5 relative group"
+                      activeClassName="bg-gradient-to-r from-primary/12 to-primary/8 text-primary font-semibold shadow-md border border-primary/10"
                     >
-                      <item.icon className="h-5 w-5" />
-                      {!collapsed && <span className="text-sm font-medium">{item.title}</span>}
+                      <item.icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                      {!collapsed && <span className="text-sm font-semibold">{item.title}</span>}
+                      {!collapsed && <span className="absolute right-3 w-1.5 h-1.5 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

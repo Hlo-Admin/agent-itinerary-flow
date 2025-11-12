@@ -10,13 +10,13 @@ const EmailTemplate = ({ bookingData }: EmailTemplateProps) => {
   const bookingRef = "TRV" + Math.random().toString(36).substr(2, 9).toUpperCase();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h3 className="text-xl font-semibold text-foreground mb-2">Confirmation Email</h3>
-        <p className="text-sm text-muted-foreground">Preview of the confirmation email sent to the traveler</p>
+        <h3 className="text-2xl font-bold text-foreground mb-3">Confirmation Email</h3>
+        <p className="text-base text-muted-foreground font-medium">Preview of the confirmation email sent to the traveler</p>
       </div>
 
-      <Card className="p-8 bg-white border-2">
+      <Card className="p-10 bg-white border-0 shadow-2xl">
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Email Header */}
           <div className="text-center pb-6 border-b-2 border-primary/20">
