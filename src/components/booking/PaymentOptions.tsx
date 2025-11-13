@@ -18,16 +18,16 @@ const PaymentOptions = ({ onNext, onBack }: PaymentOptionsProps) => {
   const remainingAmount = totalAmount - walletAmount;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-7">
       <div>
-        <h3 className="text-2xl font-bold text-foreground mb-3">Payment Method</h3>
-        <p className="text-base text-muted-foreground font-medium">Choose how you'd like to pay</p>
+        <h3 className="text-xl font-bold text-foreground mb-2">Payment Method</h3>
+        <p className="text-sm text-muted-foreground font-medium">Choose how you'd like to pay</p>
       </div>
 
       <Card className="p-6 bg-gradient-to-r from-primary/10 to-transparent border-primary/30">
         <div className="flex justify-between items-center">
-          <span className="text-foreground font-bold text-lg">Total Amount</span>
-          <span className="text-3xl font-extrabold text-primary">${totalAmount.toFixed(2)}</span>
+          <span className="text-foreground font-bold text-base">Total Amount</span>
+          <span className="text-2xl font-bold text-primary">${totalAmount.toFixed(2)}</span>
         </div>
       </Card>
 
@@ -51,29 +51,29 @@ const PaymentOptions = ({ onNext, onBack }: PaymentOptionsProps) => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="agent-credit" className="space-y-4 mt-6">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center pb-4 border-b border-border">
-                <span className="text-muted-foreground">Available Credit</span>
-                <span className="text-xl font-bold text-success">$5,000.00</span>
+        <TabsContent value="agent-credit" className="space-y-4 mt-5">
+          <Card className="p-5">
+            <div className="space-y-3.5">
+              <div className="flex justify-between items-center pb-3 border-b border-border">
+                <span className="text-sm text-muted-foreground">Available Credit</span>
+                <span className="text-lg font-bold text-success">$5,000.00</span>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 Your agent credit will be used for this booking. The amount will be deducted upon confirmation.
               </p>
             </div>
           </Card>
         </TabsContent>
 
-        <TabsContent value="wallet" className="space-y-4 mt-6">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center pb-4 border-b border-border">
-                <span className="text-muted-foreground">Wallet Balance</span>
-                <span className="text-xl font-bold text-secondary">$850.00</span>
+        <TabsContent value="wallet" className="space-y-4 mt-5">
+          <Card className="p-5">
+            <div className="space-y-3.5">
+              <div className="flex justify-between items-center pb-3 border-b border-border">
+                <span className="text-sm text-muted-foreground">Wallet Balance</span>
+                <span className="text-lg font-bold text-secondary">$850.00</span>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="wallet-amount">Use Wallet Amount</Label>
+                <Label htmlFor="wallet-amount" className="text-sm font-semibold">Use Wallet Amount</Label>
                 <Input
                   id="wallet-amount"
                   type="number"
@@ -83,9 +83,9 @@ const PaymentOptions = ({ onNext, onBack }: PaymentOptionsProps) => {
                 />
               </div>
               {walletAmount > 0 && remainingAmount > 0 && (
-                <div className="p-4 bg-muted rounded-lg">
-                  <p className="text-sm font-medium text-foreground">Remaining Amount</p>
-                  <p className="text-2xl font-bold text-primary">${remainingAmount.toFixed(2)}</p>
+                <div className="p-3.5 bg-muted rounded-2xl">
+                  <p className="text-xs font-semibold text-foreground">Remaining Amount</p>
+                  <p className="text-xl font-bold text-primary">${remainingAmount.toFixed(2)}</p>
                   <p className="text-xs text-muted-foreground mt-1">
                     To be paid via card or other methods
                   </p>
@@ -95,47 +95,47 @@ const PaymentOptions = ({ onNext, onBack }: PaymentOptionsProps) => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="net-banking" className="space-y-4 mt-6">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <Label>Select Your Bank</Label>
-              <select className="w-full p-2 border border-input rounded-lg bg-background">
+        <TabsContent value="net-banking" className="space-y-4 mt-5">
+          <Card className="p-5">
+            <div className="space-y-3.5">
+              <Label className="text-sm font-semibold">Select Your Bank</Label>
+              <select className="w-full h-11 p-2.5 border-2 border-input rounded-2xl bg-background text-sm">
                 <option>State Bank of India</option>
                 <option>HDFC Bank</option>
                 <option>ICICI Bank</option>
                 <option>Axis Bank</option>
                 <option>Punjab National Bank</option>
               </select>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 You will be redirected to your bank's secure portal to complete the payment.
               </p>
             </div>
           </Card>
         </TabsContent>
 
-        <TabsContent value="card-upi" className="space-y-4 mt-6">
-          <Card className="p-6">
-            <div className="space-y-4">
+        <TabsContent value="card-upi" className="space-y-4 mt-5">
+          <Card className="p-5">
+            <div className="space-y-3.5">
               <div className="space-y-2">
-                <Label htmlFor="card-number">Card Number</Label>
+                <Label htmlFor="card-number" className="text-sm font-semibold">Card Number</Label>
                 <Input id="card-number" placeholder="1234 5678 9012 3456" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3.5">
                 <div className="space-y-2">
-                  <Label htmlFor="expiry">Expiry Date</Label>
+                  <Label htmlFor="expiry" className="text-sm font-semibold">Expiry Date</Label>
                   <Input id="expiry" placeholder="MM/YY" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cvv">CVV</Label>
+                  <Label htmlFor="cvv" className="text-sm font-semibold">CVV</Label>
                   <Input id="cvv" placeholder="123" type="password" maxLength={3} />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="card-name">Cardholder Name</Label>
+                <Label htmlFor="card-name" className="text-sm font-semibold">Cardholder Name</Label>
                 <Input id="card-name" placeholder="John Doe" />
               </div>
-              <div className="border-t border-border pt-4 mt-4">
-                <Label htmlFor="upi">Or Pay with UPI</Label>
+              <div className="border-t border-border pt-3.5 mt-3.5">
+                <Label htmlFor="upi" className="text-sm font-semibold">Or Pay with UPI</Label>
                 <Input id="upi" placeholder="yourname@upi" className="mt-2" />
               </div>
             </div>
@@ -143,16 +143,16 @@ const PaymentOptions = ({ onNext, onBack }: PaymentOptionsProps) => {
         </TabsContent>
       </Tabs>
 
-      <div className="flex justify-between pt-4">
-        <Button onClick={onBack} variant="outline">
+      <div className="flex justify-between pt-3">
+        <Button onClick={onBack} variant="outline" className="h-11 px-6">
           Back
         </Button>
         {activeTab !== "net-banking" ? (
-          <Button onClick={onNext} className="bg-success hover:bg-success/90 text-success-foreground">
+          <Button onClick={onNext} className="h-11 px-6 bg-success hover:bg-success/90 text-success-foreground">
             Pay ${(activeTab === "wallet" && walletAmount > 0 ? remainingAmount : totalAmount).toFixed(2)}
           </Button>
         ) : (
-          <Button className="bg-primary hover:bg-primary/90">
+          <Button className="h-11 px-6">
             Proceed to Bank Portal
           </Button>
         )}

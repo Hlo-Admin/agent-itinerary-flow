@@ -47,24 +47,24 @@ const Bookings = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-3">
+    <div className="space-y-10">
+      <div className="space-y-2">
         <h1 className="text-5xl font-bold text-foreground tracking-tight">New Booking</h1>
-        <p className="text-muted-foreground text-lg font-medium">Create a new travel booking for your clients</p>
+        <p className="text-muted-foreground text-base font-medium">Create a new travel booking for your clients</p>
       </div>
 
-      <Card className="p-12 border-0">
-        <div className="space-y-12">
-          <div className="space-y-10">
+      <Card className="p-10 border-0">
+        <div className="space-y-10">
+          <div className="space-y-8">
             <div className="flex items-center justify-between">
               {steps.map((step, index) => (
                 <div key={step.number} className="flex items-center">
                   <div
-                    className={`flex items-center justify-center w-16 h-16 rounded-2xl font-bold text-xl transition-all duration-300 ${
+                    className={`flex items-center justify-center w-14 h-14 rounded-2xl font-bold text-lg transition-all duration-300 ${
                       currentStep === step.number
-                        ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-xl scale-125"
+                        ? "bg-gradient-to-br from-primary to-primary/90 text-primary-foreground shadow-lg scale-110"
                         : currentStep > step.number
-                        ? "bg-gradient-to-br from-success to-success/80 text-success-foreground shadow-lg"
+                        ? "bg-gradient-to-br from-success to-success/90 text-success-foreground shadow-md"
                         : "bg-muted/40 text-muted-foreground"
                     }`}
                   >
@@ -72,27 +72,27 @@ const Bookings = () => {
                   </div>
                   {index < steps.length - 1 && (
                     <div
-                      className={`w-16 h-2.5 mx-3 rounded-full transition-all duration-300 ${
-                        currentStep > step.number ? "bg-gradient-to-r from-success to-success/80 shadow-md" : "bg-muted/40"
+                      className={`w-14 h-2 mx-2.5 rounded-full transition-all duration-300 ${
+                        currentStep > step.number ? "bg-gradient-to-r from-success to-success/90 shadow-sm" : "bg-muted/40"
                       }`}
                     />
                   )}
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs">
               {steps.map((step) => (
                 <div
                   key={step.number}
                   className={`font-bold transition-colors duration-300 ${
-                    currentStep === step.number ? "text-primary text-base" : "text-muted-foreground"
+                    currentStep === step.number ? "text-primary text-sm" : "text-muted-foreground"
                   }`}
                 >
                   {step.title}
                 </div>
               ))}
             </div>
-            <Progress value={progress} className="h-4 rounded-full shadow-sm" />
+            <Progress value={progress} className="h-3 rounded-full shadow-sm" />
           </div>
           <div>
             {currentStep === 1 && <SearchExperiences onNext={handleNext} />}

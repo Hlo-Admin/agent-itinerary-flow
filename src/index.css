@@ -11,56 +11,58 @@ All colors MUST be HSL.
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 220 15% 10%;
+    --foreground: 220 20% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 10%;
+    --card-foreground: 220 20% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 10%;
+    --popover-foreground: 220 20% 8%;
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 215 20% 96%;
-    --secondary-foreground: 220 15% 10%;
-    --muted: 220 15% 95%;
-    --muted-foreground: 220 10% 45%;
+    --secondary: 220 15% 97%;
+    --secondary-foreground: 220 20% 8%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 12% 50%;
     --accent: 221 83% 53%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --success: 142 71% 45%;
+    --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
-    --border: 220 15% 92%;
-    --input: 220 15% 88%;
+    --border: 220 15% 94%;
+    --input: 220 15% 90%;
     --ring: 221 83% 53%;
     --radius: 1rem;
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 220 15% 10%;
+    --sidebar-foreground: 220 20% 8%;
     --sidebar-primary: 221 83% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 20% 96%;
-    --sidebar-accent-foreground: 220 15% 10%;
-    --sidebar-border: 220 15% 92%;
+    --sidebar-accent: 220 15% 97%;
+    --sidebar-accent-foreground: 220 20% 8%;
+    --sidebar-border: 220 15% 94%;
     --sidebar-ring: 221 83% 53%;
     
-    /* Premium glass morphism effects */
-    --glass-bg: 0 0% 100% / 0.7;
-    --glass-border: 220 15% 90% / 0.6;
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
+    /* Ultra-premium glass morphism */
+    --glass-bg: 0 0% 100% / 0.8;
+    --glass-border: 220 15% 92% / 0.5;
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
     
-    /* Fluent Design shadows */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-    --shadow-md: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 8px 16px 0 rgba(0, 0, 0, 0.08);
-    --shadow-xl: 0 16px 32px 0 rgba(0, 0, 0, 0.1);
-    --shadow-2xl: 0 24px 48px 0 rgba(0, 0, 0, 0.12);
+    /* Refined shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+    --shadow-md: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 8px 16px 0 rgba(0, 0, 0, 0.06);
+    --shadow-xl: 0 16px 32px 0 rgba(0, 0, 0, 0.08);
+    --shadow-2xl: 0 24px 48px 0 rgba(0, 0, 0, 0.10);
     
-    /* Premium hover and interaction effects */
-    --hover-lift: translateY(-2px);
-    --hover-scale: scale(1.01);
+    /* Premium interactions */
+    --hover-lift: translateY(-1px);
+    --hover-scale: scale(1.005);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     
-    /* Gradient accents */
-    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(221 83% 45%) 100%);
-    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(215 20% 98%) 100%);
+    /* Refined gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(221 83% 53%) 0%, hsl(221 83% 48%) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 20% 99%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsla(0 0% 100% / 0.9) 0%, hsla(220 20% 98% / 0.8) 100%);
   }
 
   .dark {
@@ -124,10 +126,10 @@ All colors MUST be HSL.
 @layer utilities {
   .glass {
     background: hsla(var(--glass-bg));
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
     border: 1px solid hsla(var(--glass-border));
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
   }
   
   .glass-hover {
@@ -135,15 +137,15 @@ All colors MUST be HSL.
   }
   
   .glass-hover:hover {
-    background: hsla(0, 0%, 100%, 0.9);
+    background: hsla(0, 0%, 100%, 0.95);
     transform: var(--hover-lift);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
   }
   
   .premium-card {
-    background: hsla(var(--glass-bg));
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: var(--gradient-glass);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
     border: 1px solid hsla(var(--glass-border));
     box-shadow: var(--shadow-sm);
     transition: var(--transition-smooth);
@@ -151,21 +153,21 @@ All colors MUST be HSL.
   
   .premium-card:hover {
     box-shadow: var(--shadow-lg);
-    transform: translateY(-1px);
+    transform: var(--hover-lift);
   }
   
   .fluent-card {
-    background: linear-gradient(135deg, hsla(var(--glass-bg)) 0%, hsla(0 0% 100% / 0.6) 100%);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: var(--gradient-glass);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
     border: 1px solid hsla(var(--glass-border));
     box-shadow: var(--shadow-sm);
     transition: var(--transition-smooth);
   }
   
   .fluent-card:hover {
-    box-shadow: var(--shadow-xl);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    transform: var(--hover-lift);
   }
   
   @media (max-width: 768px) {
