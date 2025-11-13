@@ -16,24 +16,24 @@ const EmailTemplate = ({ bookingData }: EmailTemplateProps) => {
         <p className="text-sm text-muted-foreground font-medium">Preview of the confirmation email sent to the traveler</p>
       </div>
 
-      <Card className="p-8 bg-white border-0 shadow-lg">
-        <div className="max-w-2xl mx-auto space-y-5">
+      <Card className="p-8 border border-border/50">
+        <div className="max-w-2xl mx-auto space-y-6">
           {/* Email Header */}
-          <div className="text-center pb-5 border-b-2 border-primary/20">
-            <h1 className="text-2xl font-bold text-primary mb-1.5">TravelHub Agency</h1>
-            <p className="text-xs text-muted-foreground">Your Trusted Travel Partner</p>
+          <div className="border-b border-border pb-5 text-center">
+            <h1 className="mb-2 text-2xl font-semibold text-foreground">TravelHub Agency</h1>
+            <p className="text-xs text-muted-foreground uppercase tracking-wide">Your trusted travel partner</p>
           </div>
 
           {/* Confirmation Message */}
-          <div className="bg-success/10 border border-success/20 rounded-2xl p-5 text-center">
-            <h2 className="text-xl font-bold text-success mb-1.5">Booking Confirmed! ✓</h2>
-            <p className="text-sm text-foreground">Your travel plans are all set</p>
+          <div className="rounded-xl border border-success/30 p-5 text-center">
+            <h2 className="mb-1.5 text-xl font-semibold text-success">Booking confirmed ✓</h2>
+            <p className="text-sm text-muted-foreground">Your travel plans are all set</p>
           </div>
 
           {/* Booking Details */}
           <div>
-            <h3 className="text-base font-bold text-foreground mb-3">Booking Details</h3>
-            <div className="space-y-2.5 bg-muted/50 p-3.5 rounded-2xl">
+            <h3 className="mb-3 text-base font-semibold text-foreground">Booking details</h3>
+            <div className="space-y-2.5 rounded-xl border border-border/60 p-4">
               <div className="flex justify-between">
                 <span className="text-xs text-muted-foreground">Booking Reference</span>
                 <span className="font-mono font-semibold text-xs text-foreground">{bookingRef}</span>
@@ -59,8 +59,8 @@ const EmailTemplate = ({ bookingData }: EmailTemplateProps) => {
 
           {/* Payment Summary */}
           <div>
-            <h3 className="text-base font-bold text-foreground mb-3">Payment Summary</h3>
-            <div className="space-y-2.5 bg-muted/50 p-3.5 rounded-2xl">
+            <h3 className="mb-3 text-base font-semibold text-foreground">Payment summary</h3>
+            <div className="space-y-2.5 rounded-xl border border-border/60 p-4">
               <div className="flex justify-between">
                 <span className="text-xs text-muted-foreground">Ticket Price</span>
                 <span className="text-xs text-foreground">$1,200.00</span>
@@ -81,9 +81,9 @@ const EmailTemplate = ({ bookingData }: EmailTemplateProps) => {
           </div>
 
           {/* Important Information */}
-          <div className="bg-accent/10 border border-accent/20 rounded-2xl p-5">
-            <h3 className="text-base font-bold text-foreground mb-2.5">Important Information</h3>
-            <ul className="space-y-1.5 text-xs text-foreground">
+          <div className="rounded-xl border border-border/60 p-5">
+            <h3 className="mb-2.5 text-base font-semibold text-foreground">Important information</h3>
+            <ul className="space-y-1.5 text-xs text-muted-foreground">
               <li>• Please arrive at the airport at least 2 hours before departure</li>
               <li>• Carry a valid ID proof and this booking confirmation</li>
               <li>• Check baggage allowance and restrictions</li>
@@ -92,10 +92,10 @@ const EmailTemplate = ({ bookingData }: EmailTemplateProps) => {
           </div>
 
           {/* Footer */}
-          <div className="text-center pt-5 border-t border-border">
-            <p className="text-xs text-muted-foreground mb-1.5">Need help? Contact us anytime</p>
-            <p className="text-xs font-semibold text-foreground">info@travelhub.com | +1 (555) 123-4567</p>
-            <p className="text-xs text-muted-foreground mt-3">
+          <div className="border-t border-border pt-5 text-center">
+            <p className="mb-1.5 text-xs text-muted-foreground">Need help? Contact us anytime</p>
+            <p className="text-xs font-semibold text-foreground">info@travelhub.com · +1 (555) 123-4567</p>
+            <p className="mt-3 text-xs text-muted-foreground">
               This is an automated confirmation email. Please do not reply.
             </p>
           </div>
@@ -103,12 +103,12 @@ const EmailTemplate = ({ bookingData }: EmailTemplateProps) => {
       </Card>
 
       <div className="flex justify-center gap-3">
-        <Button className="h-11 px-6 flex items-center gap-2">
+        <Button className="flex h-10 items-center gap-2 px-6">
           <Mail className="h-4 w-4" />
-          Send Email to Customer
+          Send email to customer
         </Button>
-        <Button variant="outline" className="h-11 px-6">
-          Create New Booking
+        <Button variant="outline" className="h-10 px-6">
+          Create new booking
         </Button>
       </div>
     </div>

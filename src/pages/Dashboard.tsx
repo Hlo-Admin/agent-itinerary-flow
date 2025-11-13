@@ -90,18 +90,18 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-semibold text-foreground tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">Welcome back! Here's your booking overview.</p>
+    <div className="space-y-10">
+      <div className="space-y-2">
+        <h1 className="text-4xl font-semibold text-foreground tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground text-base">Welcome back! Here's your booking overview.</p>
       </div>
 
       {/* Credit Limit Card */}
-      <Card className="p-6">
-        <div className="space-y-6">
+      <Card className="p-8 border-2">
+        <div className="space-y-8">
           <div>
-            <CardTitle className="text-lg font-semibold">Agent Credit Limit</CardTitle>
-            <CardDescription className="text-sm mt-1">Track your available credit balance</CardDescription>
+            <CardTitle className="text-xl font-semibold">Agent Credit Limit</CardTitle>
+            <CardDescription className="text-sm mt-2">Track your available credit balance</CardDescription>
           </div>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -124,21 +124,21 @@ const Dashboard = () => {
       </Card>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className="p-6 space-y-3 hover:shadow-md transition-shadow">
+            <Card key={stat.title} className="p-6 space-y-4 hover:shadow-lg transition-all duration-200 group">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{stat.title}</CardTitle>
-                <div className="p-2 rounded-md bg-muted">
-                  <Icon className={`h-4 w-4 ${stat.color}`} />
+                <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{stat.title}</CardTitle>
+                <div className="p-2.5 rounded-lg bg-muted/50 group-hover:bg-primary/10 transition-colors">
+                  <Icon className={`h-4 w-4 ${stat.color} group-hover:text-primary transition-colors`} />
                 </div>
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <div className="text-3xl font-semibold tracking-tight">{stat.value}</div>
-                <p className="text-xs text-success font-medium flex items-center gap-1">
-                  <ArrowUpRight className="h-3 w-3" />
+                <p className="text-xs text-success font-medium flex items-center gap-1.5">
+                  <ArrowUpRight className="h-3.5 w-3.5" />
                   {stat.change} from last month
                 </p>
               </div>
@@ -150,39 +150,39 @@ const Dashboard = () => {
       {/* Recent Bookings and Top Categories */}
       <div className="grid md:grid-cols-2 gap-6">
         {/* Recent Bookings */}
-        <Card className="p-6">
+        <Card className="p-7">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-lg font-semibold">Recent Bookings</CardTitle>
-                <CardDescription className="text-sm mt-1">Latest client reservations</CardDescription>
+                <CardTitle className="text-xl font-semibold">Recent Bookings</CardTitle>
+                <CardDescription className="text-sm mt-2">Latest client reservations</CardDescription>
               </div>
               <Button variant="outline" size="sm" asChild>
                 <Link to="/bookings">View All</Link>
               </Button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {recentBookings.map((booking) => (
-                <div key={booking.id} className="flex items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium text-foreground text-sm">{booking.client}</p>
+                <div key={booking.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/40 hover:bg-muted/60 transition-all border border-transparent hover:border-border/50">
+                  <div className="space-y-1.5">
+                    <div className="flex items-center gap-2.5">
+                      <p className="font-semibold text-foreground text-sm">{booking.client}</p>
                       <Badge
                         variant={booking.status === "confirmed" ? "default" : "secondary"}
-                        className="text-xs"
+                        className="text-xs font-medium"
                       >
                         {booking.status}
                       </Badge>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <MapPin className="h-3 w-3" />
+                      <MapPin className="h-3.5 w-3.5" />
                       {booking.destination}
                     </div>
-                    <p className="text-xs text-muted-foreground">{booking.date}</p>
+                    <p className="text-xs text-muted-foreground font-medium">{booking.date}</p>
                   </div>
-                  <div className="text-right space-y-0.5">
-                    <p className="font-semibold text-foreground text-base">${booking.amount}</p>
-                    <p className="text-xs text-success font-medium">+${booking.commission}</p>
+                  <div className="text-right space-y-1">
+                    <p className="font-semibold text-foreground text-lg">${booking.amount}</p>
+                    <p className="text-xs text-success font-semibold">+${booking.commission}</p>
                   </div>
                 </div>
               ))}
@@ -191,28 +191,28 @@ const Dashboard = () => {
         </Card>
 
         {/* Top Categories */}
-        <Card className="p-6">
+        <Card className="p-7">
           <div className="space-y-6">
             <div>
-              <CardTitle className="text-lg font-semibold">Top Categories</CardTitle>
-              <CardDescription className="text-sm mt-1">Best performing experience types</CardDescription>
+              <CardTitle className="text-xl font-semibold">Top Categories</CardTitle>
+              <CardDescription className="text-sm mt-2">Best performing experience types</CardDescription>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-5">
               {topCategories.map((category, index) => (
-                <div key={category.name} className="space-y-2">
+                <div key={category.name} className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-md bg-muted text-foreground text-sm font-medium">
+                    <div className="flex items-center gap-3.5">
+                      <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10 text-primary text-sm font-semibold">
                         {index + 1}
                       </div>
-                      <span className="font-medium text-foreground text-sm">{category.name}</span>
+                      <span className="font-semibold text-foreground text-sm">{category.name}</span>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold text-foreground text-base">${category.revenue.toLocaleString()}</p>
                       <p className="text-xs text-muted-foreground font-medium">{category.bookings} bookings</p>
                     </div>
                   </div>
-                  <Progress value={(category.bookings / 50) * 100} className="h-1.5" />
+                  <Progress value={(category.bookings / 50) * 100} className="h-2" />
                 </div>
               ))}
             </div>
@@ -221,27 +221,27 @@ const Dashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <Card className="p-6">
-        <CardTitle className="text-lg font-semibold mb-4">Quick Actions</CardTitle>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Button className="h-auto py-6 flex flex-col gap-2" asChild>
+      <Card className="p-7">
+        <CardTitle className="text-xl font-semibold mb-6">Quick Actions</CardTitle>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Button className="h-auto py-7 flex flex-col gap-3 hover:scale-[1.02] transition-transform" asChild>
             <Link to="/bookings">
-              <Calendar className="h-5 w-5" />
-              <span className="font-medium text-sm">New Booking</span>
+              <Calendar className="h-6 w-6" />
+              <span className="font-semibold text-sm">New Booking</span>
             </Link>
           </Button>
-          <Button variant="outline" className="h-auto py-6 flex flex-col gap-2">
-            <Users className="h-5 w-5" />
-            <span className="font-medium text-sm">Manage Clients</span>
+          <Button variant="outline" className="h-auto py-7 flex flex-col gap-3 hover:scale-[1.02] transition-transform hover:bg-accent">
+            <Users className="h-6 w-6" />
+            <span className="font-semibold text-sm">Manage Clients</span>
           </Button>
-          <Button variant="outline" className="h-auto py-6 flex flex-col gap-2">
-            <Star className="h-5 w-5" />
-            <span className="font-medium text-sm">Reviews</span>
+          <Button variant="outline" className="h-auto py-7 flex flex-col gap-3 hover:scale-[1.02] transition-transform hover:bg-accent">
+            <Star className="h-6 w-6" />
+            <span className="font-semibold text-sm">Reviews</span>
           </Button>
-          <Button variant="outline" className="h-auto py-6 flex flex-col gap-2" asChild>
+          <Button variant="outline" className="h-auto py-7 flex flex-col gap-3 hover:scale-[1.02] transition-transform hover:bg-accent" asChild>
             <Link to="/settings">
-              <DollarSign className="h-5 w-5" />
-              <span className="font-medium text-sm">Payments</span>
+              <DollarSign className="h-6 w-6" />
+              <span className="font-semibold text-sm">Payments</span>
             </Link>
           </Button>
         </div>

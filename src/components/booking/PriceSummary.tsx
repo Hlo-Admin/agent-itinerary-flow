@@ -26,42 +26,42 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
   };
 
   return (
-    <div className="space-y-7">
-      <div>
-        <h3 className="text-xl font-bold text-foreground mb-2">Price Summary</h3>
-        <p className="text-sm text-muted-foreground font-medium">Review your booking charges</p>
+    <div className="space-y-8">
+      <div className="space-y-1">
+        <h3 className="text-2xl font-semibold text-foreground">Price summary</h3>
+        <p className="text-sm text-muted-foreground">Review your booking charges</p>
       </div>
 
-      <Card className="p-7 bg-gradient-to-br from-muted/20 to-transparent border-0">
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-foreground">Base Ticket Price</span>
-            <span className="font-semibold text-sm text-foreground">${basePrice.toFixed(2)}</span>
+      <Card className="p-6">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>Base ticket price</span>
+            <span className="font-medium text-foreground">${basePrice.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-foreground">Taxes & Fees</span>
-            <span className="font-semibold text-sm text-foreground">${taxes.toFixed(2)}</span>
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>Taxes & fees</span>
+            <span className="font-medium text-foreground">${taxes.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-foreground">Service Fee</span>
-            <span className="font-semibold text-sm text-foreground">${serviceFee.toFixed(2)}</span>
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>Service fee</span>
+            <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
           </div>
           {discount > 0 && (
-            <div className="flex justify-between items-center text-success">
-              <span className="text-sm">Promo Discount</span>
-              <span className="font-semibold text-sm">-${discount.toFixed(2)}</span>
+            <div className="flex items-center justify-between text-sm text-success">
+              <span>Promo discount</span>
+              <span className="font-medium">-${discount.toFixed(2)}</span>
             </div>
           )}
-          <div className="border-t border-border pt-3.5 flex justify-between items-center">
-            <span className="text-base font-bold text-foreground">Total Amount Due</span>
-            <span className="text-2xl font-bold text-primary">${total.toFixed(2)}</span>
+          <div className="flex items-center justify-between border-t border-border pt-4">
+            <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
+            <span className="text-2xl font-semibold text-primary">${total.toFixed(2)}</span>
           </div>
         </div>
       </Card>
 
-      <div>
-        <h3 className="text-lg font-bold text-foreground mb-3">Have a Promo Code?</h3>
-        <div className="flex gap-2">
+      <div className="space-y-3">
+        <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Have a promo code?</h4>
+        <div className="flex flex-col gap-2 sm:flex-row">
           <div className="relative flex-1">
             <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -71,21 +71,21 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
               className="pl-11"
             />
           </div>
-          <Button onClick={applyPromo} variant="outline" className="h-11 px-5 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+          <Button onClick={applyPromo} variant="outline" className="sm:w-auto">
             Apply
           </Button>
         </div>
         {discount > 0 && (
-          <p className="text-xs text-success mt-2 font-semibold">✓ Promo code applied successfully!</p>
+          <p className="text-xs font-medium text-success">Promo code applied successfully</p>
         )}
       </div>
 
-      <div className="flex justify-between pt-3">
-        <Button onClick={onBack} variant="outline" className="h-11 px-6">
+      <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:justify-between">
+        <Button onClick={onBack} variant="outline">
           Back
         </Button>
-        <Button onClick={onNext} className="h-11 px-6">
-          Continue to Payment
+        <Button onClick={onNext}>
+          Continue to payment
         </Button>
       </div>
     </div>

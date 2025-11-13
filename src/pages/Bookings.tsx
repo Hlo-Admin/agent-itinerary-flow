@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Fragment, useState } from "react";
+import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import SearchExperiences from "@/components/booking/SearchExperiences";
 import SearchResults from "@/components/booking/SearchResults";
@@ -47,52 +47,57 @@ const Bookings = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-semibold text-foreground tracking-tight">New Booking</h1>
-        <p className="text-muted-foreground text-sm">Create a new travel booking for your clients</p>
+    <div className="space-y-4 sm:space-y-12 w-full min-w-0 max-w-full overflow-hidden">
+      <div className="space-y-1 sm:space-y-2 w-full min-w-0">
+        <h1 className="text-xl sm:text-4xl font-semibold text-foreground tracking-tight">New Booking</h1>
+        <p className="text-muted-foreground text-xs sm:text-base">Create a new travel booking for your clients</p>
       </div>
 
-      <Card className="p-6">
-        <div className="space-y-8">
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              {steps.map((step, index) => (
-                <div key={step.number} className="flex items-center">
-                  <div
-                    className={`flex items-center justify-center w-10 h-10 rounded-md font-medium text-sm transition-colors ${
-                      currentStep === step.number
-                        ? "bg-primary text-primary-foreground"
-                        : currentStep > step.number
-                        ? "bg-success text-success-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {step.number}
-                  </div>
-                  {index < steps.length - 1 && (
-                    <div
-                      className={`w-12 h-1 mx-2 rounded-full transition-colors ${
-                        currentStep > step.number ? "bg-success" : "bg-muted"
-                      }`}
-                    />
-                  )}
-                </div>
-              ))}
+      <Card className="p-1.5 sm:p-8 border border-border/50 w-full min-w-0 max-w-full box-border overflow-hidden">
+        <div className="space-y-3 sm:space-y-10 w-full min-w-0 max-w-full overflow-hidden">
+          <div className="space-y-3 sm:space-y-8 w-full max-w-full">
+            <div className="w-full max-w-full overflow-x-auto pb-2 -mx-1.5 sm:mx-0 px-1.5 sm:px-0 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
+              <div className="flex items-center gap-1 sm:gap-3 min-w-max">
+                {steps.map((step, index) => {
+                  const isActive = currentStep === step.number;
+                  const isComplete = currentStep > step.number;
+
+                  return (
+                    <Fragment key={step.number}>
+                      <div className="flex flex-col items-center min-w-[32px] sm:min-w-[52px] flex-shrink-0">
+                        <div
+                          className={`flex h-6 w-6 sm:h-9 sm:w-9 items-center justify-center rounded-full border text-[9px] sm:text-sm font-medium transition-all duration-200 ${
+                            isActive
+                              ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                              : isComplete
+                              ? "border-primary/60 bg-primary/10 text-primary"
+                              : "border-border bg-card text-muted-foreground"
+                          }`}
+                        >
+                          {step.number}
+                        </div>
+                        <span
+                          className={`mt-1 sm:mt-2 text-[8px] sm:text-xs font-medium uppercase tracking-wide whitespace-nowrap ${
+                            isActive ? "text-foreground" : "text-muted-foreground"
+                          }`}
+                        >
+                          {step.title}
+                        </span>
+                      </div>
+                      {index < steps.length - 1 && (
+                        <div
+                          className={`h-px min-w-[6px] sm:min-w-[12px] transition-colors duration-300 ${
+                            currentStep > step.number ? "bg-primary/60" : "bg-border"
+                          }`}
+                          style={{ width: 'clamp(6px, 2vw, 20px)' }}
+                        />
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex items-center justify-between text-xs">
-              {steps.map((step) => (
-                <div
-                  key={step.number}
-                  className={`font-medium transition-colors ${
-                    currentStep === step.number ? "text-primary" : "text-muted-foreground"
-                  }`}
-                >
-                  {step.title}
-                </div>
-              ))}
-            </div>
-            <Progress value={progress} className="h-1.5" />
+            <Progress value={progress} className="h-2" />
           </div>
           <div>
             {currentStep === 1 && <SearchExperiences onNext={handleNext} />}

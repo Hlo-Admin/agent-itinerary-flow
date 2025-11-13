@@ -36,50 +36,56 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
   };
 
   return (
-    <div className="space-y-7">
-      <div>
-        <h3 className="text-xl font-bold text-foreground mb-2">Lead Passenger Information</h3>
-        <p className="text-sm text-muted-foreground font-medium">Enter details for the primary traveler</p>
+    <div className="space-y-8">
+      <div className="space-y-1">
+        <h3 className="text-2xl font-semibold text-foreground">Lead passenger information</h3>
+        <p className="text-sm text-muted-foreground">Enter details for the primary traveler</p>
       </div>
 
-      <div className="grid gap-4">
-        <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="lead-name" className="text-sm font-semibold">Full Name *</Label>
+            <Label htmlFor="lead-name" className="text-sm font-medium text-muted-foreground">
+              Full name *
+            </Label>
             <Input id="lead-name" placeholder="John Doe" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="lead-email" className="text-sm font-semibold">Email *</Label>
+            <Label htmlFor="lead-email" className="text-sm font-medium text-muted-foreground">
+              Email *
+            </Label>
             <Input id="lead-email" type="email" placeholder="john@example.com" required />
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="lead-phone" className="text-sm font-semibold">Phone Number *</Label>
+          <Label htmlFor="lead-phone" className="text-sm font-medium text-muted-foreground">
+            Phone number *
+          </Label>
           <Input id="lead-phone" placeholder="+1 (555) 000-0000" required />
         </div>
       </div>
 
-      <div className="border-t border-border/50 pt-7">
-        <div className="flex items-center justify-between mb-5">
+      <div className="space-y-4 border-t border-border pt-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-lg font-bold text-foreground">Additional Adults</h3>
-            <p className="text-sm text-muted-foreground font-medium">Add other adult travelers</p>
+            <h3 className="text-lg font-semibold text-foreground">Additional adults</h3>
+            <p className="text-sm text-muted-foreground">Add other adult travelers</p>
           </div>
-          <Button onClick={addAdult} variant="outline" size="sm" className="h-10 px-4">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Adult
+          <Button onClick={addAdult} variant="outline" size="sm" className="flex w-full gap-2 sm:w-auto">
+            <Plus className="h-4 w-4" />
+            Add adult
           </Button>
         </div>
 
         <div className="space-y-4">
           {adults.slice(1).map((adult, index) => (
             <Card key={index} className="p-4">
-              <div className="flex items-start gap-4">
-                <div className="flex-1 grid grid-cols-2 gap-4">
-                  <Input placeholder="Full Name" />
+              <div className="flex flex-col gap-4 md:flex-row md:items-start">
+                <div className="grid flex-1 gap-4 md:grid-cols-2">
+                  <Input placeholder="Full name" />
                   <Input type="email" placeholder="Email" />
                 </div>
-                <Button onClick={() => removeAdult(index + 1)} variant="ghost" size="icon">
+                <Button onClick={() => removeAdult(index + 1)} variant="ghost" size="icon" className="self-start">
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
               </div>
@@ -88,27 +94,27 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
         </div>
       </div>
 
-      <div className="border-t border-border/50 pt-7">
-        <div className="flex items-center justify-between mb-5">
+      <div className="space-y-4 border-t border-border pt-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-lg font-bold text-foreground">Children</h3>
-            <p className="text-sm text-muted-foreground font-medium">Add child travelers (under 18)</p>
+            <h3 className="text-lg font-semibold text-foreground">Children</h3>
+            <p className="text-sm text-muted-foreground">Add child travelers (under 18)</p>
           </div>
-          <Button onClick={addChild} variant="outline" size="sm" className="h-10 px-4">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Child
+          <Button onClick={addChild} variant="outline" size="sm" className="flex w-full gap-2 sm:w-auto">
+            <Plus className="h-4 w-4" />
+            Add child
           </Button>
         </div>
 
         <div className="space-y-4">
           {children.map((child, index) => (
             <Card key={index} className="p-4">
-              <div className="flex items-start gap-4">
-                <div className="flex-1 grid grid-cols-2 gap-4">
-                  <Input placeholder="Full Name" />
-                  <Input type="date" placeholder="Date of Birth" />
+              <div className="flex flex-col gap-4 md:flex-row md:items-start">
+                <div className="grid flex-1 gap-4 md:grid-cols-2">
+                  <Input placeholder="Full name" />
+                  <Input type="date" placeholder="Date of birth" />
                 </div>
-                <Button onClick={() => removeChild(index)} variant="ghost" size="icon">
+                <Button onClick={() => removeChild(index)} variant="ghost" size="icon" className="self-start">
                   <Trash2 className="h-4 w-4 text-destructive" />
                 </Button>
               </div>
@@ -117,21 +123,23 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
         </div>
       </div>
 
-      <div className="border-t border-border/50 pt-7">
-        <h3 className="text-lg font-bold text-foreground mb-2">Discount Documents (Optional)</h3>
-        <p className="text-sm text-muted-foreground mb-5 font-medium">
-          Upload student ID, senior citizen, or military documents for potential discounts
-        </p>
-        <div className="border-2 border-dashed border-border/50 rounded-2xl p-8 text-center hover:border-primary hover:bg-primary/5 transition-all cursor-pointer">
-          <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-sm text-foreground font-semibold">Click to upload or drag and drop</p>
-          <p className="text-xs text-muted-foreground mt-1.5">PDF, JPG, PNG up to 10MB</p>
+      <div className="space-y-4 border-t border-border pt-6">
+        <div className="space-y-1">
+          <h3 className="text-lg font-semibold text-foreground">Discount documents (optional)</h3>
+          <p className="text-sm text-muted-foreground">
+            Upload student ID, senior citizen, or military documents for potential discounts
+          </p>
+        </div>
+        <div className="flex cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border p-6 text-center transition-colors hover:border-primary">
+          <Upload className="mb-2 h-6 w-6 text-muted-foreground" />
+          <p className="text-sm font-medium text-foreground">Click to upload or drag and drop</p>
+          <p className="mt-1 text-xs text-muted-foreground">PDF, JPG, PNG up to 10MB</p>
         </div>
       </div>
 
       <div className="flex justify-end pt-3">
-        <Button onClick={handleSubmit} className="h-11 px-6">
-          Continue to Price Summary
+        <Button onClick={handleSubmit}>
+          Continue to price summary
         </Button>
       </div>
     </div>
