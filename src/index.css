@@ -38,13 +38,18 @@
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
     
-    /* Premium accent colors - Blue-focused palette */
+    /* Premium accent colors - Enhanced vibrant palette */
     --accent-blue: 217 91% 60%;
     --accent-blue-light: 217 91% 70%;
     --accent-blue-dark: 217 91% 50%;
     --accent-purple: 262 83% 58%;
     --accent-teal: 200 80% 50%;
     --accent-cyan: 195 85% 55%;
+    --accent-emerald: 160 84% 39%;
+    --accent-amber: 43 96% 56%;
+    --accent-rose: 346 77% 50%;
+    --accent-indigo: 239 84% 67%;
+    --accent-pink: 330 81% 60%;
     
     /* Borders and inputs - ultra-subtle */
     --border: 214 16% 88%;

@@ -90,14 +90,14 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 sm:space-y-10 animate-fade-in">
       <div className="space-y-2">
-        <h1 className="text-4xl font-semibold text-foreground tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground text-base">Welcome back! Here's your booking overview.</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">Dashboard</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">Welcome back! Here's your booking overview.</p>
       </div>
 
       {/* Credit Limit Card */}
-      <Card className="p-8 border-2">
+      <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-gradient-to-br from-background via-background to-accent-blue/5 animate-scale-in">
         <div className="space-y-8">
           <div>
             <CardTitle className="text-xl font-semibold">Agent Credit Limit</CardTitle>
@@ -124,20 +124,28 @@ const Dashboard = () => {
       </Card>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {stats.map((stat) => {
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {stats.map((stat, index) => {
           const Icon = stat.icon;
+          const colorMap: Record<string, { bg: string; icon: string; gradient: string }> = {
+            "text-primary": { bg: "from-accent-blue/20 to-accent-indigo/20", icon: "text-accent-blue", gradient: "from-accent-blue to-accent-indigo" },
+            "text-success": { bg: "from-emerald/20 to-teal/20", icon: "text-emerald-600", gradient: "from-emerald to-teal" },
+            "text-secondary": { bg: "from-purple/20 to-pink/20", icon: "text-purple-600", gradient: "from-purple to-pink" },
+            "text-accent": { bg: "from-amber/20 to-rose/20", icon: "text-amber-600", gradient: "from-amber to-rose" },
+          };
+          const colors = colorMap[stat.color] || colorMap["text-primary"];
+          
           return (
-            <Card key={stat.title} className="p-6 space-y-4 hover:shadow-lg transition-all duration-200 group">
+            <Card key={stat.title} className="p-5 sm:p-6 space-y-4 hover:shadow-xl transition-all duration-500 group border border-border/40 bg-gradient-to-br from-background to-muted/10 animate-scale-in hover:scale-[1.02]" style={{ animationDelay: `${index * 100}ms` }}>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{stat.title}</CardTitle>
-                <div className="p-2.5 rounded-lg bg-muted/50 group-hover:bg-primary/10 transition-colors">
-                  <Icon className={`h-4 w-4 ${stat.color} group-hover:text-primary transition-colors`} />
+                <CardTitle className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{stat.title}</CardTitle>
+                <div className={`p-2.5 rounded-xl bg-gradient-to-br ${colors.bg} group-hover:scale-110 transition-all duration-300 shadow-sm`}>
+                  <Icon className={`h-4 w-4 ${colors.icon} transition-colors`} />
                 </div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-semibold tracking-tight">{stat.value}</div>
-                <p className="text-xs text-success font-medium flex items-center gap-1.5">
+                <div className={`text-2xl sm:text-3xl font-bold tracking-tight bg-gradient-to-r ${colors.gradient} bg-clip-text text-transparent`}>{stat.value}</div>
+                <p className="text-xs text-emerald-600 font-semibold flex items-center gap-1.5">
                   <ArrowUpRight className="h-3.5 w-3.5" />
                   {stat.change} from last month
                 </p>

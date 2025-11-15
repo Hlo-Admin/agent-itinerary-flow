@@ -47,7 +47,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-3xl font-semibold text-foreground tracking-tight mb-2">{tour.name}</h3>
@@ -72,37 +72,38 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
         </Button>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid gap-6 sm:gap-8 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-6 animate-slide-in-right">
           <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 h-12 bg-muted/50 p-1">
+            <TabsList className="grid w-full grid-cols-3 h-14 bg-gradient-to-r from-muted/80 via-muted/60 to-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
               <TabsTrigger 
                 value="overview" 
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-blue data-[state=active]:to-accent-indigo data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 Overview
               </TabsTrigger>
               <TabsTrigger 
                 value="itinerary"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-purple data-[state=active]:to-accent-pink data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-purple/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 Itinerary
               </TabsTrigger>
               <TabsTrigger 
                 value="included"
-                className="data-[state=active]:bg-background data-[state=active]:shadow-sm font-medium"
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 What's Included
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="overview" className="mt-6 space-y-4">
-              <Card className="overflow-hidden border-0 shadow-lg">
-                <div className="relative h-80 w-full overflow-hidden bg-muted">
+            <TabsContent value="overview" className="mt-6 space-y-4 animate-fade-in">
+              <Card className="overflow-hidden border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/20">
+                <div className="relative h-80 sm:h-96 w-full overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-accent-purple/5 z-10" />
                   <img
                     src={tourData?.tour?.image || "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format"}
                     alt={tour.name}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                     loading="lazy"
                     decoding="async"
                     onError={(e) => {
@@ -110,12 +111,14 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                       target.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${encodeURIComponent(tour.name)}`;
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10" />
                 </div>
-                <div className="p-8 space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    <h4 className="text-lg font-semibold text-foreground">About This Experience</h4>
+                <div className="p-6 sm:p-8 space-y-4 bg-gradient-to-b from-background to-muted/10">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                      <Sparkles className="h-5 w-5 text-accent-blue" />
+                    </div>
+                    <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">About This Experience</h4>
                   </div>
                   <p className="text-base text-muted-foreground leading-relaxed">
                     Discover the rich history and hidden gems of the old town with our expert local guides. Walk through
@@ -126,10 +129,15 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               </Card>
             </TabsContent>
             
-            <TabsContent value="itinerary" className="mt-6">
-              <Card className="p-8">
+            <TabsContent value="itinerary" className="mt-6 animate-fade-in">
+              <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
                 <div className="space-y-6">
-                  <h4 className="text-lg font-semibold text-foreground mb-6">Day Schedule</h4>
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
+                      <Clock className="h-5 w-5 text-accent-purple" />
+                    </div>
+                    <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Day Schedule</h4>
+                  </div>
                   <div className="space-y-5">
                     {[
                       { time: "09:00", activity: "Meeting point at Central Square" },
@@ -137,17 +145,19 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                       { time: "11:00", activity: "Visit to the ancient cathedral" },
                       { time: "12:00", activity: "Tour concludes at the Old Town Gate" },
                     ].map((item, index) => (
-                      <div key={index} className="flex gap-5 group">
+                      <div key={index} className="flex gap-5 group animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
                         <div className="flex flex-col items-center">
-                          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20 group-hover:border-primary/40 transition-colors">
-                            <span className="text-sm font-bold text-primary">{item.time}</span>
+                          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-accent-purple/20 to-accent-pink/20 flex items-center justify-center border-2 border-accent-purple/30 group-hover:border-accent-purple/60 group-hover:scale-110 transition-all duration-300 shadow-sm group-hover:shadow-md">
+                            <span className="text-sm font-bold text-accent-purple">{item.time}</span>
                           </div>
                           {index < 3 && (
-                            <div className="w-0.5 h-12 bg-border mt-2" />
+                            <div className="w-0.5 h-12 bg-gradient-to-b from-accent-purple/30 to-accent-pink/30 mt-2" />
                           )}
                         </div>
                         <div className="flex-1 pt-2">
-                          <p className="text-base font-medium text-foreground">{item.activity}</p>
+                          <p className="text-base font-medium text-foreground group-hover:text-accent-purple transition-all duration-300">
+                            {item.activity}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -156,21 +166,32 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               </Card>
             </TabsContent>
             
-            <TabsContent value="included" className="mt-6">
-              <Card className="p-8">
-                <h4 className="text-lg font-semibold text-foreground mb-6">What's Included</h4>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {[
-                    "Expert local guide",
-                    "Entrance fees to all sites",
-                    "Complimentary water bottle",
-                    "Digital tour booklet",
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-                      <CheckCircle2 className="h-5 w-5 text-success flex-shrink-0" />
-                      <span className="text-sm font-medium text-foreground">{item}</span>
+            <TabsContent value="included" className="mt-6 animate-fade-in">
+              <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-accent-emerald/20 to-accent-teal/20">
+                      <CheckCircle2 className="h-5 w-5 text-accent-emerald" />
                     </div>
-                  ))}
+                    <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">What's Included</h4>
+                  </div>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {[
+                      "Professional local guide",
+                      "Entrance fees to all attractions",
+                      "Small group experience (max 15 people)",
+                      "Historical information booklet",
+                      "Complimentary refreshments",
+                      "Photo opportunities at key locations",
+                    ].map((item, index) => (
+                      <div key={index} className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-emerald/10 via-emerald/5 to-transparent border border-emerald/20 group hover:border-emerald/40 hover:shadow-md transition-all duration-300 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                        <div className="p-1.5 rounded-lg bg-emerald/20 group-hover:bg-emerald/30 transition-colors">
+                          <CheckCircle2 className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+                        </div>
+                        <span className="text-sm font-medium text-foreground">{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </Card>
             </TabsContent>

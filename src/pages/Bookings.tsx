@@ -1,6 +1,9 @@
 import { Fragment, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { Bot } from "lucide-react";
+import { cn } from "@/lib/utils";
 import SearchExperiences from "@/components/booking/SearchExperiences";
 import SearchResults from "@/components/booking/SearchResults";
 import ProductDetail from "@/components/booking/ProductDetail";
@@ -10,12 +13,14 @@ import PriceSummary from "@/components/booking/PriceSummary";
 import PaymentOptions from "@/components/booking/PaymentOptions";
 import VoucherView from "@/components/booking/VoucherView";
 import EmailTemplate from "@/components/booking/EmailTemplate";
+import AIChatbot from "@/components/booking/AIChatbot";
 
 type BookingStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 const Bookings = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>(1);
   const [bookingData, setBookingData] = useState<any>({});
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   const steps = [
     { number: 1, title: "Search" },
@@ -46,14 +51,41 @@ const Bookings = () => {
     }
   };
 
-  return (
-    <div className="space-y-4 sm:space-y-12 w-full min-w-0 max-w-full overflow-hidden">
-      <div className="space-y-1 sm:space-y-2 w-full min-w-0">
-        <h1 className="text-xl sm:text-4xl font-semibold text-foreground tracking-tight">New Booking</h1>
-        <p className="text-muted-foreground text-xs sm:text-base">Create a new travel booking for your clients</p>
-      </div>
+  const handleBookingComplete = (data: any) => {
+    setBookingData(data);
+    // Optionally navigate to voucher or confirmation step
+    if (data.status === "completed") {
+      setCurrentStep(8); // Voucher step
+    }
+  };
 
-      <Card className="p-1.5 sm:p-8 border border-border/50 w-full min-w-0 max-w-full box-border overflow-hidden">
+  return (
+    <div className="relative flex h-full w-full min-w-0 max-w-full overflow-hidden">
+      {/* Main Booking Section - Middle */}
+      <div className={cn(
+        "flex-1 overflow-y-auto transition-all duration-500 ease-in-out",
+        isChatbotOpen ? "mr-0 sm:mr-96 lg:mr-[420px]" : "mr-0"
+      )}>
+        <div className="space-y-4 sm:space-y-12 w-full min-w-0 max-w-full p-1.5 sm:p-6 lg:p-8 animate-fade-in">
+          <div className="flex items-start justify-between gap-4">
+            <div className="space-y-1 sm:space-y-2 w-full min-w-0 flex-1">
+              <h1 className="text-xl sm:text-4xl font-bold text-foreground tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">New Booking</h1>
+              <p className="text-muted-foreground text-xs sm:text-base">Create a new travel booking for your clients</p>
+            </div>
+            <Button
+              onClick={() => setIsChatbotOpen(!isChatbotOpen)}
+              className={cn(
+                "h-10 w-10 sm:h-12 sm:w-12 p-0 rounded-xl shadow-lg transition-all duration-300 flex-shrink-0",
+                isChatbotOpen
+                  ? "bg-gradient-to-r from-accent-blue to-accent-indigo text-white"
+                  : "bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 text-accent-blue hover:from-accent-blue/20 hover:to-accent-indigo/20 border border-accent-blue/20"
+              )}
+            >
+              <Bot className="h-5 w-5 sm:h-6 sm:w-6" />
+            </Button>
+          </div>
+
+      <Card className="p-1.5 sm:p-8 border border-border/40 w-full min-w-0 max-w-full box-border overflow-hidden shadow-xl bg-gradient-to-br from-background via-background to-muted/10">
         <div className="space-y-3 sm:space-y-10 w-full min-w-0 max-w-full overflow-hidden">
           <div className="space-y-3 sm:space-y-8 w-full max-w-full">
             <div className="w-full max-w-full overflow-x-auto pb-2 -mx-1.5 sm:mx-0 px-1.5 sm:px-0 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
@@ -64,21 +96,28 @@ const Bookings = () => {
 
                   return (
                     <Fragment key={step.number}>
-                      <div className="flex flex-col items-center min-w-[32px] sm:min-w-[52px] flex-shrink-0">
+                      <div className="flex flex-col items-center min-w-[32px] sm:min-w-[52px] flex-shrink-0 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
                         <div
-                          className={`flex h-6 w-6 sm:h-9 sm:w-9 items-center justify-center rounded-full border text-[9px] sm:text-sm font-medium transition-all duration-200 ${
+                          className={`relative flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 text-[9px] sm:text-sm font-bold transition-all duration-500 ${
                             isActive
-                              ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                              ? "border-accent-blue bg-gradient-to-br from-accent-blue to-accent-indigo text-white shadow-lg shadow-accent-blue/30 scale-110 ring-2 ring-accent-blue/20"
                               : isComplete
-                              ? "border-primary/60 bg-primary/10 text-primary"
-                              : "border-border bg-card text-muted-foreground"
+                              ? "border-accent-blue/60 bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20 text-accent-blue shadow-md"
+                              : "border-border/50 bg-gradient-to-br from-muted to-muted/80 text-muted-foreground"
                           }`}
                         >
                           {step.number}
+                          {isActive && (
+                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent animate-pulse" />
+                          )}
                         </div>
                         <span
-                          className={`mt-1 sm:mt-2 text-[8px] sm:text-xs font-medium uppercase tracking-wide whitespace-nowrap ${
-                            isActive ? "text-foreground" : "text-muted-foreground"
+                          className={`mt-1.5 sm:mt-2 text-[8px] sm:text-xs font-semibold uppercase tracking-wide whitespace-nowrap transition-all duration-300 ${
+                            isActive 
+                              ? "text-accent-blue font-bold" 
+                              : isComplete
+                              ? "text-accent-blue/70"
+                              : "text-muted-foreground"
                           }`}
                         >
                           {step.title}
@@ -86,10 +125,12 @@ const Bookings = () => {
                       </div>
                       {index < steps.length - 1 && (
                         <div
-                          className={`h-px min-w-[6px] sm:min-w-[12px] transition-colors duration-300 ${
-                            currentStep > step.number ? "bg-primary/60" : "bg-border"
+                          className={`h-0.5 min-w-[8px] sm:min-w-[16px] transition-all duration-500 rounded-full ${
+                            currentStep > step.number 
+                              ? "bg-gradient-to-r from-accent-blue to-accent-indigo shadow-sm" 
+                              : "bg-border/50"
                           }`}
-                          style={{ width: 'clamp(6px, 2vw, 20px)' }}
+                          style={{ width: 'clamp(8px, 2.5vw, 24px)' }}
                         />
                       )}
                     </Fragment>
@@ -112,6 +153,15 @@ const Bookings = () => {
           </div>
         </div>
       </Card>
+        </div>
+      </div>
+
+      {/* AI Chatbot Section - Right */}
+      <AIChatbot
+        isOpen={isChatbotOpen}
+        onClose={() => setIsChatbotOpen(false)}
+        onBookingComplete={handleBookingComplete}
+      />
     </div>
   );
 };

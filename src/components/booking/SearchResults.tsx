@@ -194,23 +194,35 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
 
         {/* Results Grid - Vertical Cards */}
         <div className="lg:col-span-9 w-full min-w-0 max-w-full overflow-hidden">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-5 lg:gap-6 w-full min-w-0 max-w-full">
-            {filteredTours.map((tour) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5 lg:gap-6 w-full min-w-0 max-w-full">
+            {filteredTours.map((tour, index) => {
               const isActive = selectedTour === tour.id;
+              const colorMap: Record<string, string> = {
+                "accent-blue": "from-accent-blue/90 to-accent-indigo/90",
+                "accent-cyan": "from-accent-cyan/90 to-accent-teal/90",
+                "accent-teal": "from-accent-teal/90 to-accent-emerald/90",
+                "accent-purple": "from-accent-purple/90 to-accent-pink/90",
+              };
+              const gradientClass = colorMap[tour.color] || colorMap["accent-blue"];
+              
               return (
                 <Card
                   key={tour.id}
                   className={cn(
-                    "group relative flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl border h-full w-full min-w-0 max-w-full box-border",
-                    isActive ? "border-primary border-2 shadow-xl ring-2 ring-primary/20" : "border-border/50 hover:border-primary/30"
+                    "group relative flex flex-col overflow-hidden transition-all duration-500 hover:shadow-2xl border h-full w-full min-w-0 max-w-full box-border animate-scale-in",
+                    isActive 
+                      ? "border-accent-blue border-2 shadow-xl shadow-accent-blue/20 ring-2 ring-accent-blue/20 scale-[1.02]" 
+                      : "border-border/40 hover:border-accent-blue/40 hover:shadow-lg"
                   )}
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Image Section */}
-                  <div className="relative h-44 sm:h-64 overflow-hidden w-full min-w-0 bg-muted">
+                  <div className="relative h-48 sm:h-72 overflow-hidden w-full min-w-0 bg-gradient-to-br from-muted to-muted/50">
+                    <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-accent-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                     <img 
                       src={tour.image} 
                       alt={tour.name} 
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                      className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110" 
                       loading="lazy"
                       decoding="async"
                       onError={(e) => {
@@ -219,69 +231,76 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                       }}
                     />
                     <div className={cn(
-                      "absolute top-3 left-3 sm:top-4 sm:left-4 px-2.5 sm:px-4 py-1 sm:py-2 rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-bold backdrop-blur-md text-white shadow-lg",
-                      getColorClasses(tour.color)
+                      "absolute top-3 left-3 sm:top-4 sm:left-4 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[10px] sm:text-sm font-bold backdrop-blur-xl text-white shadow-xl border border-white/20 transition-all duration-300 group-hover:scale-105",
+                      `bg-gradient-to-r ${gradientClass}`
                     )}>
                       {tour.category}
                     </div>
                     {isActive && (
-                      <div className="absolute inset-0 bg-primary/10 border-4 border-primary" />
+                      <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/10 via-accent-indigo/5 to-transparent border-2 border-accent-blue/50 z-20 animate-pulse-glow" />
                     )}
-                    <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background/90 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background via-background/80 to-transparent z-10" />
                   </div>
                   
                   {/* Content Section */}
-                  <div className="flex flex-1 flex-col justify-between p-2 sm:p-5 lg:p-6 min-w-0">
-                    <div className="space-y-2.5 sm:space-y-4 min-w-0">
-                      <div className="space-y-1.5 sm:space-y-2 min-w-0">
-                        <h4 className="text-base sm:text-xl lg:text-2xl font-bold text-foreground group-hover:text-primary transition-colors leading-tight line-clamp-2 break-words">
+                  <div className="flex flex-1 flex-col justify-between p-4 sm:p-6 lg:p-7 min-w-0 bg-gradient-to-b from-background to-muted/20">
+                    <div className="space-y-3 sm:space-y-4 min-w-0">
+                      <div className="space-y-2 sm:space-y-3 min-w-0">
+                        <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground group-hover:text-accent-blue transition-all duration-300 leading-tight line-clamp-2 break-words bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text">
                           {tour.name}
                         </h4>
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm">
-                          <div className="flex items-center gap-1.5 flex-shrink-0">
-                            <Star className="h-3.5 w-3.5 sm:h-5 sm:w-5 fill-primary text-primary flex-shrink-0" />
+                        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+                          <div className="flex items-center gap-1.5 flex-shrink-0 px-2 py-1 rounded-lg bg-amber/10 border border-amber/20">
+                            <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4 fill-amber-500 text-amber-500 flex-shrink-0" />
                             <span className="font-bold text-foreground">{tour.rating}</span>
-                            <span className="text-muted-foreground">({tour.reviews})</span>
+                            <span className="text-muted-foreground text-xs">({tour.reviews})</span>
                           </div>
-                          <div className="flex items-center gap-1.5 text-muted-foreground flex-shrink-0">
-                            <Clock className="h-3.5 w-3.5 sm:h-5 sm:w-5 flex-shrink-0" />
+                          <div className="flex items-center gap-1.5 text-muted-foreground flex-shrink-0 px-2 py-1 rounded-lg bg-muted/50">
+                            <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
                             <span className="font-medium text-xs sm:text-sm">{tour.duration}</span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0">
-                          <MapPin className="h-3.5 w-3.5 sm:h-5 sm:w-5 flex-shrink-0" />
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground min-w-0 px-2 py-1 rounded-lg bg-muted/30">
+                          <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 text-accent-blue" />
                           <span className="font-medium truncate">{tour.location}</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-lg sm:rounded-xl bg-success/10 border border-success/20 min-w-0">
-                        <CheckCircle2 className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-success flex-shrink-0" />
+                      <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-emerald/10 via-emerald/5 to-transparent border border-emerald/20 min-w-0 backdrop-blur-sm">
+                        <div className="p-1.5 rounded-lg bg-emerald/20">
+                          <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 flex-shrink-0" />
+                        </div>
                         <span className="text-xs sm:text-sm font-medium text-foreground line-clamp-1 min-w-0">{tour.cancellation}</span>
                       </div>
                     </div>
 
-                    <div className="space-y-2.5 sm:space-y-4 pt-3 sm:pt-5 border-t border-border/50 mt-2.5 sm:mt-4 min-w-0">
+                    <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-5 border-t border-border/30 mt-3 sm:mt-4 min-w-0">
                       <div className="flex items-center justify-between gap-2 min-w-0">
-                        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
-                          <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 flex-shrink-0">
-                            <TrendingUp className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-primary" />
+                        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 px-2 py-1.5 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
+                          <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20 flex-shrink-0">
+                            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-blue" />
                           </div>
                           <p className="text-xs sm:text-sm text-muted-foreground truncate">
                             <span className="font-bold text-foreground">{tour.suppliers}</span> supplier{tour.suppliers > 1 ? "s" : ""}
                           </p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                          <p className="text-xl sm:text-3xl lg:text-4xl font-bold text-primary">${tour.price}</p>
+                          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-accent-blue to-accent-indigo bg-clip-text text-transparent">${tour.price}</p>
                           <p className="text-[10px] sm:text-xs text-muted-foreground font-semibold">per person</p>
                         </div>
                       </div>
                       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                        <Button variant="outline" size="sm" className="h-8 sm:h-10 flex-1 text-xs sm:text-sm">
+                        <Button variant="outline" size="sm" className="h-9 sm:h-11 flex-1 text-xs sm:text-sm border-border/50 hover:border-accent-blue/50 hover:bg-accent-blue/5 transition-all duration-300">
                           View Details
                         </Button>
                         <Button 
                           size="sm" 
-                          className="h-8 sm:h-10 flex-1 sm:flex-none sm:min-w-[120px] font-bold text-xs sm:text-sm"
+                          className={cn(
+                            "h-9 sm:h-11 flex-1 sm:flex-none sm:min-w-[130px] font-bold text-xs sm:text-sm transition-all duration-300",
+                            isActive
+                              ? "bg-gradient-to-r from-accent-blue to-accent-indigo shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40"
+                              : "bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-md hover:shadow-lg"
+                          )}
                           onClick={() => handleSelectTour(tour.id)}
                         >
                           {isActive ? "✓ Selected" : "Select Tour"}

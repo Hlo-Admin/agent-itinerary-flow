@@ -38,16 +38,18 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-10 w-full min-w-0 max-w-full overflow-hidden">
+    <div className="space-y-6 sm:space-y-10 w-full min-w-0 max-w-full overflow-hidden animate-fade-in">
       <div className="w-full min-w-0">
-        <h3 className="text-xl sm:text-3xl font-semibold text-foreground tracking-tight mb-1 sm:mb-2">Find Experiences</h3>
+        <h3 className="text-xl sm:text-3xl font-bold text-foreground tracking-tight mb-1 sm:mb-2 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">Find Experiences</h3>
         <p className="text-xs sm:text-base text-muted-foreground">Search tours and activities for your clients</p>
       </div>
 
-      <Card className="p-3 sm:p-8 border border-primary/10 bg-gradient-to-br from-background to-muted/20 w-full min-w-0 max-w-full box-border overflow-hidden">
-        <div className="flex items-center gap-2 mb-4 sm:mb-6 w-full min-w-0">
-          <Sparkles className="h-5 w-5 text-primary flex-shrink-0" />
-          <h4 className="text-base sm:text-lg font-semibold text-foreground">Search Criteria</h4>
+      <Card className="p-4 sm:p-8 border border-border/40 bg-gradient-to-br from-background via-background to-accent-blue/5 w-full min-w-0 max-w-full box-border overflow-hidden shadow-xl animate-scale-in">
+        <div className="flex items-center gap-3 mb-5 sm:mb-6 w-full min-w-0">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+            <Sparkles className="h-5 w-5 text-accent-blue flex-shrink-0" />
+          </div>
+          <h4 className="text-base sm:text-lg font-bold text-foreground">Search Criteria</h4>
         </div>
         <div className="grid gap-3 sm:gap-6 md:grid-cols-3 w-full min-w-0 max-w-full">
           <div className="space-y-2 sm:space-y-3 w-full min-w-0">
@@ -93,35 +95,41 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
         </div>
       </Card>
 
-      <div className="w-full min-w-0 overflow-hidden">
-        <div className="flex items-center gap-2 mb-4 sm:mb-6 w-full min-w-0">
-          <Sparkles className="h-4 w-4 text-primary flex-shrink-0" />
-          <h4 className="text-sm font-semibold uppercase tracking-wider text-foreground">Quick Filters</h4>
+      <div className="w-full min-w-0 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="flex items-center gap-3 mb-5 sm:mb-6 w-full min-w-0">
+          <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
+            <Sparkles className="h-4 w-4 text-accent-purple flex-shrink-0" />
+          </div>
+          <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">Quick Filters</h4>
         </div>
-        <div className="grid grid-cols-2 gap-1.5 sm:gap-4 md:grid-cols-3 lg:grid-cols-6 w-full min-w-0 max-w-full">
-          {categories.map((category) => {
+        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-6 w-full min-w-0 max-w-full">
+          {categories.map((category, index) => {
             const Icon = category.icon;
             const isSelected = selectedCategories.includes(category.name);
-            const colorClasses: Record<string, { border: string; bg: string; text: string }> = {
+            const colorClasses: Record<string, { border: string; bg: string; text: string; gradient: string }> = {
               "accent-cyan": {
-                border: "border-accent-cyan",
-                bg: "bg-accent-cyan/10",
+                border: "border-accent-cyan/40",
+                bg: "bg-gradient-to-br from-accent-cyan/10 to-accent-teal/10",
                 text: "text-accent-cyan",
+                gradient: "from-accent-cyan/90 to-accent-teal/90",
               },
               "accent-blue": {
-                border: "border-accent-blue",
-                bg: "bg-accent-blue/10",
+                border: "border-accent-blue/40",
+                bg: "bg-gradient-to-br from-accent-blue/10 to-accent-indigo/10",
                 text: "text-accent-blue",
+                gradient: "from-accent-blue/90 to-accent-indigo/90",
               },
               "accent-teal": {
-                border: "border-accent-teal",
-                bg: "bg-accent-teal/10",
+                border: "border-accent-teal/40",
+                bg: "bg-gradient-to-br from-accent-teal/10 to-accent-emerald/10",
                 text: "text-accent-teal",
+                gradient: "from-accent-teal/90 to-accent-emerald/90",
               },
               "accent-purple": {
-                border: "border-accent-purple",
-                bg: "bg-accent-purple/10",
+                border: "border-accent-purple/40",
+                bg: "bg-gradient-to-br from-accent-purple/10 to-accent-pink/10",
                 text: "text-accent-purple",
+                gradient: "from-accent-purple/90 to-accent-pink/90",
               },
             };
             const colorClass = colorClasses[category.color] || colorClasses["accent-blue"];
@@ -131,30 +139,31 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
                 key={category.name}
                 type="button"
                 className={cn(
-                  "group relative flex flex-col items-center justify-center gap-1 sm:gap-3 rounded-lg sm:rounded-xl border bg-background p-1.5 sm:p-5 text-[10px] sm:text-sm font-semibold text-foreground transition-all duration-300 sm:hover:scale-105 sm:hover:shadow-lg w-full min-w-0 max-w-full box-border overflow-hidden",
+                  "group relative flex flex-col items-center justify-center gap-1.5 sm:gap-3 rounded-xl sm:rounded-2xl border-2 bg-background p-2.5 sm:p-5 text-[10px] sm:text-sm font-semibold text-foreground transition-all duration-500 sm:hover:scale-105 sm:hover:shadow-xl w-full min-w-0 max-w-full box-border overflow-hidden animate-scale-in",
                   isSelected 
-                    ? `${colorClass.border} ${colorClass.bg} shadow-md border-2` 
-                    : "border-border sm:hover:border-primary/40"
+                    ? `${colorClass.border} ${colorClass.bg} shadow-lg ring-2 ring-${category.color}/20` 
+                    : "border-border/40 sm:hover:border-accent-blue/40 sm:hover:bg-gradient-to-br sm:hover:from-accent-blue/5 sm:hover:to-accent-indigo/5"
                 )}
+                style={{ animationDelay: `${index * 50}ms` }}
                 onClick={() => toggleCategory(category.name)}
               >
                 <div className={cn(
-                  "p-2 sm:p-3 rounded-lg transition-colors flex-shrink-0",
+                  "p-2 sm:p-3 rounded-xl transition-all duration-300 flex-shrink-0 group-hover:scale-110",
                   isSelected 
-                    ? `${colorClass.bg.replace('/10', '/20')}` 
-                    : "bg-muted/50 group-hover:bg-primary/10"
+                    ? `bg-gradient-to-br ${colorClass.gradient} shadow-md` 
+                    : "bg-gradient-to-br from-muted/60 to-muted/40 group-hover:from-accent-blue/20 group-hover:to-accent-indigo/20"
                 )}>
                   <Icon className={cn(
-                    "h-4 w-4 sm:h-5 sm:w-5 transition-colors",
+                    "h-4 w-4 sm:h-5 sm:w-5 transition-all duration-300",
                     isSelected 
-                      ? colorClass.text
-                      : "text-muted-foreground group-hover:text-primary"
+                      ? "text-white drop-shadow-sm"
+                      : "text-muted-foreground group-hover:text-accent-blue"
                   )} />
                 </div>
-                <span className="text-[10px] sm:text-xs text-center line-clamp-2">{category.name}</span>
+                <span className="text-[10px] sm:text-xs text-center line-clamp-2 font-medium">{category.name}</span>
                 {isSelected && (
-                  <div className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-primary flex items-center justify-center">
-                    <span className="text-[8px] sm:text-[10px] text-primary-foreground font-bold">✓</span>
+                  <div className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-gradient-to-br from-accent-blue to-accent-indigo flex items-center justify-center shadow-lg ring-2 ring-white animate-pulse-glow">
+                    <span className="text-[9px] sm:text-[10px] text-white font-bold">✓</span>
                   </div>
                 )}
               </button>
@@ -163,8 +172,12 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
         </div>
       </div>
 
-      <div className="flex justify-end pt-3 sm:pt-4 w-full min-w-0">
-        <Button onClick={handleSearch} className="gap-2 h-10 sm:h-12 px-4 sm:px-8 text-sm sm:text-base font-semibold w-full sm:w-auto min-w-0 box-border" size="lg">
+      <div className="flex justify-end pt-3 sm:pt-4 w-full min-w-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
+        <Button 
+          onClick={handleSearch} 
+          className="gap-2 h-11 sm:h-12 px-6 sm:px-8 text-sm sm:text-base font-bold w-full sm:w-auto min-w-0 box-border shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40"
+          size="lg"
+        >
           <Search className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
           <span className="truncate">Search Experiences</span>
         </Button>
