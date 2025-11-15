@@ -7,29 +7,68 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, Shield, Bell, CreditCard, Building2, User } from "lucide-react";
 
 const Settings = () => {
   return (
-    <div className="space-y-8">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-semibold text-foreground tracking-tight">Settings</h1>
-        <p className="text-muted-foreground text-sm">Manage your account and preferences</p>
+    <div className="space-y-6 sm:space-y-8 animate-fade-in">
+      <div className="space-y-1 sm:space-y-2">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">Settings</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">Manage your account and preferences</p>
       </div>
 
       <Tabs defaultValue="agency" className="space-y-6">
-        <TabsList>
-          <TabsTrigger value="agency">Agency</TabsTrigger>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="payment">Payment</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-12 bg-gradient-to-r from-muted/80 via-muted/60 to-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
+          <TabsTrigger 
+            value="agency" 
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-blue data-[state=active]:to-accent-indigo data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-semibold transition-all duration-300 rounded-lg"
+          >
+            <Building2 className="h-4 w-4 mr-2 hidden sm:inline" />
+            Agency
+          </TabsTrigger>
+          <TabsTrigger 
+            value="account"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-purple data-[state=active]:to-accent-pink data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-purple/30 font-semibold transition-all duration-300 rounded-lg"
+          >
+            <User className="h-4 w-4 mr-2 hidden sm:inline" />
+            Account
+          </TabsTrigger>
+          <TabsTrigger 
+            value="notifications"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
+          >
+            <Bell className="h-4 w-4 mr-2 hidden sm:inline" />
+            Notifications
+          </TabsTrigger>
+          <TabsTrigger 
+            value="payment"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-amber data-[state=active]:to-accent-rose data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-amber/30 font-semibold transition-all duration-300 rounded-lg"
+          >
+            <CreditCard className="h-4 w-4 mr-2 hidden sm:inline" />
+            Payment
+          </TabsTrigger>
+          <TabsTrigger 
+            value="security"
+            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-cyan data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-cyan/30 font-semibold transition-all duration-300 rounded-lg"
+          >
+            <Shield className="h-4 w-4 mr-2 hidden sm:inline" />
+            Security
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="agency" className="space-y-6">
-          <Card>
+        <TabsContent value="agency" className="space-y-6 animate-fade-in">
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Agency Information</CardTitle>
-              <CardDescription>Update your travel agency details</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                  <Building2 className="h-5 w-5 text-accent-blue" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Agency Information</CardTitle>
+                  <CardDescription>Update your travel agency details</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -66,14 +105,21 @@ const Settings = () => {
                 <Label htmlFor="address">Business Address</Label>
                 <Textarea id="address" placeholder="Street address, City, State, ZIP" rows={3} />
               </div>
-              <Button>Save Changes</Button>
+              <Button className="bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30">Save Changes</Button>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Business Details</CardTitle>
-              <CardDescription>Additional business information</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
+                  <Sparkles className="h-5 w-5 text-accent-purple" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Business Details</CardTitle>
+                  <CardDescription>Additional business information</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -110,16 +156,23 @@ const Settings = () => {
                 <Label htmlFor="description">Agency Description</Label>
                 <Textarea id="description" placeholder="Brief description of your agency" rows={4} />
               </div>
-              <Button>Save Changes</Button>
+              <Button className="bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30">Save Changes</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="account" className="space-y-6">
-          <Card>
+        <TabsContent value="account" className="space-y-6 animate-fade-in">
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>Update your personal account details</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
+                  <User className="h-5 w-5 text-accent-purple" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Profile Information</CardTitle>
+                  <CardDescription>Update your personal account details</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -140,14 +193,21 @@ const Settings = () => {
                 <Label htmlFor="account-phone">Phone Number</Label>
                 <Input id="account-phone" placeholder="+1 (555) 000-0000" />
               </div>
-              <Button>Save Changes</Button>
+              <Button className="bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30">Save Changes</Button>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Change Password</CardTitle>
-              <CardDescription>Update your account password</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-accent-teal/20">
+                  <Shield className="h-5 w-5 text-accent-cyan" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Change Password</CardTitle>
+                  <CardDescription>Update your account password</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -162,47 +222,54 @@ const Settings = () => {
                 <Label htmlFor="confirm-password">Confirm New Password</Label>
                 <Input id="confirm-password" type="password" />
               </div>
-              <Button>Update Password</Button>
+              <Button className="bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30">Update Password</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="notifications" className="space-y-6">
-          <Card>
+        <TabsContent value="notifications" className="space-y-6 animate-fade-in">
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Email Notifications</CardTitle>
-              <CardDescription>Configure email notification preferences</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-emerald/20 to-accent-teal/20">
+                  <Bell className="h-5 w-5 text-accent-emerald" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Email Notifications</CardTitle>
+                  <CardDescription>Configure email notification preferences</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-emerald/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">New Booking Alerts</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Receive email when a new booking is created</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-emerald/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Payment Alerts</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Get notified when payments are received</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-emerald/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Booking Reminders</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Reminders for upcoming travel dates</p>
                 </div>
                 <Switch />
               </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-emerald/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Commission Updates</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Notifications about commission payments</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-emerald/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">System Updates</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Important system announcements and updates</p>
@@ -213,11 +280,18 @@ const Settings = () => {
           </Card>
         </TabsContent>
 
-        <TabsContent value="payment" className="space-y-6">
-          <Card>
+        <TabsContent value="payment" className="space-y-6 animate-fade-in">
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Payment Settings</CardTitle>
-              <CardDescription>Configure payment methods and commission rates</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-amber/20 to-accent-rose/20">
+                  <CreditCard className="h-5 w-5 text-accent-amber" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Payment Settings</CardTitle>
+                  <CardDescription>Configure payment methods and commission rates</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -247,61 +321,82 @@ const Settings = () => {
                 <Label htmlFor="service-fee">Service Fee (%)</Label>
                 <Input id="service-fee" type="number" placeholder="0" defaultValue="2.5" />
               </div>
-              <Button>Update Settings</Button>
+              <Button className="bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30">Update Settings</Button>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Credit Limit</CardTitle>
-              <CardDescription>Manage your agent credit limit</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-emerald/20 to-accent-teal/20">
+                  <CreditCard className="h-5 w-5 text-accent-emerald" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Credit Limit</CardTitle>
+                  <CardDescription>Manage your agent credit limit</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="credit-limit">Current Credit Limit</Label>
                 <Input id="credit-limit" type="number" placeholder="50000" defaultValue="50000" />
               </div>
-              <div className="p-4 rounded-lg bg-muted/50">
-                <p className="text-sm text-muted-foreground mb-2">Available Credit</p>
-                <p className="text-2xl font-semibold text-success">$17,500.00</p>
+              <div className="p-5 rounded-xl bg-gradient-to-br from-emerald/10 to-emerald/5 border border-emerald/20">
+                <p className="text-sm text-muted-foreground mb-2 font-medium">Available Credit</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">$17,500.00</p>
               </div>
-              <Button variant="outline">Request Credit Increase</Button>
+              <Button variant="outline" className="border-accent-blue/50 hover:bg-accent-blue/5 hover:border-accent-blue">Request Credit Increase</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="security" className="space-y-6">
-          <Card>
+        <TabsContent value="security" className="space-y-6 animate-fade-in">
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Two-Factor Authentication</CardTitle>
-              <CardDescription>Add an extra layer of security to your account</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-cyan/20 to-accent-teal/20">
+                  <Shield className="h-5 w-5 text-accent-cyan" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Two-Factor Authentication</CardTitle>
+                  <CardDescription>Add an extra layer of security to your account</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-cyan/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Enable 2FA</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Require a verification code in addition to your password</p>
                 </div>
                 <Switch />
               </div>
-              <Button variant="outline">Setup Authenticator App</Button>
+              <Button variant="outline" className="border-accent-cyan/50 hover:bg-accent-cyan/5 hover:border-accent-cyan">Setup Authenticator App</Button>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
             <CardHeader>
-              <CardTitle>Active Sessions</CardTitle>
-              <CardDescription>Manage your active login sessions</CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-gradient-to-br from-accent-indigo/20 to-accent-purple/20">
+                  <Shield className="h-5 w-5 text-accent-indigo" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-bold">Active Sessions</CardTitle>
+                  <CardDescription>Manage your active login sessions</CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-indigo/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Current Session</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Windows • Chrome • New York, USA</p>
                 </div>
-                <Badge variant="default">Active</Badge>
+                <Badge className="bg-gradient-to-r from-accent-blue to-accent-indigo text-white">Active</Badge>
               </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-indigo/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Mobile Device</p>
                   <p className="text-xs text-muted-foreground mt-0.5">iOS • Safari • San Francisco, USA</p>

@@ -31,8 +31,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </header>
-          <main className="flex-1 overflow-hidden w-full min-w-0 max-w-full">
-            <div className="w-full h-full max-w-full mx-auto animate-fade-in min-w-0 box-border">
+          <main className="flex-1 overflow-y-auto w-full min-w-0 max-w-full">
+            <div className="w-full max-w-full mx-auto p-4 sm:p-6 lg:p-8 animate-fade-in min-w-0 box-border">
               {children}
             </div>
           </main>
