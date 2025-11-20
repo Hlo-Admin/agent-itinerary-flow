@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Plus, Trash2, Upload } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 interface TravelerInfoFormProps {
   onNext: (data: any) => void;
@@ -120,20 +120,6 @@ const TravelerInfoForm = ({ onNext }: TravelerInfoFormProps) => {
               </div>
             </Card>
           ))}
-        </div>
-      </div>
-
-      <div className="space-y-4 border-t border-border pt-6">
-        <div className="space-y-1">
-          <h3 className="text-lg font-semibold text-foreground">Discount documents (optional)</h3>
-          <p className="text-sm text-muted-foreground">
-            Upload student ID, senior citizen, or military documents for potential discounts
-          </p>
-        </div>
-        <div className="flex cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-border p-6 text-center transition-colors hover:border-primary">
-          <Upload className="mb-2 h-6 w-6 text-muted-foreground" />
-          <p className="text-sm font-medium text-foreground">Click to upload or drag and drop</p>
-          <p className="mt-1 text-xs text-muted-foreground">PDF, JPG, PNG up to 10MB</p>
         </div>
       </div>
 

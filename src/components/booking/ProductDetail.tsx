@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, Clock, MapPin, Users, Calendar, Upload, Plus, Minus, CheckCircle2, Sparkles } from "lucide-react";
+import { Star, Clock, MapPin, Users, Calendar, Plus, Minus, CheckCircle2, Sparkles, Badge as BadgeIcon, Info } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ProductDetailProps {
   onNext: (data: any) => void;
@@ -13,12 +14,50 @@ interface ProductDetailProps {
   tourData: any;
 }
 
+const mockSuppliers = [
+  {
+    id: 1,
+    name: "TourPro Adventures",
+    rating: 4.9,
+    reviews: 1243,
+    adultPrice: 45,
+    childPrice: 30,
+    commission: 15,
+    cancellationPolicy: "Free cancellation up to 24 hours",
+    instantConfirmation: true,
+    verified: true,
+  },
+  {
+    id: 2,
+    name: "Local Experiences Co",
+    rating: 4.7,
+    reviews: 876,
+    adultPrice: 42,
+    childPrice: 28,
+    commission: 12,
+    cancellationPolicy: "Free cancellation up to 48 hours",
+    instantConfirmation: false,
+    verified: true,
+  },
+  {
+    id: 3,
+    name: "Heritage Tours Ltd",
+    rating: 4.8,
+    reviews: 2103,
+    adultPrice: 48,
+    childPrice: 32,
+    commission: 18,
+    cancellationPolicy: "Free cancellation up to 72 hours",
+    instantConfirmation: true,
+    verified: true,
+  },
+];
+
 const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [adultTickets, setAdultTickets] = useState(2);
   const [childTickets, setChildTickets] = useState(0);
-  const [seniorTickets, setSeniorTickets] = useState(0);
 
   const tour = tourData?.tour || {
     name: "Historic Walking Tour",
@@ -29,20 +68,14 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     category: "History",
   };
 
-  const adultPrice = 45;
-  const childPrice = 30;
-  const seniorPrice = 40;
-
-  const totalTickets = adultTickets + childTickets + seniorTickets;
-  const totalPrice = adultTickets * adultPrice + childTickets * childPrice + seniorTickets * seniorPrice;
+  const totalTickets = adultTickets + childTickets;
 
   const handleContinue = () => {
     onNext({
       tour,
       selectedDate,
       selectedTime,
-      tickets: { adult: adultTickets, child: childTickets, senior: seniorTickets },
-      totalPrice,
+      tickets: { adult: adultTickets, child: childTickets },
     });
   };
 
@@ -74,8 +107,14 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
 
       <div className="grid gap-6 sm:gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6 animate-slide-in-right">
-          <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 h-14 bg-gradient-to-r from-muted/80 via-muted/60 to-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
+          <Tabs defaultValue="pricing" className="w-full">
+            <TabsList className="grid w-full grid-cols-4 h-14 bg-gradient-to-r from-muted/80 via-muted/60 to-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
+              <TabsTrigger 
+                value="pricing" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
+              >
+                Pricing
+              </TabsTrigger>
               <TabsTrigger 
                 value="overview" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-blue data-[state=active]:to-accent-indigo data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-semibold transition-all duration-300 rounded-lg"
@@ -95,6 +134,132 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 What's Included
               </TabsTrigger>
             </TabsList>
+            
+            <TabsContent value="pricing" className="mt-6 space-y-4 animate-fade-in">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2 rounded-xl bg-gradient-to-br from-accent-emerald/20 to-accent-teal/20">
+                    <BadgeIcon className="h-5 w-5 text-accent-emerald" />
+                  </div>
+                  <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Compare Supplier Prices</h4>
+                </div>
+                <div className="space-y-4">
+                  {mockSuppliers.map((supplier, index) => {
+                    const adultTotal = supplier.adultPrice * adultTickets;
+                    const childTotal = supplier.childPrice * childTickets;
+                    const grandTotal = adultTotal + childTotal;
+                    const agentCommission = (grandTotal * supplier.commission) / 100;
+
+                    return (
+                      <Card 
+                        key={supplier.id} 
+                        className={cn(
+                          "p-6 border transition-shadow hover:shadow-md",
+                          "border-border/40 shadow-lg bg-gradient-to-br from-background to-muted/10"
+                        )}
+                      >
+                        <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                          <div className="flex-1">
+                            <div className="mb-4 flex flex-wrap items-center gap-3">
+                              <h5 className="text-lg font-semibold text-foreground">{supplier.name}</h5>
+                              {supplier.verified && (
+                                <Badge variant="secondary" className="gap-1">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  Verified
+                                </Badge>
+                              )}
+                            </div>
+
+                            <div className="grid gap-4 md:grid-cols-4 mb-4">
+                              <div>
+                                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Rating</p>
+                                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                  <Star className="h-4 w-4 text-primary fill-primary" />
+                                  <span className="font-semibold text-foreground">{supplier.rating}</span>
+                                  <span>({supplier.reviews})</span>
+                                </div>
+                              </div>
+
+                              <div>
+                                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Price per person</p>
+                                <div className="space-y-1">
+                                  {adultTickets > 0 && (
+                                    <p className="text-sm font-semibold text-foreground">Adult: ${supplier.adultPrice}</p>
+                                  )}
+                                  {childTickets > 0 && (
+                                    <p className="text-sm font-semibold text-foreground">Child: ${supplier.childPrice}</p>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div>
+                                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Your commission</p>
+                                <p className="text-sm font-semibold text-success">
+                                  {supplier.commission}% (${agentCommission.toFixed(2)})
+                                </p>
+                              </div>
+
+                              <div>
+                                <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Pax breakdown</p>
+                                <div className="space-y-1">
+                                  {adultTickets > 0 && (
+                                    <p className="text-xs text-muted-foreground">Adult: {adultTickets} × ${supplier.adultPrice}</p>
+                                  )}
+                                  {childTickets > 0 && (
+                                    <p className="text-xs text-muted-foreground">Child: {childTickets} × ${supplier.childPrice}</p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-2">
+                                {supplier.instantConfirmation ? (
+                                  <CheckCircle2 className="h-4 w-4 text-success" />
+                                ) : (
+                                  <Clock className="h-4 w-4 text-muted-foreground" />
+                                )}
+                                <span>
+                                  {supplier.instantConfirmation ? "Instant" : "Manual"} confirmation
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Info className="h-4 w-4 text-primary" />
+                                <span>{supplier.cancellationPolicy}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="text-left md:text-right space-y-2">
+                            <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Total price</p>
+                            <p className="text-2xl font-semibold text-primary">${grandTotal.toFixed(2)}</p>
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              for {totalTickets} ticket{totalTickets > 1 ? "s" : ""}
+                            </p>
+                            <Button 
+                              className="w-full md:w-auto mt-4 h-11 font-semibold bg-gradient-to-r from-accent-emerald to-accent-teal hover:from-accent-emerald/90 hover:to-accent-teal/90 shadow-md hover:shadow-lg"
+                              onClick={() => {
+                                onNext({
+                                  tour,
+                                  selectedDate,
+                                  selectedTime,
+                                  tickets: { adult: adultTickets, child: childTickets },
+                                  supplier,
+                                  totalPrice: grandTotal,
+                                });
+                              }}
+                              disabled={!selectedDate || !selectedTime || totalTickets === 0}
+                            >
+                              Continue
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            </TabsContent>
             
             <TabsContent value="overview" className="mt-6 space-y-4 animate-fade-in">
               <Card className="overflow-hidden border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/20">
@@ -238,14 +403,12 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
             
             <div className="space-y-3">
               {[
-                { label: "Adult", price: adultPrice, count: adultTickets, setCount: setAdultTickets },
-                { label: "Child (5-12)", price: childPrice, count: childTickets, setCount: setChildTickets },
-                { label: "Senior (65+)", price: seniorPrice, count: seniorTickets, setCount: setSeniorTickets },
+                { label: "Adult", count: adultTickets, setCount: setAdultTickets },
+                { label: "Child (5-12)", count: childTickets, setCount: setChildTickets },
               ].map((ticket) => (
                 <div key={ticket.label} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                   <div>
                     <p className="font-semibold text-foreground text-sm">{ticket.label}</p>
-                    <p className="text-xs text-muted-foreground">${ticket.price} each</p>
                   </div>
                   <div className="flex items-center gap-3">
                     <Button
@@ -276,18 +439,6 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               <span className="text-muted-foreground">Total Tickets</span>
               <span className="font-semibold text-foreground">{totalTickets}</span>
             </div>
-            <div className="flex justify-between items-center pt-2 border-t border-border">
-              <span className="text-base font-semibold text-foreground">Total Price</span>
-              <span className="text-3xl font-bold text-primary">${totalPrice}</span>
-            </div>
-          </div>
-
-          <div className="space-y-2 pt-2">
-            <Label className="text-xs font-medium text-muted-foreground">Discount Documents (Optional)</Label>
-            <div className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-border p-6 text-center transition-all hover:border-primary hover:bg-primary/5">
-              <Upload className="mb-2 h-6 w-6 text-muted-foreground" />
-              <p className="text-xs font-medium text-foreground">Upload student or senior ID</p>
-            </div>
           </div>
 
           <Button
@@ -296,7 +447,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
             className="w-full h-12 text-base font-semibold"
             size="lg"
           >
-            Compare Suppliers
+            View Pricing Options
           </Button>
         </Card>
       </div>

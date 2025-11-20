@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import SearchExperiences from "@/components/booking/SearchExperiences";
 import SearchResults from "@/components/booking/SearchResults";
 import ProductDetail from "@/components/booking/ProductDetail";
-import SupplierComparison from "@/components/booking/SupplierComparison";
 import TravelerInfoForm from "@/components/booking/TravelerInfoForm";
 import PriceSummary from "@/components/booking/PriceSummary";
 import PaymentOptions from "@/components/booking/PaymentOptions";
@@ -15,7 +14,7 @@ import VoucherView from "@/components/booking/VoucherView";
 import EmailTemplate from "@/components/booking/EmailTemplate";
 import AIChatbot from "@/components/booking/AIChatbot";
 
-type BookingStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+type BookingStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 const Bookings = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>(1);
@@ -26,21 +25,20 @@ const Bookings = () => {
     { number: 1, title: "Search" },
     { number: 2, title: "Results" },
     { number: 3, title: "Details" },
-    { number: 4, title: "Compare" },
-    { number: 5, title: "Travelers" },
-    { number: 6, title: "Payment" },
-    { number: 7, title: "Confirm" },
-    { number: 8, title: "Voucher" },
-    { number: 9, title: "Email" },
+    { number: 4, title: "Travelers" },
+    { number: 5, title: "Payment" },
+    { number: 6, title: "Confirm" },
+    { number: 7, title: "Voucher" },
+    { number: 8, title: "Email" },
   ];
 
-  const progress = (currentStep / 9) * 100;
+  const progress = (currentStep / 8) * 100;
 
   const handleNext = (data?: any) => {
     if (data) {
       setBookingData({ ...bookingData, ...data });
     }
-    if (currentStep < 9) {
+    if (currentStep < 8) {
       setCurrentStep((prev) => (prev + 1) as BookingStep);
     }
   };
@@ -144,12 +142,11 @@ const Bookings = () => {
             {currentStep === 1 && <SearchExperiences onNext={handleNext} />}
             {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
             {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-            {currentStep === 4 && <SupplierComparison onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-            {currentStep === 5 && <TravelerInfoForm onNext={handleNext} />}
-            {currentStep === 6 && <PriceSummary onNext={handleNext} onBack={handleBack} />}
-            {currentStep === 7 && <PaymentOptions onNext={handleNext} onBack={handleBack} />}
-            {currentStep === 8 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
-            {currentStep === 9 && <EmailTemplate bookingData={bookingData} />}
+            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} />}
+            {currentStep === 5 && <PriceSummary onNext={handleNext} onBack={handleBack} />}
+            {currentStep === 6 && <PaymentOptions onNext={handleNext} onBack={handleBack} />}
+            {currentStep === 7 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
+            {currentStep === 8 && <EmailTemplate bookingData={bookingData} />}
           </div>
         </div>
       </Card>

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Search, MapPin, Calendar, Users, Utensils, Landmark, Compass, Building2, Mountain, Waves, Sparkles } from "lucide-react";
+import { Search, MapPin, Calendar, Utensils, Landmark, Compass, Building2, Mountain, Waves, Sparkles } from "lucide-react";
 
 interface SearchExperiencesProps {
   onNext: (data: any) => void;
@@ -22,7 +22,6 @@ const categories = [
 const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
-  const [guests, setGuests] = useState(2);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const toggleCategory = (category: string) => {
@@ -34,7 +33,7 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
   };
 
   const handleSearch = () => {
-    onNext({ destination, date, guests, categories: selectedCategories });
+    onNext({ destination, date, categories: selectedCategories });
   };
 
   return (
@@ -51,7 +50,7 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
           </div>
           <h4 className="text-base sm:text-lg font-bold text-foreground">Search Criteria</h4>
         </div>
-        <div className="grid gap-3 sm:gap-6 md:grid-cols-3 w-full min-w-0 max-w-full">
+        <div className="grid gap-3 sm:gap-6 md:grid-cols-2 w-full min-w-0 max-w-full">
           <div className="space-y-2 sm:space-y-3 w-full min-w-0">
             <Label htmlFor="destination" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
               <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
@@ -75,20 +74,6 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
-            />
-          </div>
-          <div className="space-y-2 sm:space-y-3 w-full min-w-0">
-            <Label htmlFor="guests" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
-              <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
-              Guests
-            </Label>
-            <Input
-              id="guests"
-              type="number"
-              min="1"
-              value={guests}
-              onChange={(e) => setGuests(Number(e.target.value))}
               className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
             />
           </div>

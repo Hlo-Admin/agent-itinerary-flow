@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Download, Mail, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
 
 interface VoucherViewProps {
   onNext: () => void;
@@ -24,31 +23,22 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
       </div>
 
       <Card className="p-7">
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="space-y-3.5">
-            <div>
-              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passenger Name</h4>
-              <p className="text-base font-bold text-foreground">John Doe</p>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Travel Date</h4>
-              <p className="text-base font-bold text-foreground">June 15, 2024</p>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Route</h4>
-              <p className="text-base font-bold text-foreground">New York → London</p>
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passengers</h4>
-              <p className="text-base font-bold text-foreground">2 Adults, 1 Child</p>
-            </div>
+        <div className="space-y-3.5">
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passenger Name</h4>
+            <p className="text-base font-bold text-foreground">John Doe</p>
           </div>
-
-          <div className="flex flex-col items-center justify-center gap-2">
-            <div className="rounded-xl border border-border p-3.5 shadow-sm bg-card">
-              <QRCodeSVG value={bookingRef} size={140} />
-            </div>
-            <p className="text-xs text-muted-foreground">Scan for mobile voucher</p>
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Travel Date</h4>
+            <p className="text-base font-bold text-foreground">June 15, 2024</p>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Route</h4>
+            <p className="text-base font-bold text-foreground">New York → London</p>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passengers</h4>
+            <p className="text-base font-bold text-foreground">2 Adults, 1 Child</p>
           </div>
         </div>
       </Card>
