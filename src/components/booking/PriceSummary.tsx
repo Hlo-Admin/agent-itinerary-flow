@@ -18,7 +18,6 @@ const PriceSummary = ({ onNext, onBack, bookingData }: PriceSummaryProps) => {
   const [discount, setDiscount] = useState(0);
   const [walletFlag, setWalletFlag] = useState<string>("No");
   const [walletBalance, setWalletBalance] = useState("850.00");
-  const [transactionWalletRedemption, setTransactionWalletRedemption] = useState("");
 
   // Extract booking details
   const tickets = bookingData?.tickets || { adult: 0, child: 0 };
@@ -49,46 +48,18 @@ const PriceSummary = ({ onNext, onBack, bookingData }: PriceSummaryProps) => {
   
   // Calculate wallet redemption based on balance
   const balanceValue = parseFloat(walletBalance) || 0;
-  const isBalanceAbove20 = balanceValue > 20;
-  const effectiveRedemption = walletFlag === "Yes" 
-    ? (isBalanceAbove20 
-        ? (parseFloat(transactionWalletRedemption) || 0)
-        : balanceValue)
-    : 0;
-  
-  const walletRedemption = effectiveRedemption;
-  const total = basePrice + taxes + serviceFee - discount - walletRedemption;
-  
-  // Update redemption when balance changes and balance <= 20
-  const handleWalletBalanceChange = (value: string) => {
-    setWalletBalance(value);
-    const newBalance = parseFloat(value) || 0;
-    if (walletFlag === "Yes" && newBalance <= 20) {
-      setTransactionWalletRedemption(value);
-    } else if (walletFlag === "Yes" && newBalance > 20) {
-      // Reset redemption if balance increases above 20
-      if (parseFloat(transactionWalletRedemption) > newBalance) {
-        setTransactionWalletRedemption("");
-      }
-    }
-  };
+  const balanceInteger = Math.floor(balanceValue);
+  // Calculate 33% of integer balance, rounded down to nearest 10
+  const redeemableAmount = Math.floor((balanceInteger * 0.33) / 10) * 10;
+  // Calculate bill amount before wallet redemption
+  const billAmount = basePrice + taxes + serviceFee - discount;
+  // Wallet redemption cannot exceed the bill amount
+  const walletRedemption = walletFlag === "Yes" ? Math.min(redeemableAmount, billAmount) : 0;
+  const total = billAmount - walletRedemption;
   
   // Update redemption when flag changes
   const handleWalletFlagChange = (value: string) => {
     setWalletFlag(value);
-    if (value === "Yes") {
-      const balance = parseFloat(walletBalance) || 0;
-      if (balance <= 20) {
-        setTransactionWalletRedemption(walletBalance);
-      } else {
-        // If balance > 20, keep redemption empty or current value
-        if (!transactionWalletRedemption) {
-          setTransactionWalletRedemption("");
-        }
-      }
-    } else {
-      setTransactionWalletRedemption("");
-    }
   };
 
   const applyPromo = () => {
@@ -254,40 +225,22 @@ const PriceSummary = ({ onNext, onBack, bookingData }: PriceSummaryProps) => {
             <div className="space-y-4 pt-2 border-t border-border">
               <div className="space-y-2">
                 <Label htmlFor="wallet-balance" className="text-sm font-semibold text-foreground">
-                  Wallet Balance - Cash point
+                  Available Balance
                 </Label>
-                <Input
-                  id="wallet-balance"
-                  type="number"
-                  placeholder="Enter wallet balance"
-                  value={walletBalance}
-                  onChange={(e) => handleWalletBalanceChange(e.target.value)}
-                  className="h-11 bg-muted/50"
-                  readOnly
-                  disabled
-                />
+                <div className="h-11 px-3 py-2 bg-muted/50 rounded-md border border-border flex items-center">
+                  <span className="text-sm font-semibold text-foreground">${balanceValue.toFixed(2)}</span>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="wallet-redemption" className="text-sm font-semibold text-foreground">
-                  Transaction Wallet Redemption
+                  Amount Can Be Redeemed
                 </Label>
-                <Input
-                  id="wallet-redemption"
-                  type="number"
-                  placeholder="Enter redemption amount"
-                  value={transactionWalletRedemption}
-                  onChange={(e) => setTransactionWalletRedemption(e.target.value)}
-                  className="h-11"
-                  readOnly={!isBalanceAbove20}
-                  disabled={!isBalanceAbove20}
-                  max={walletBalance ? parseFloat(walletBalance) : undefined}
-                />
-                {walletBalance && (
-                  <p className="text-xs text-muted-foreground">
-                    Available balance: ${parseFloat(walletBalance) || 0}
-                    {!isBalanceAbove20 && " (Auto-applied - balance ≤ $20)"}
-                  </p>
-                )}
+                <div className="h-11 px-3 py-2 bg-muted/50 rounded-md border border-border flex items-center">
+                  <span className="text-sm font-semibold text-foreground">${redeemableAmount.toFixed(2)}</span>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Calculated as 33% of balance (rounded down to nearest 10)
+                </p>
               </div>
             </div>
           )}
