@@ -47,51 +47,14 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
         <p className="text-xs sm:text-base text-muted-foreground">Search tours and activities for your clients</p>
       </div>
 
-      <Card className="p-4 sm:p-8 border border-border/40 bg-gradient-to-br from-background via-background to-accent-blue/5 w-full min-w-0 max-w-full box-border overflow-hidden shadow-xl animate-scale-in">
-        <div className="flex items-center gap-3 mb-5 sm:mb-6 w-full min-w-0">
-          <div className="p-2 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
-            <Sparkles className="h-5 w-5 text-accent-blue flex-shrink-0" />
-          </div>
-          <h4 className="text-base sm:text-lg font-bold text-foreground">Search Criteria</h4>
-        </div>
-        <div className="grid gap-3 sm:gap-6 md:grid-cols-2 w-full min-w-0 max-w-full">
-          <div className="space-y-2 sm:space-y-3 w-full min-w-0">
-            <Label htmlFor="destination" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
-              <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
-              Destination
-            </Label>
-            <Input
-              id="destination"
-              placeholder="Search by city or attraction"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
-            />
-          </div>
-          <div className="space-y-2 sm:space-y-3 w-full min-w-0">
-            <Label htmlFor="date" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
-              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
-              Travel Date
-            </Label>
-            <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
-            />
-          </div>
-        </div>
-      </Card>
-
-      <div className="w-full min-w-0 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
+      <div className="w-full min-w-0 overflow-hidden animate-fade-in" style={{ animationDelay: '100ms' }}>
         <div className="flex items-center gap-3 mb-5 sm:mb-6 w-full min-w-0">
           <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
             <Sparkles className="h-4 w-4 text-accent-purple flex-shrink-0" />
           </div>
           <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">Quick Filters</h4>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-5 w-full min-w-0 max-w-full">
+        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-5 w-full min-w-0 max-w-full mb-6">
           {categories.map((category, index) => {
             const Icon = category.icon;
             const isSelected = selectedCategories.includes(category.name);
@@ -178,6 +141,43 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
           })}
         </div>
       </div>
+
+      <Card className="p-4 sm:p-8 border border-border/40 bg-gradient-to-br from-background via-background to-accent-blue/5 w-full min-w-0 max-w-full box-border overflow-hidden shadow-xl animate-scale-in" style={{ animationDelay: '200ms' }}>
+        <div className="flex items-center gap-3 mb-5 sm:mb-6 w-full min-w-0">
+          <div className="p-2 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+            <Sparkles className="h-5 w-5 text-accent-blue flex-shrink-0" />
+          </div>
+          <h4 className="text-base sm:text-lg font-bold text-foreground">Search Criteria</h4>
+        </div>
+        <div className="grid gap-3 sm:gap-6 md:grid-cols-2 w-full min-w-0 max-w-full">
+          <div className="space-y-2 sm:space-y-3 w-full min-w-0">
+            <Label htmlFor="destination" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
+              <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
+              Destination
+            </Label>
+            <Input
+              id="destination"
+              placeholder="Search by city or attraction"
+              value={destination}
+              onChange={(e) => setDestination(e.target.value)}
+              className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
+            />
+          </div>
+          <div className="space-y-2 sm:space-y-3 w-full min-w-0">
+            <Label htmlFor="date" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
+              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
+              Travel Date
+            </Label>
+            <Input
+              id="date"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
+            />
+          </div>
+        </div>
+      </Card>
 
       <div className="flex justify-end pt-3 sm:pt-4 w-full min-w-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
         <Button 

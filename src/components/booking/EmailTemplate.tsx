@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 interface EmailTemplateProps {
   bookingData: any;
@@ -33,26 +34,43 @@ const EmailTemplate = ({ bookingData }: EmailTemplateProps) => {
           {/* Booking Details */}
           <div>
             <h3 className="mb-3 text-base font-semibold text-foreground">Booking details</h3>
-            <div className="space-y-2.5 rounded-xl border border-border/60 p-4">
-              <div className="flex justify-between">
-                <span className="text-xs text-muted-foreground">Booking Reference</span>
-                <span className="font-mono font-semibold text-xs text-foreground">{bookingRef}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2.5 rounded-xl border border-border/60 p-4">
+                <div className="flex justify-between">
+                  <span className="text-xs text-muted-foreground">Booking Reference</span>
+                  <span className="font-mono font-semibold text-xs text-foreground">{bookingRef}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-muted-foreground">Passenger Name</span>
+                  <span className="font-semibold text-xs text-foreground">John Doe</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-muted-foreground">Travel Date</span>
+                  <span className="font-semibold text-xs text-foreground">June 15, 2024</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-muted-foreground">Route</span>
+                  <span className="font-semibold text-xs text-foreground">New York → London</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-xs text-muted-foreground">Total Passengers</span>
+                  <span className="font-semibold text-xs text-foreground">3 (2 Adults, 1 Child)</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-muted-foreground">Passenger Name</span>
-                <span className="font-semibold text-xs text-foreground">John Doe</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-muted-foreground">Travel Date</span>
-                <span className="font-semibold text-xs text-foreground">June 15, 2024</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-muted-foreground">Route</span>
-                <span className="font-semibold text-xs text-foreground">New York → London</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-muted-foreground">Total Passengers</span>
-                <span className="font-semibold text-xs text-foreground">3 (2 Adults, 1 Child)</span>
+              <div className="flex flex-col items-center justify-center space-y-3 rounded-xl border border-border/60 p-4">
+                <div className="text-center">
+                  <h4 className="text-xs font-semibold text-muted-foreground mb-2">Ticket Number</h4>
+                  <p className="text-sm font-bold text-foreground mb-3">{bookingRef}</p>
+                </div>
+                <div className="p-3 bg-white rounded-lg border border-border/50">
+                  <QRCodeSVG
+                    value={bookingRef}
+                    size={140}
+                    level="H"
+                    includeMargin={true}
+                  />
+                </div>
+                <p className="text-[10px] text-muted-foreground text-center">Scan QR code at check-in</p>
               </div>
             </div>
           </div>

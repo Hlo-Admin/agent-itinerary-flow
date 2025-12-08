@@ -4,27 +4,92 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tag, Wallet } from "lucide-react";
+import { Tag, Wallet, Users, Building2, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface PriceSummaryProps {
   onNext: () => void;
   onBack: () => void;
+  bookingData?: any;
 }
 
-const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
+const PriceSummary = ({ onNext, onBack, bookingData }: PriceSummaryProps) => {
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
   const [walletFlag, setWalletFlag] = useState<string>("No");
-  const [walletBalance, setWalletBalance] = useState("");
+  const [walletBalance, setWalletBalance] = useState("850.00");
   const [transactionWalletRedemption, setTransactionWalletRedemption] = useState("");
 
-  const basePrice = 1200;
-  const taxes = 180;
-  const serviceFee = 50;
-  const walletRedemption = walletFlag === "Yes" && transactionWalletRedemption 
-    ? parseFloat(transactionWalletRedemption) || 0 
+  // Extract booking details
+  const tickets = bookingData?.tickets || { adult: 0, child: 0 };
+  const adultCount = tickets.adult || 0;
+  const childCount = tickets.child || 0;
+  const selectedSupplier = bookingData?.supplier;
+  const selectedTimeSlot = bookingData?.selectedTimeSlot;
+  const isPremiumTime = selectedTimeSlot?.type === "premium";
+
+  // Get prices from supplier or use defaults
+  const getAdultPrice = () => {
+    if (!selectedSupplier) return 0;
+    return isPremiumTime ? (selectedSupplier.adultPremiumPrice || selectedSupplier.adultPrice || 0) : (selectedSupplier.adultPrice || 0);
+  };
+
+  const getChildPrice = () => {
+    if (!selectedSupplier) return 0;
+    return isPremiumTime ? (selectedSupplier.childPremiumPrice || selectedSupplier.childPrice || 0) : (selectedSupplier.childPrice || 0);
+  };
+
+  const adultPrice = getAdultPrice();
+  const childPrice = getChildPrice();
+  const adultTotal = adultPrice * adultCount;
+  const childTotal = childPrice * childCount;
+  const basePrice = adultTotal + childTotal || 1200;
+  const taxes = Math.round(basePrice * 0.15) || 180;
+  const serviceFee = Math.round(basePrice * 0.04) || 50;
+  
+  // Calculate wallet redemption based on balance
+  const balanceValue = parseFloat(walletBalance) || 0;
+  const isBalanceAbove20 = balanceValue > 20;
+  const effectiveRedemption = walletFlag === "Yes" 
+    ? (isBalanceAbove20 
+        ? (parseFloat(transactionWalletRedemption) || 0)
+        : balanceValue)
     : 0;
+  
+  const walletRedemption = effectiveRedemption;
   const total = basePrice + taxes + serviceFee - discount - walletRedemption;
+  
+  // Update redemption when balance changes and balance <= 20
+  const handleWalletBalanceChange = (value: string) => {
+    setWalletBalance(value);
+    const newBalance = parseFloat(value) || 0;
+    if (walletFlag === "Yes" && newBalance <= 20) {
+      setTransactionWalletRedemption(value);
+    } else if (walletFlag === "Yes" && newBalance > 20) {
+      // Reset redemption if balance increases above 20
+      if (parseFloat(transactionWalletRedemption) > newBalance) {
+        setTransactionWalletRedemption("");
+      }
+    }
+  };
+  
+  // Update redemption when flag changes
+  const handleWalletFlagChange = (value: string) => {
+    setWalletFlag(value);
+    if (value === "Yes") {
+      const balance = parseFloat(walletBalance) || 0;
+      if (balance <= 20) {
+        setTransactionWalletRedemption(walletBalance);
+      } else {
+        // If balance > 20, keep redemption empty or current value
+        if (!transactionWalletRedemption) {
+          setTransactionWalletRedemption("");
+        }
+      }
+    } else {
+      setTransactionWalletRedemption("");
+    }
+  };
 
   const applyPromo = () => {
     // Simple promo code logic
@@ -39,6 +104,97 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
         <h3 className="text-2xl font-semibold text-foreground">Price summary</h3>
         <p className="text-sm text-muted-foreground">Review your booking charges</p>
       </div>
+
+      {/* Booking Details Section */}
+      {(selectedSupplier || adultCount > 0 || childCount > 0) && (
+        <Card className="p-6 border border-border/50">
+          <div className="flex items-center gap-2 mb-4 pb-4 border-b border-border">
+            <Users className="h-5 w-5 text-primary" />
+            <h4 className="text-lg font-semibold text-foreground">Booking Details</h4>
+          </div>
+          <div className="space-y-4">
+            {/* Vendor/Supplier Info */}
+            {selectedSupplier && (
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-muted-foreground" />
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Vendor</Label>
+                </div>
+                <p className="text-sm font-bold text-foreground pl-6">{selectedSupplier.name}</p>
+                {selectedTimeSlot && (
+                  <div className="flex items-center gap-2 pl-6 mt-1">
+                    <Clock className="h-3 w-3 text-muted-foreground" />
+                    <p className="text-xs font-semibold text-foreground">{selectedTimeSlot.label}</p>
+                    {isPremiumTime && (
+                      <Badge variant="secondary" className="text-[9px] px-1.5 py-0">Premium</Badge>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Pax Count */}
+            <div className="space-y-2 pt-2 border-t border-border/30">
+              <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Passenger Count</Label>
+              <div className="space-y-2 pl-2">
+                {adultCount > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Adults</span>
+                    <span className="text-base font-bold text-foreground">{adultCount}</span>
+                  </div>
+                )}
+                {childCount > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Children</span>
+                    <span className="text-base font-bold text-foreground">{childCount}</span>
+                  </div>
+                )}
+                {(adultCount > 0 || childCount > 0) && (
+                  <div className="flex justify-between items-center pt-2 border-t border-border/30">
+                    <span className="text-sm font-semibold text-foreground">Total Passengers</span>
+                    <span className="text-lg font-bold text-primary">{adultCount + childCount}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Vendor Price Breakdown */}
+            {selectedSupplier && (adultCount > 0 || childCount > 0) && (
+              <div className="space-y-2 pt-2 border-t border-border/30">
+                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Vendor Price Breakdown</Label>
+                <div className="space-y-2 pl-2">
+                  {adultCount > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">
+                        Adult {adultCount} X {adultPrice.toFixed(0)} = {adultTotal.toFixed(0)}
+                        {isPremiumTime && (
+                          <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>
+                        )}
+                      </span>
+                      <span className="text-sm font-semibold text-foreground">${adultTotal.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {childCount > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">
+                        Child {childCount} X {childPrice.toFixed(0)} = {childTotal.toFixed(0)}
+                        {isPremiumTime && (
+                          <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>
+                        )}
+                      </span>
+                      <span className="text-sm font-semibold text-foreground">${childTotal.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center pt-2 border-t border-border/30">
+                    <span className="text-sm font-semibold text-foreground">Subtotal</span>
+                    <span className="text-base font-bold text-primary">${basePrice.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </Card>
+      )}
 
       <Card className="p-6">
         <div className="space-y-3">
@@ -83,7 +239,7 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
             <Label htmlFor="wallet-flag" className="text-sm font-semibold text-foreground">
               Wallet Flag
             </Label>
-            <Select value={walletFlag} onValueChange={setWalletFlag}>
+            <Select value={walletFlag} onValueChange={handleWalletFlagChange}>
               <SelectTrigger id="wallet-flag" className="h-11">
                 <SelectValue placeholder="Select wallet flag" />
               </SelectTrigger>
@@ -105,8 +261,10 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
                   type="number"
                   placeholder="Enter wallet balance"
                   value={walletBalance}
-                  onChange={(e) => setWalletBalance(e.target.value)}
-                  className="h-11"
+                  onChange={(e) => handleWalletBalanceChange(e.target.value)}
+                  className="h-11 bg-muted/50"
+                  readOnly
+                  disabled
                 />
               </div>
               <div className="space-y-2">
@@ -120,11 +278,14 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
                   value={transactionWalletRedemption}
                   onChange={(e) => setTransactionWalletRedemption(e.target.value)}
                   className="h-11"
+                  readOnly={!isBalanceAbove20}
+                  disabled={!isBalanceAbove20}
                   max={walletBalance ? parseFloat(walletBalance) : undefined}
                 />
                 {walletBalance && (
                   <p className="text-xs text-muted-foreground">
                     Available balance: ${parseFloat(walletBalance) || 0}
+                    {!isBalanceAbove20 && " (Auto-applied - balance ≤ $20)"}
                   </p>
                 )}
               </div>

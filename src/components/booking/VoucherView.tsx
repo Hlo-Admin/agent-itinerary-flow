@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Download, Mail, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 
 interface VoucherViewProps {
   onNext: () => void;
@@ -23,22 +24,38 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
       </div>
 
       <Card className="p-7">
-        <div className="space-y-3.5">
-          <div>
-            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passenger Name</h4>
-            <p className="text-base font-bold text-foreground">John Doe</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-3.5">
+            <div>
+              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passenger Name</h4>
+              <p className="text-base font-bold text-foreground">John Doe</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Travel Date</h4>
+              <p className="text-base font-bold text-foreground">June 15, 2024</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Route</h4>
+              <p className="text-base font-bold text-foreground">New York → London</p>
+            </div>
+            <div>
+              <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passengers</h4>
+              <p className="text-base font-bold text-foreground">2 Adults, 1 Child</p>
+            </div>
           </div>
-          <div>
-            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Travel Date</h4>
-            <p className="text-base font-bold text-foreground">June 15, 2024</p>
-          </div>
-          <div>
-            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Route</h4>
-            <p className="text-base font-bold text-foreground">New York → London</p>
-          </div>
-          <div>
-            <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passengers</h4>
-            <p className="text-base font-bold text-foreground">2 Adults, 1 Child</p>
+          <div className="flex flex-col items-center justify-center space-y-3">
+            <div className="text-center">
+              <h4 className="text-xs font-semibold text-muted-foreground mb-2">Ticket Number</h4>
+              <p className="text-lg font-bold text-foreground mb-3">{bookingRef}</p>
+            </div>
+            <div className="p-4 bg-white rounded-lg border border-border/50">
+              <QRCodeSVG
+                value={bookingRef}
+                size={160}
+                level="H"
+                includeMargin={true}
+              />
+            </div>
           </div>
         </div>
       </Card>
