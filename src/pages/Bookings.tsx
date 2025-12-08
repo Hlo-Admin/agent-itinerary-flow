@@ -142,7 +142,7 @@ const Bookings = () => {
             {currentStep === 1 && <SearchExperiences onNext={handleNext} />}
             {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
             {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} />}
+            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} bookingData={bookingData} />}
             {currentStep === 5 && <PriceSummary onNext={handleNext} onBack={handleBack} />}
             {currentStep === 6 && <PaymentOptions onNext={handleNext} onBack={handleBack} />}
             {currentStep === 7 && <VoucherView onNext={handleNext} bookingData={bookingData} />}

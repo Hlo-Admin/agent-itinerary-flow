@@ -4,19 +4,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Search, MapPin, Calendar, Utensils, Landmark, Compass, Building2, Mountain, Waves, Sparkles } from "lucide-react";
+import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass } from "lucide-react";
 
 interface SearchExperiencesProps {
   onNext: (data: any) => void;
 }
 
 const categories = [
-  { name: "Food Tours", icon: Utensils, color: "accent-cyan" },
-  { name: "History", icon: Landmark, color: "accent-blue" },
-  { name: "Day Trips", icon: Compass, color: "accent-teal" },
-  { name: "Museums", icon: Building2, color: "accent-purple" },
-  { name: "Outdoor", icon: Mountain, color: "accent-teal" },
-  { name: "Water Sports", icon: Waves, color: "accent-blue" },
+  { name: "Themes & Adventure Parks", icon: Ticket, color: "accent-purple" },
+  { name: "Public & Green Parks", icon: Trees, color: "accent-emerald" },
+  { name: "Land Marks & Observation Decks", icon: Building2, color: "accent-blue" },
+  { name: "Family Entertainment + Food Shows & Malls", icon: ShoppingBag, color: "accent-cyan" },
+  { name: "Cultural + Heritage Museums", icon: BookOpen, color: "accent-indigo" },
+  { name: "Animal & Nature Parks", icon: PawPrint, color: "accent-teal" },
+  { name: "Cruises", icon: Ship, color: "accent-blue" },
+  { name: "Water Parks", icon: Waves, color: "accent-cyan" },
+  { name: "Beach & Marina Parks", icon: Umbrella, color: "accent-teal" },
+  { name: "Desert Safaris & Adventures", icon: Mountain, color: "accent-orange" },
 ];
 
 const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
@@ -87,7 +91,7 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
           </div>
           <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">Quick Filters</h4>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-6 w-full min-w-0 max-w-full">
+        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-5 w-full min-w-0 max-w-full">
           {categories.map((category, index) => {
             const Icon = category.icon;
             const isSelected = selectedCategories.includes(category.name);
@@ -115,6 +119,24 @@ const SearchExperiences = ({ onNext }: SearchExperiencesProps) => {
                 bg: "bg-gradient-to-br from-accent-purple/10 to-accent-pink/10",
                 text: "text-accent-purple",
                 gradient: "from-accent-purple/90 to-accent-pink/90",
+              },
+              "accent-emerald": {
+                border: "border-accent-emerald/40",
+                bg: "bg-gradient-to-br from-accent-emerald/10 to-accent-teal/10",
+                text: "text-accent-emerald",
+                gradient: "from-accent-emerald/90 to-accent-teal/90",
+              },
+              "accent-indigo": {
+                border: "border-accent-indigo/40",
+                bg: "bg-gradient-to-br from-accent-indigo/10 to-accent-blue/10",
+                text: "text-accent-indigo",
+                gradient: "from-accent-indigo/90 to-accent-blue/90",
+              },
+              "accent-orange": {
+                border: "border-orange-500/40",
+                bg: "bg-gradient-to-br from-orange-500/10 to-amber-500/10",
+                text: "text-orange-500",
+                gradient: "from-orange-500/90 to-amber-500/90",
               },
             };
             const colorClass = colorClasses[category.color] || colorClasses["accent-blue"];

@@ -119,12 +119,12 @@ const SupplierComparison = ({ onNext, onBack, bookingData }: SupplierComparisonP
                       <p className="text-sm font-semibold text-foreground">${supplier.price}</p>
                     </div>
 
-                    <div>
+                    {/* <div>
                       <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Your commission</p>
                       <p className="text-sm font-semibold text-success">
                         {supplier.commission}% (${agentCommission.toFixed(2)})
                       </p>
-                    </div>
+                    </div> */}
 
                     <div>
                       <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Response time</p>

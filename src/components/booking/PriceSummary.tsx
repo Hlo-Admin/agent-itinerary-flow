@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Tag } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tag, Wallet } from "lucide-react";
 
 interface PriceSummaryProps {
   onNext: () => void;
@@ -12,11 +14,17 @@ interface PriceSummaryProps {
 const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [walletFlag, setWalletFlag] = useState<string>("No");
+  const [walletBalance, setWalletBalance] = useState("");
+  const [transactionWalletRedemption, setTransactionWalletRedemption] = useState("");
 
   const basePrice = 1200;
   const taxes = 180;
   const serviceFee = 50;
-  const total = basePrice + taxes + serviceFee - discount;
+  const walletRedemption = walletFlag === "Yes" && transactionWalletRedemption 
+    ? parseFloat(transactionWalletRedemption) || 0 
+    : 0;
+  const total = basePrice + taxes + serviceFee - discount - walletRedemption;
 
   const applyPromo = () => {
     // Simple promo code logic
@@ -52,10 +60,76 @@ const PriceSummary = ({ onNext, onBack }: PriceSummaryProps) => {
               <span className="font-medium">-${discount.toFixed(2)}</span>
             </div>
           )}
+          {walletRedemption > 0 && (
+            <div className="flex items-center justify-between text-sm text-success">
+              <span>Wallet redemption</span>
+              <span className="font-medium">-${walletRedemption.toFixed(2)}</span>
+            </div>
+          )}
           <div className="flex items-center justify-between border-t border-border pt-4">
             <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
             <span className="text-2xl font-semibold text-primary">${total.toFixed(2)}</span>
           </div>
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4 pb-4 border-b border-border">
+          <Wallet className="h-5 w-5 text-primary" />
+          <h4 className="text-lg font-semibold text-foreground">Wallet Adjustment</h4>
+        </div>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="wallet-flag" className="text-sm font-semibold text-foreground">
+              Wallet Flag
+            </Label>
+            <Select value={walletFlag} onValueChange={setWalletFlag}>
+              <SelectTrigger id="wallet-flag" className="h-11">
+                <SelectValue placeholder="Select wallet flag" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Yes">Yes</SelectItem>
+                <SelectItem value="No">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {walletFlag === "Yes" && (
+            <div className="space-y-4 pt-2 border-t border-border">
+              <div className="space-y-2">
+                <Label htmlFor="wallet-balance" className="text-sm font-semibold text-foreground">
+                  Wallet Balance - Cash point
+                </Label>
+                <Input
+                  id="wallet-balance"
+                  type="number"
+                  placeholder="Enter wallet balance"
+                  value={walletBalance}
+                  onChange={(e) => setWalletBalance(e.target.value)}
+                  className="h-11"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="wallet-redemption" className="text-sm font-semibold text-foreground">
+                  Transaction Wallet Redemption
+                </Label>
+                <Input
+                  id="wallet-redemption"
+                  type="number"
+                  placeholder="Enter redemption amount"
+                  value={transactionWalletRedemption}
+                  onChange={(e) => setTransactionWalletRedemption(e.target.value)}
+                  className="h-11"
+                  max={walletBalance ? parseFloat(walletBalance) : undefined}
+                />
+                {walletBalance && (
+                  <p className="text-xs text-muted-foreground">
+                    Available balance: ${parseFloat(walletBalance) || 0}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </Card>
 

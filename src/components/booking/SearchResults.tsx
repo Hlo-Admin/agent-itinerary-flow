@@ -5,7 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, Clock, MapPin, CheckCircle2, Sparkles, TrendingUp, Filter, X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Star, Clock, MapPin, CheckCircle2, Sparkles, TrendingUp, Filter, X, Calendar, Users, DollarSign, Plus, Minus, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SearchResultsProps {
@@ -28,6 +29,7 @@ const mockTours = [
     cancellation: "Free cancellation up to 24 hours",
     suppliers: 3,
     color: "accent-blue",
+    ticketRestrictions: "both", // "adult-only", "child-only", "both"
   },
   {
     id: 2,
@@ -42,6 +44,7 @@ const mockTours = [
     cancellation: "Free cancellation up to 48 hours",
     suppliers: 5,
     color: "accent-cyan",
+    ticketRestrictions: "adult-only",
   },
   {
     id: 3,
@@ -56,6 +59,7 @@ const mockTours = [
     cancellation: "No refund",
     suppliers: 2,
     color: "accent-teal",
+    ticketRestrictions: "both",
   },
   {
     id: 4,
@@ -70,6 +74,7 @@ const mockTours = [
     cancellation: "Free cancellation up to 24 hours",
     suppliers: 4,
     color: "accent-purple",
+    ticketRestrictions: "child-only",
   },
 ];
 
@@ -79,6 +84,62 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
   const [sortBy, setSortBy] = useState("popular");
   const [selectedTour, setSelectedTour] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [showBookingPopup, setShowBookingPopup] = useState(false);
+  const [selectedTourForPopup, setSelectedTourForPopup] = useState<any>(null);
+  const [popupAdultCount, setPopupAdultCount] = useState(2);
+  const [popupChildCount, setPopupChildCount] = useState(0);
+  const [popupTimeSlot, setPopupTimeSlot] = useState("10:00 AM");
+  
+  // Mock time slots
+  const timeSlots = [
+    { id: "09:00", label: "09:00 AM", type: "normal" },
+    { id: "10:00", label: "10:00 AM", type: "normal" },
+    { id: "11:00", label: "11:00 AM", type: "premium" },
+    { id: "14:00", label: "02:00 PM", type: "normal" },
+    { id: "15:00", label: "03:00 PM", type: "premium" },
+    { id: "16:00", label: "04:00 PM", type: "normal" },
+    { id: "17:00", label: "05:00 PM", type: "premium" },
+  ];
+  
+  // Get booking details from searchData or use defaults
+  const getBookingDetails = (tour: any) => {
+    const adultCount = popupAdultCount;
+    const childCount = popupChildCount;
+    const timeSlot = popupTimeSlot;
+    const childPrice = tour.price * 0.7; // 70% of adult price
+    const totalPrice = (adultCount * tour.price) + (childCount * childPrice);
+    
+    return {
+      adultCount,
+      childCount,
+      timeSlot,
+      price: totalPrice,
+    };
+  };
+  
+  const handleOpenPopup = (tour: any) => {
+    setSelectedTourForPopup(tour);
+    const restrictions = tour.ticketRestrictions || "both";
+    const isAdultOnly = restrictions === "adult-only";
+    const isChildOnly = restrictions === "child-only";
+    
+    // Initialize with searchData or defaults, respecting restrictions
+    let adultCount = searchData?.tickets?.adult || 2;
+    let childCount = searchData?.tickets?.child || 0;
+    
+    if (isAdultOnly) {
+      adultCount = adultCount || 1;
+      childCount = 0;
+    } else if (isChildOnly) {
+      adultCount = 0;
+      childCount = childCount || 1;
+    }
+    
+    setPopupAdultCount(adultCount);
+    setPopupChildCount(childCount);
+    setPopupTimeSlot(searchData?.selectedTimeSlot || searchData?.selectedTime || "10:00 AM");
+    setShowBookingPopup(true);
+  };
 
   const filteredTours = mockTours.filter(
     (tour) => tour.price >= priceRange[0] && tour.price <= priceRange[1]
@@ -87,7 +148,26 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
   const handleSelectTour = (tourId: number) => {
     setSelectedTour(tourId);
     const tour = mockTours.find((t) => t.id === tourId);
-    onNext({ tour });
+    if (tour) {
+      handleOpenPopup(tour);
+    }
+  };
+
+  const handleConfirmBooking = () => {
+    const tour = mockTours.find((t) => t.id === selectedTour);
+    if (tour) {
+      const bookingDetails = {
+        adultCount: popupAdultCount,
+        childCount: popupChildCount,
+        timeSlot: popupTimeSlot,
+        price: getBookingDetails(tour).price,
+      };
+      onNext({ 
+        tour,
+        bookingDetails 
+      });
+      setShowBookingPopup(false);
+    }
   };
 
   const getColorClasses = (color: string) => {
@@ -156,10 +236,16 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All categories</SelectItem>
-                    <SelectItem value="history">History</SelectItem>
-                    <SelectItem value="food">Food tours</SelectItem>
-                    <SelectItem value="outdoor">Outdoor</SelectItem>
-                    <SelectItem value="museums">Museums</SelectItem>
+                    <SelectItem value="themes-adventure">Themes & Adventure Parks</SelectItem>
+                    <SelectItem value="public-green">Public & Green Parks</SelectItem>
+                    <SelectItem value="landmarks-observation">Land Marks & Observation Decks</SelectItem>
+                    <SelectItem value="family-entertainment">Family Entertainment + Food Shows & Malls</SelectItem>
+                    <SelectItem value="cultural-heritage">Cultural + Heritage Museums</SelectItem>
+                    <SelectItem value="animal-nature">Animal & Nature Parks</SelectItem>
+                    <SelectItem value="cruises">Cruises</SelectItem>
+                    <SelectItem value="water-parks">Water Parks</SelectItem>
+                    <SelectItem value="beach-marina">Beach & Marina Parks</SelectItem>
+                    <SelectItem value="desert-safaris">Desert Safaris & Adventures</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -310,6 +396,185 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
           </div>
         </div>
       </div>
+
+      {/* Booking Details Popup */}
+      <Dialog open={showBookingPopup} onOpenChange={setShowBookingPopup}>
+        <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Booking Summary</DialogTitle>
+            <DialogDescription>
+              Review and update your booking details
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedTourForPopup && (() => {
+            const bookingDetails = getBookingDetails(selectedTourForPopup);
+            const restrictions = selectedTourForPopup.ticketRestrictions || "both";
+            const isAdultOnly = restrictions === "adult-only";
+            const isChildOnly = restrictions === "child-only";
+            const allowBoth = restrictions === "both";
+            
+            return (
+              <div className="space-y-3 py-2">
+                {/* Selected Park */}
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
+                  <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                    <MapPin className="h-4 w-4 text-accent-blue" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Selected Park</p>
+                    <p className="text-base font-bold text-foreground truncate">{selectedTourForPopup.name}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{selectedTourForPopup.location}</p>
+                  </div>
+                </div>
+
+                {/* Ticket Restrictions Info */}
+                {(isAdultOnly || isChildOnly) && (
+                  <div className="flex items-start gap-2 p-2.5 rounded-lg bg-amber/10 border border-amber/20">
+                    <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-foreground">
+                      {isAdultOnly && "This park only allows adult tickets."}
+                      {isChildOnly && "This park only allows child tickets."}
+                    </p>
+                  </div>
+                )}
+
+                {/* Time Slot Selection */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Time Slot</Label>
+                  <Select value={popupTimeSlot} onValueChange={setPopupTimeSlot}>
+                    <SelectTrigger className="h-10">
+                      <SelectValue placeholder="Select time slot" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {timeSlots.map((slot) => (
+                        <SelectItem key={slot.id} value={slot.label}>
+                          {slot.label} {slot.type === "premium" && "(Premium)"}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Pax Count Selection */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Pax Count</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Adult Count */}
+                    <div className={cn(
+                      "p-3 rounded-lg border",
+                      isChildOnly ? "bg-muted/50 border-muted opacity-50" : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                    )}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-foreground">Adults</span>
+                        {isChildOnly && (
+                          <AlertCircle className="h-3 w-3 text-amber-600" />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => setPopupAdultCount(Math.max(0, popupAdultCount - 1))}
+                          disabled={isChildOnly || popupAdultCount === 0}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="flex-1 text-center text-lg font-bold text-foreground">{popupAdultCount}</span>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => setPopupAdultCount(popupAdultCount + 1)}
+                          disabled={isChildOnly}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Child Count */}
+                    <div className={cn(
+                      "p-3 rounded-lg border",
+                      isAdultOnly ? "bg-muted/50 border-muted opacity-50" : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                    )}>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-medium text-foreground">Children</span>
+                        {isAdultOnly && (
+                          <AlertCircle className="h-3 w-3 text-amber-600" />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => setPopupChildCount(Math.max(0, popupChildCount - 1))}
+                          disabled={isAdultOnly || popupChildCount === 0}
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="flex-1 text-center text-lg font-bold text-foreground">{popupChildCount}</span>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => setPopupChildCount(popupChildCount + 1)}
+                          disabled={isAdultOnly}
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-border/30">
+                    <span className="text-xs font-semibold text-foreground">Total Pax</span>
+                    <span className="text-lg font-bold text-primary">{popupAdultCount + popupChildCount}</span>
+                  </div>
+                </div>
+
+                {/* Price Summary */}
+                <div className="p-3 rounded-lg bg-gradient-to-r from-emerald/10 to-emerald/5 border border-emerald/20">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Total Price</p>
+                      <p className="text-sm text-muted-foreground">
+                        ${selectedTourForPopup.price} per adult, ${(selectedTourForPopup.price * 0.7).toFixed(0)} per child
+                      </p>
+                    </div>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">
+                      ${bookingDetails.price.toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowBookingPopup(false)}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleConfirmBooking}
+                    disabled={(popupAdultCount === 0 && popupChildCount === 0) || !popupTimeSlot}
+                    className="flex-1 bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90"
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </div>
+            );
+          })()}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

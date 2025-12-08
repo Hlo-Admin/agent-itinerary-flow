@@ -270,4 +270,10 @@
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
+  
+  /* Ensure sidebar spacer is exactly 6rem */
+  .group[data-state="expanded"] > div:first-child,
+  .group[data-state="collapsed"] > div:first-child {
+    width: 6rem !important;
+  }
 }

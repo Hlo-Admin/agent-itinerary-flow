@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, Clock, MapPin, Users, Calendar, Plus, Minus, CheckCircle2, Sparkles, Badge as BadgeIcon, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,17 @@ interface ProductDetailProps {
   tourData: any;
 }
 
+// Mock time slots - In production, this would come from API
+const timeSlots = [
+  { id: "09:00", label: "09:00 AM", type: "normal" },
+  { id: "10:00", label: "10:00 AM", type: "normal" },
+  { id: "11:00", label: "11:00 AM", type: "premium" },
+  { id: "14:00", label: "02:00 PM", type: "normal" },
+  { id: "15:00", label: "03:00 PM", type: "premium" },
+  { id: "16:00", label: "04:00 PM", type: "normal" },
+  { id: "17:00", label: "05:00 PM", type: "premium" },
+];
+
 const mockSuppliers = [
   {
     id: 1,
@@ -22,6 +34,8 @@ const mockSuppliers = [
     reviews: 1243,
     adultPrice: 45,
     childPrice: 30,
+    adultPremiumPrice: 55,
+    childPremiumPrice: 38,
     commission: 15,
     cancellationPolicy: "Free cancellation up to 24 hours",
     instantConfirmation: true,
@@ -34,6 +48,8 @@ const mockSuppliers = [
     reviews: 876,
     adultPrice: 42,
     childPrice: 28,
+    adultPremiumPrice: 50,
+    childPremiumPrice: 35,
     commission: 12,
     cancellationPolicy: "Free cancellation up to 48 hours",
     instantConfirmation: false,
@@ -46,6 +62,8 @@ const mockSuppliers = [
     reviews: 2103,
     adultPrice: 48,
     childPrice: 32,
+    adultPremiumPrice: 58,
+    childPremiumPrice: 40,
     commission: 18,
     cancellationPolicy: "Free cancellation up to 72 hours",
     instantConfirmation: true,
@@ -58,6 +76,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   const [selectedTime, setSelectedTime] = useState("");
   const [adultTickets, setAdultTickets] = useState(2);
   const [childTickets, setChildTickets] = useState(0);
+  const [selectedSupplier, setSelectedSupplier] = useState<number | null>(tourData?.supplier?.id || null);
 
   const tour = tourData?.tour || {
     name: "Historic Walking Tour",
@@ -69,6 +88,27 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   };
 
   const totalTickets = adultTickets + childTickets;
+  
+  // Get selected time slot details
+  const selectedTimeSlot = timeSlots.find(ts => ts.id === selectedTime);
+  const isPremiumTime = selectedTimeSlot?.type === "premium";
+  
+  // Calculate prices based on time slot type
+  const selectedSupplierData = selectedSupplier ? mockSuppliers.find(s => s.id === selectedSupplier) : null;
+  const getAdultPrice = (supplier: typeof mockSuppliers[0] | null) => {
+    if (!supplier) return 0;
+    return isPremiumTime ? supplier.adultPremiumPrice : supplier.adultPrice;
+  };
+  const getChildPrice = (supplier: typeof mockSuppliers[0] | null) => {
+    if (!supplier) return 0;
+    return isPremiumTime ? supplier.childPremiumPrice : supplier.childPrice;
+  };
+  
+  const selectedAdultPrice = getAdultPrice(selectedSupplierData);
+  const selectedChildPrice = getChildPrice(selectedSupplierData);
+  const selectedAdultTotal = selectedAdultPrice * adultTickets;
+  const selectedChildTotal = selectedChildPrice * childTickets;
+  const selectedGrandTotal = selectedAdultTotal + selectedChildTotal;
 
   const handleContinue = () => {
     onNext({
@@ -145,18 +185,25 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 </div>
                 <div className="space-y-4">
                   {mockSuppliers.map((supplier, index) => {
-                    const adultTotal = supplier.adultPrice * adultTickets;
-                    const childTotal = supplier.childPrice * childTickets;
+                    const adultPrice = isPremiumTime ? supplier.adultPremiumPrice : supplier.adultPrice;
+                    const childPrice = isPremiumTime ? supplier.childPremiumPrice : supplier.childPrice;
+                    const adultTotal = adultPrice * adultTickets;
+                    const childTotal = childPrice * childTickets;
                     const grandTotal = adultTotal + childTotal;
                     const agentCommission = (grandTotal * supplier.commission) / 100;
+
+                    const isSelected = selectedSupplier === supplier.id;
 
                     return (
                       <Card 
                         key={supplier.id} 
                         className={cn(
-                          "p-6 border transition-shadow hover:shadow-md",
-                          "border-border/40 shadow-lg bg-gradient-to-br from-background to-muted/10"
+                          "p-6 border transition-all duration-300 hover:shadow-md cursor-pointer",
+                          isSelected 
+                            ? "border-primary border-2 shadow-xl shadow-primary/20 ring-2 ring-primary/20 bg-gradient-to-br from-primary/5 to-primary/10" 
+                            : "border-border/40 shadow-lg bg-gradient-to-br from-background to-muted/10 hover:border-primary/40"
                         )}
+                        onClick={() => setSelectedSupplier(supplier.id)}
                       >
                         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
                           <div className="flex-1">
@@ -166,6 +213,12 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                                 <Badge variant="secondary" className="gap-1">
                                   <CheckCircle2 className="h-3 w-3" />
                                   Verified
+                                </Badge>
+                              )}
+                              {isSelected && (
+                                <Badge className="gap-1 bg-primary text-primary-foreground">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  Selected
                                 </Badge>
                               )}
                             </div>
@@ -184,29 +237,39 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                                 <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Price per person</p>
                                 <div className="space-y-1">
                                   {adultTickets > 0 && (
-                                    <p className="text-sm font-semibold text-foreground">Adult: ${supplier.adultPrice}</p>
+                                    <div className="flex items-center gap-1">
+                                      <p className="text-sm font-semibold text-foreground">Adult: ${adultPrice}</p>
+                                      {isPremiumTime && (
+                                        <Badge variant="secondary" className="text-[9px] px-1 py-0">Premium</Badge>
+                                      )}
+                                    </div>
                                   )}
                                   {childTickets > 0 && (
-                                    <p className="text-sm font-semibold text-foreground">Child: ${supplier.childPrice}</p>
+                                    <div className="flex items-center gap-1">
+                                      <p className="text-sm font-semibold text-foreground">Child: ${childPrice}</p>
+                                      {isPremiumTime && (
+                                        <Badge variant="secondary" className="text-[9px] px-1 py-0">Premium</Badge>
+                                      )}
+                                    </div>
                                   )}
                                 </div>
                               </div>
 
-                              <div>
+                              {/* <div>
                                 <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Your commission</p>
                                 <p className="text-sm font-semibold text-success">
                                   {supplier.commission}% (${agentCommission.toFixed(2)})
                                 </p>
-                              </div>
+                              </div> */}
 
                               <div>
                                 <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Pax breakdown</p>
                                 <div className="space-y-1">
                                   {adultTickets > 0 && (
-                                    <p className="text-xs text-muted-foreground">Adult: {adultTickets} × ${supplier.adultPrice}</p>
+                                    <p className="text-xs text-muted-foreground">Adult: {adultTickets} × ${adultPrice}</p>
                                   )}
                                   {childTickets > 0 && (
-                                    <p className="text-xs text-muted-foreground">Child: {childTickets} × ${supplier.childPrice}</p>
+                                    <p className="text-xs text-muted-foreground">Child: {childTickets} × ${childPrice}</p>
                                   )}
                                 </div>
                               </div>
@@ -236,22 +299,6 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             <p className="mt-1 text-xs text-muted-foreground">
                               for {totalTickets} ticket{totalTickets > 1 ? "s" : ""}
                             </p>
-                            <Button 
-                              className="w-full md:w-auto mt-4 h-11 font-semibold bg-gradient-to-r from-accent-emerald to-accent-teal hover:from-accent-emerald/90 hover:to-accent-teal/90 shadow-md hover:shadow-lg"
-                              onClick={() => {
-                                onNext({
-                                  tour,
-                                  selectedDate,
-                                  selectedTime,
-                                  tickets: { adult: adultTickets, child: childTickets },
-                                  supplier,
-                                  totalPrice: grandTotal,
-                                });
-                              }}
-                              disabled={!selectedDate || !selectedTime || totalTickets === 0}
-                            >
-                              Continue
-                            </Button>
                           </div>
                         </div>
                       </Card>
@@ -386,15 +433,32 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
 
             <div className="space-y-2">
               <Label htmlFor="tour-time" className="text-sm font-semibold text-foreground">
-                Select Time
+                Select Time Slot
               </Label>
-              <Input
-                id="tour-time"
-                type="time"
-                value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
-                className="h-11"
-              />
+              <Select value={selectedTime} onValueChange={setSelectedTime}>
+                <SelectTrigger id="tour-time" className="h-11">
+                  <SelectValue placeholder="Select a time slot" />
+                </SelectTrigger>
+                <SelectContent>
+                  {timeSlots.map((slot) => (
+                    <SelectItem key={slot.id} value={slot.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{slot.label}</span>
+                        {slot.type === "premium" && (
+                          <Badge variant="secondary" className="ml-2 text-[10px]">Premium</Badge>
+                        )}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {selectedTimeSlot && (
+                <p className="text-xs text-muted-foreground">
+                  {selectedTimeSlot.type === "premium" 
+                    ? "Premium time slot - Higher pricing applies" 
+                    : "Standard time slot"}
+                </p>
+              )}
             </div>
           </div>
 
@@ -441,13 +505,69 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
             </div>
           </div>
 
+          {selectedSupplierData && (
+            <div className="space-y-3 border-t border-border pt-4 mt-4">
+              <div className="flex items-center gap-2 pb-2 border-b border-border">
+                <CheckCircle2 className="h-4 w-4 text-success" />
+                <h4 className="text-sm font-semibold text-foreground">Selected Supplier</h4>
+              </div>
+              <div className="space-y-2">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Supplier</p>
+                  <p className="text-sm font-semibold text-foreground">{selectedSupplierData.name}</p>
+                </div>
+                {selectedTimeSlot && (
+                  <div>
+                    <p className="text-xs text-muted-foreground mb-1">Time Slot</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-semibold text-foreground">{selectedTimeSlot.label}</p>
+                      {isPremiumTime && (
+                        <Badge variant="secondary" className="text-[10px]">Premium</Badge>
+                      )}
+                    </div>
+                  </div>
+                )}
+                <div>
+                  <p className="text-xs text-muted-foreground mb-1">Total Price</p>
+                  <p className="text-lg font-bold text-primary">${selectedGrandTotal.toFixed(2)}</p>
+                </div>
+                <div className="space-y-1 pt-2 border-t border-border/50">
+                  {adultTickets > 0 && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">Adult ({adultTickets}) @ ${selectedAdultPrice}</span>
+                      <span className="font-semibold text-foreground">${selectedAdultTotal.toFixed(2)}</span>
+                    </div>
+                  )}
+                  {childTickets > 0 && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">Child ({childTickets}) @ ${selectedChildPrice}</span>
+                      <span className="font-semibold text-foreground">${selectedChildTotal.toFixed(2)}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
           <Button
-            onClick={handleContinue}
-            disabled={!selectedDate || !selectedTime || totalTickets === 0}
+            onClick={() => {
+              if (selectedSupplierData) {
+                onNext({
+                  tour,
+                  selectedDate,
+                  selectedTime,
+                  selectedTimeSlot,
+                  tickets: { adult: adultTickets, child: childTickets },
+                  supplier: selectedSupplierData,
+                  totalPrice: selectedGrandTotal,
+                });
+              }
+            }}
+            disabled={!selectedDate || !selectedTime || totalTickets === 0 || !selectedSupplierData}
             className="w-full h-12 text-base font-semibold"
             size="lg"
           >
-            View Pricing Options
+            Continue
           </Button>
         </Card>
       </div>
