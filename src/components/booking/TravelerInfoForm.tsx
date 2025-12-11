@@ -1,19 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, MapPin, Calendar, Clock, Users, DollarSign, CheckCircle2 } from "lucide-react";
+import { Plus, Trash2, MapPin, Calendar, Clock, Users, DollarSign, CheckCircle2, Building2 } from "lucide-react";
 
 interface TravelerInfoFormProps {
   onNext: (data: any) => void;
+  onBack?: () => void;
   bookingData?: any;
 }
 
-const TravelerInfoForm = ({ onNext, bookingData }: TravelerInfoFormProps) => {
-  const [adults, setAdults] = useState([{ name: "", email: "", phone: "" }]);
-  const [children, setChildren] = useState<any[]>([]);
+const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps) => {
+  const tickets = bookingData?.tickets || { adult: 0, child: 0 };
+
+  // Helper function to get alternate image for specific tours
+  const getAlternateImage = (tourName: string) => {
+    // Use images from other tours as alternates
+    const alternateImages: Record<string, string> = {
+      "Museum and Art Gallery Tour": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format", // Culinary Food Tasting
+      "Historic Walking Tour of Old Town": "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop&auto=format", // Mountain Hiking
+    };
+    
+    // Return alternate image if tour name matches
+    if (alternateImages[tourName]) {
+      return alternateImages[tourName];
+    }
+    // Fallback to default
+    return "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format";
+  };
+  const adultCount = tickets.adult || 0;
+  const childCount = tickets.child || 0;
+  
+  // Initialize adults and children based on passenger count
+  const [adults, setAdults] = useState<Array<{ name: string; email: string; phone: string }>>(() => {
+    if (adultCount > 0) {
+      return Array(adultCount).fill(null).map(() => ({ name: "", email: "", phone: "" }));
+    }
+    return [{ name: "", email: "", phone: "" }];
+  });
+  
+  const [children, setChildren] = useState<Array<{ name: string; dob: string }>>(() => {
+    if (childCount > 0) {
+      return Array(childCount).fill(null).map(() => ({ name: "", dob: "" }));
+    }
+    return [];
+  });
+
+  // Update when bookingData changes
+  useEffect(() => {
+    const newAdultCount = tickets.adult || 0;
+    const newChildCount = tickets.child || 0;
+    
+    if (newAdultCount > 0 && adults.length !== newAdultCount) {
+      setAdults(Array(newAdultCount).fill(null).map(() => ({ name: "", email: "", phone: "" })));
+    }
+    if (newChildCount > 0 && children.length !== newChildCount) {
+      setChildren(Array(newChildCount).fill(null).map(() => ({ name: "", dob: "" })));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tickets.adult, tickets.child]);
 
   const addAdult = () => {
     setAdults([...adults, { name: "", email: "", phone: "" }]);
@@ -33,6 +80,18 @@ const TravelerInfoForm = ({ onNext, bookingData }: TravelerInfoFormProps) => {
     setChildren(children.filter((_, i) => i !== index));
   };
 
+  const updateAdult = (index: number, field: string, value: string) => {
+    const updated = [...adults];
+    updated[index] = { ...updated[index], [field]: value };
+    setAdults(updated);
+  };
+
+  const updateChild = (index: number, field: string, value: string) => {
+    const updated = [...children];
+    updated[index] = { ...updated[index], [field]: value };
+    setChildren(updated);
+  };
+
   const handleSubmit = () => {
     onNext({ adults, children });
   };
@@ -40,9 +99,27 @@ const TravelerInfoForm = ({ onNext, bookingData }: TravelerInfoFormProps) => {
   const selectedTour = bookingData?.tour;
   const selectedSupplier = bookingData?.supplier;
   const selectedDate = bookingData?.selectedDate;
-  const selectedTime = bookingData?.selectedTime;
-  const tickets = bookingData?.tickets || { adult: 0, child: 0 };
-  const totalPrice = bookingData?.totalPrice || 0;
+  const selectedTimeSlot = bookingData?.selectedTimeSlot;
+  const selectedTime = bookingData?.selectedTime || selectedTimeSlot?.label;
+  const isPremiumTime = selectedTimeSlot?.type === "premium";
+
+  // Get prices from supplier
+  const getAdultPrice = () => {
+    if (!selectedSupplier) return 0;
+    return isPremiumTime ? (selectedSupplier.adultPremiumPrice || selectedSupplier.adultPrice || 0) : (selectedSupplier.adultPrice || 0);
+  };
+
+  const getChildPrice = () => {
+    if (!selectedSupplier) return 0;
+    return isPremiumTime ? (selectedSupplier.childPremiumPrice || selectedSupplier.childPrice || 0) : (selectedSupplier.childPrice || 0);
+  };
+
+  const adultPrice = getAdultPrice();
+  const childPrice = getChildPrice();
+  const adultTotal = adultPrice * adultCount;
+  const childTotal = childPrice * childCount;
+  const basePrice = adultTotal + childTotal;
+  const totalPrice = bookingData?.totalPrice || basePrice;
 
   return (
     <div className="space-y-8">
@@ -51,168 +128,286 @@ const TravelerInfoForm = ({ onNext, bookingData }: TravelerInfoFormProps) => {
         <p className="text-sm text-muted-foreground">Enter details for the primary traveler</p>
       </div>
 
-      {selectedTour && selectedSupplier && (
-        <Card className="p-6 border border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
-          <div className="flex items-center gap-2 mb-4 pb-4 border-b border-border">
-            <CheckCircle2 className="h-5 w-5 text-success" />
-            <h4 className="text-lg font-semibold text-foreground">Selected Booking Details</h4>
+      {/* Main Content Grid - Left: Travelers, Right: Price Summary */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Side - Traveler Information */}
+        <div className="lg:col-span-2 space-y-8">
+
+      {/* Adult Passengers */}
+      {adultCount > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold text-foreground">
+              Adult Passengers ({adultCount})
+            </h3>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <MapPin className="h-4 w-4 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Park/Experience</p>
-                  <p className="text-sm font-semibold text-foreground">{selectedTour.name}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Users className="h-4 w-4 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Pax Count</p>
-                  <div className="space-y-1">
-                    {tickets.adult > 0 && (
-                      <p className="text-sm font-semibold text-foreground">Adult: {tickets.adult}</p>
+          <div className="space-y-4">
+            {adults.map((adult, index) => (
+              <Card key={index} className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Adult {index + 1} {index === 0 && "(Lead Passenger)"}
+                    </Label>
+                    {adults.length > 1 && index !== 0 && (
+                      <Button onClick={() => removeAdult(index)} variant="ghost" size="icon" className="h-8 w-8">
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
                     )}
-                    {tickets.child > 0 && (
-                      <p className="text-sm font-semibold text-foreground">Child: {tickets.child}</p>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor={`adult-${index}-name`} className="text-xs font-medium text-muted-foreground">
+                        Full name *
+                      </Label>
+                      <Input
+                        id={`adult-${index}-name`}
+                        placeholder="John Doe"
+                        value={adult.name}
+                        onChange={(e) => updateAdult(index, "name", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`adult-${index}-email`} className="text-xs font-medium text-muted-foreground">
+                        Email *
+                      </Label>
+                      <Input
+                        id={`adult-${index}-email`}
+                        type="email"
+                        placeholder="john@example.com"
+                        value={adult.email}
+                        onChange={(e) => updateAdult(index, "email", e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`adult-${index}-phone`} className="text-xs font-medium text-muted-foreground">
+                      Phone number *
+                    </Label>
+                    <Input
+                      id={`adult-${index}-phone`}
+                      placeholder="+1 (555) 000-0000"
+                      value={adult.phone}
+                      onChange={(e) => updateAdult(index, "phone", e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          {adultCount > adults.length && (
+            <Button onClick={addAdult} variant="outline" size="sm" className="w-full">
+              <Plus className="h-4 w-4 mr-2" />
+              Add another adult
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* Child Passengers */}
+      {childCount > 0 && (
+        <div className="space-y-4 border-t border-border pt-6">
+          <div className="flex items-center gap-2">
+            <Users className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-semibold text-foreground">
+              Child Passengers ({childCount})
+            </h3>
+          </div>
+          <div className="space-y-4">
+            {children.map((child, index) => (
+              <Card key={index} className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-medium text-muted-foreground">
+                      Child {index + 1}
+                    </Label>
+                    {children.length > 1 && (
+                      <Button onClick={() => removeChild(index)} variant="ghost" size="icon" className="h-8 w-8">
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    )}
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor={`child-${index}-name`} className="text-xs font-medium text-muted-foreground">
+                        Full name *
+                      </Label>
+                      <Input
+                        id={`child-${index}-name`}
+                        placeholder="Child name"
+                        value={child.name}
+                        onChange={(e) => updateChild(index, "name", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`child-${index}-dob`} className="text-xs font-medium text-muted-foreground">
+                        Date of birth *
+                      </Label>
+                      <Input
+                        id={`child-${index}-dob`}
+                        type="date"
+                        value={child.dob}
+                        onChange={(e) => updateChild(index, "dob", e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          {childCount > children.length && (
+            <Button onClick={addChild} variant="outline" size="sm" className="w-full">
+              <Plus className="h-4 w-4 mr-2" />
+              Add another child
+            </Button>
+          )}
+        </div>
+      )}
+
+          <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:justify-between">
+            {onBack && (
+              <Button onClick={onBack} variant="outline">
+                Back
+              </Button>
+            )}
+            <Button onClick={handleSubmit} className={onBack ? "" : "ml-auto"}>
+              Continue to payment
+            </Button>
+          </div>
+        </div>
+
+        {/* Right Side - Destination Price Summary */}
+        <div className="lg:col-span-1">
+          {selectedTour && selectedSupplier && (
+            <Card className="sticky top-8 space-y-6 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20 overflow-hidden">
+              {/* Destination Image */}
+              {selectedTour && (
+                <div className="relative w-full h-48 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+                  <img
+                    src={selectedTour.image || selectedTour.imageUrl || "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format"}
+                    alt={selectedTour.name || "Destination"}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      // For specific tours, use other tour's image instead of placeholder
+                      if (selectedTour?.name === "Museum and Art Gallery Tour" || selectedTour?.name === "Historic Walking Tour of Old Town") {
+                        target.src = getAlternateImage(selectedTour.name);
+                      } else {
+                        target.src = `https://via.placeholder.com/400x300/6366f1/ffffff?text=${encodeURIComponent(selectedTour?.name || 'Destination')}`;
+                      }
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+                </div>
+              )}
+              
+              <div className="p-6 space-y-4">
+                <div className="flex items-center gap-2 pb-4 border-b border-border">
+                  <MapPin className="h-5 w-5 text-primary" />
+                  <h4 className="text-lg font-semibold text-foreground">Destination</h4>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Building2 className="h-4 w-4 text-muted-foreground" />
+                      <p className="text-sm font-bold text-foreground">{selectedTour.name}</p>
+                    </div>
+                  {selectedSupplier && (
+                    <Badge variant="secondary" className="ml-6">
+                      {selectedSupplier.name}
+                    </Badge>
+                  )}
+                  {selectedDate && (
+                    <div className="flex items-center gap-2 pl-6">
+                      <Calendar className="h-3 w-3 text-muted-foreground" />
+                      <p className="text-xs font-semibold text-foreground">
+                        {new Date(selectedDate).toLocaleDateString('en-US', { 
+                          weekday: 'short', 
+                          year: 'numeric', 
+                          month: 'short', 
+                          day: 'numeric' 
+                        })}
+                      </p>
+                    </div>
+                  )}
+                  {selectedTimeSlot && (
+                    <div className="flex items-center gap-2 pl-6">
+                      <Clock className="h-3 w-3 text-muted-foreground" />
+                      <p className="text-xs font-semibold text-foreground">{selectedTimeSlot.label}</p>
+                      {isPremiumTime && (
+                        <Badge variant="secondary" className="text-[9px] px-1.5 py-0">Premium</Badge>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-4 border-t border-border space-y-3">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Passenger Count</Label>
+                  <div className="space-y-2 pl-2">
+                    {adultCount > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Adults</span>
+                        <span className="text-base font-bold text-foreground">{adultCount}</span>
+                      </div>
+                    )}
+                    {childCount > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">Children</span>
+                        <span className="text-base font-bold text-foreground">{childCount}</span>
+                      </div>
+                    )}
+                    {(adultCount > 0 || childCount > 0) && (
+                      <div className="flex justify-between items-center pt-2 border-t border-border/30">
+                        <span className="text-sm font-semibold text-foreground">Total Passengers</span>
+                        <span className="text-lg font-bold text-primary">{adultCount + childCount}</span>
+                      </div>
                     )}
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Calendar className="h-4 w-4 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Date</p>
-                  <p className="text-sm font-semibold text-foreground">
-                    {selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', { 
-                      weekday: 'short', 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    }) : 'Not selected'}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Clock className="h-4 w-4 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Time Slot</p>
-                  <p className="text-sm font-semibold text-foreground">{selectedTime || 'Not selected'}</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <DollarSign className="h-4 w-4 text-primary" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Total Price</p>
-                  <p className="text-lg font-bold text-primary">${totalPrice.toFixed(2)}</p>
-                  <Badge variant="secondary" className="mt-1">
-                    {selectedSupplier.name}
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-      )}
 
-      <div className="space-y-4">
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="lead-name" className="text-sm font-medium text-muted-foreground">
-              Full name *
-            </Label>
-            <Input id="lead-name" placeholder="John Doe" required />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lead-email" className="text-sm font-medium text-muted-foreground">
-              Email *
-            </Label>
-            <Input id="lead-email" type="email" placeholder="john@example.com" required />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="lead-phone" className="text-sm font-medium text-muted-foreground">
-            Phone number *
-          </Label>
-          <Input id="lead-phone" placeholder="+1 (555) 000-0000" required />
-        </div>
-      </div>
-
-      <div className="space-y-4 border-t border-border pt-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-foreground">Additional adults</h3>
-            <p className="text-sm text-muted-foreground">Add other adult travelers</p>
-          </div>
-          <Button onClick={addAdult} variant="outline" size="sm" className="flex w-full gap-2 sm:w-auto">
-            <Plus className="h-4 w-4" />
-            Add adult
-          </Button>
-        </div>
-
-        <div className="space-y-4">
-          {adults.slice(1).map((adult, index) => (
-            <Card key={index} className="p-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start">
-                <div className="grid flex-1 gap-4 md:grid-cols-2">
-                  <Input placeholder="Full name" />
-                  <Input type="email" placeholder="Email" />
+                <div className="pt-4 border-t border-border space-y-3">
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Price Breakdown</Label>
+                  <div className="space-y-2 pl-2">
+                    {adultCount > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">
+                          Adult {adultCount} × ${adultPrice.toFixed(0)}
+                          {isPremiumTime && (
+                            <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>
+                          )}
+                        </span>
+                        <span className="text-sm font-semibold text-foreground">${adultTotal.toFixed(2)}</span>
+                      </div>
+                    )}
+                    {childCount > 0 && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-muted-foreground">
+                          Child {childCount} × ${childPrice.toFixed(0)}
+                          {isPremiumTime && (
+                            <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>
+                          )}
+                        </span>
+                        <span className="text-sm font-semibold text-foreground">${childTotal.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center pt-2 border-t border-border/30">
+                      <span className="text-sm font-semibold text-foreground">Total Price</span>
+                      <span className="text-lg font-bold text-primary">${basePrice.toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
-                <Button onClick={() => removeAdult(index + 1)} variant="ghost" size="icon" className="self-start">
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
+              </div>
               </div>
             </Card>
-          ))}
+          )}
         </div>
-      </div>
-
-      <div className="space-y-4 border-t border-border pt-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="text-lg font-semibold text-foreground">Children</h3>
-            <p className="text-sm text-muted-foreground">Add child travelers (under 18)</p>
-          </div>
-          <Button onClick={addChild} variant="outline" size="sm" className="flex w-full gap-2 sm:w-auto">
-            <Plus className="h-4 w-4" />
-            Add child
-          </Button>
-        </div>
-
-        <div className="space-y-4">
-          {children.map((child, index) => (
-            <Card key={index} className="p-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start">
-                <div className="grid flex-1 gap-4 md:grid-cols-2">
-                  <Input placeholder="Full name" />
-                  <Input type="date" placeholder="Date of birth" />
-                </div>
-                <Button onClick={() => removeChild(index)} variant="ghost" size="icon" className="self-start">
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex justify-end pt-3">
-        <Button onClick={handleSubmit}>
-          Continue to price summary
-        </Button>
       </div>
     </div>
   );

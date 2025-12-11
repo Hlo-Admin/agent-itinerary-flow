@@ -78,6 +78,22 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   const [childTickets, setChildTickets] = useState(0);
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(tourData?.supplier?.id || null);
 
+  // Helper function to get alternate image for specific tours
+  const getAlternateImage = (tourName: string) => {
+    // Use images from other tours as alternates
+    const alternateImages: Record<string, string> = {
+      "Museum and Art Gallery Tour": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format", // Culinary Food Tasting
+      "Historic Walking Tour of Old Town": "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop&auto=format", // Mountain Hiking
+    };
+    
+    // Return alternate image if tour name matches
+    if (alternateImages[tourName]) {
+      return alternateImages[tourName];
+    }
+    // Fallback to default
+    return "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format";
+  };
+
   const tour = tourData?.tour || {
     name: "Historic Walking Tour",
     rating: 4.8,
@@ -85,7 +101,13 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     duration: "3 hours",
     location: "Downtown",
     category: "History",
+    image: "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format",
   };
+  
+  // Ensure image is preserved from tourData if available
+  if (tourData?.tour?.image || tourData?.tour?.imageUrl) {
+    tour.image = tourData.tour.image || tourData.tour.imageUrl;
+  }
 
   const totalTickets = adultTickets + childTickets;
   
@@ -313,14 +335,19 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 <div className="relative h-80 sm:h-96 w-full overflow-hidden bg-gradient-to-br from-muted to-muted/50">
                   <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-accent-purple/5 z-10" />
                   <img
-                    src={tourData?.tour?.image || "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format"}
+                    src={tour.image || tour.imageUrl || tourData?.tour?.image || tourData?.tour?.imageUrl || "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format"}
                     alt={tour.name}
                     className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                     loading="lazy"
                     decoding="async"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${encodeURIComponent(tour.name)}`;
+                      // For specific tours, use other tour's image instead of placeholder
+                      if (tour.name === "Museum and Art Gallery Tour" || tour.name === "Historic Walking Tour of Old Town") {
+                        target.src = getAlternateImage(tour.name);
+                      } else {
+                        target.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${encodeURIComponent(tour.name)}`;
+                      }
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10" />

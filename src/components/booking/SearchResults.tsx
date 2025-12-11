@@ -100,6 +100,26 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
     { id: "16:00", label: "04:00 PM", type: "normal" },
     { id: "17:00", label: "05:00 PM", type: "premium" },
   ];
+
+  // Helper function to get alternate image from other tours
+  const getAlternateImage = (currentTourName: string) => {
+    // Use images from other tours (Culinary Food Tasting Experience or Mountain Hiking Adventure)
+    const alternateImages: Record<string, string> = {
+      "Museum and Art Gallery Tour": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format", // Culinary Food Tasting
+      "Historic Walking Tour of Old Town": "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop&auto=format", // Mountain Hiking
+    };
+    
+    // Return alternate image if tour name matches
+    if (alternateImages[currentTourName]) {
+      return alternateImages[currentTourName];
+    }
+    
+    // Fallback: find any other tour with an image
+    const alternateTour = mockTours.find(tour => 
+      tour.name !== currentTourName && (tour.image || tour.imageUrl)
+    );
+    return alternateTour?.image || alternateTour?.imageUrl || "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format";
+  };
   
   // Get booking details from searchData or use defaults
   const getBookingDetails = (tour: any) => {
@@ -313,7 +333,12 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                       decoding="async"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${encodeURIComponent(tour.name)}`;
+                        // For specific tours, use other tour's image instead of placeholder
+                        if (tour.name === "Museum and Art Gallery Tour" || tour.name === "Historic Walking Tour of Old Town") {
+                          target.src = getAlternateImage(tour.name);
+                        } else {
+                          target.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${encodeURIComponent(tour.name)}`;
+                        }
                       }}
                     />
                     <div className={cn(

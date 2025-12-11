@@ -1,4 +1,5 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import { Home, Calendar, Settings, Users, BarChart3, CalendarDays, Sparkles } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -25,6 +26,7 @@ const items = [
 export function AppSidebar() {
   const { state, isMobile } = useSidebar();
   const collapsed = state === "collapsed";
+  const location = useLocation();
 
   return (
     <Sidebar 
@@ -63,20 +65,36 @@ export function AppSidebar() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="relative flex flex-col items-center justify-center rounded-md px-0 py-8 w-full transition-all duration-300 hover:bg-muted/20 group"
-                      activeClassName="bg-muted/30 "
+                      className={(props) => {
+                        const isActive = item.url === "/" 
+                          ? location.pathname === "/"
+                          : location.pathname.startsWith(item.url);
+                        return `relative flex flex-col items-center justify-center rounded-md px-0 py-8 w-full transition-all duration-300 ${
+                          isActive ? 'bg-muted/80' : ''
+                        }`;
+                      }}
+                      activeClassName=""
                     >
-                      <div className="flex flex-col  w-full gap-0">
-                      <div className="transition-all duration-300 flex items-center justify-center w-16 h-8">
-                          <item.icon className="h-7 w-7 text-foreground transition-all duration-300" strokeWidth={2.5} style={{ color: 'rgb(0, 0, 0)' }} />
-                        </div>
-                        {!collapsed && (
-                          <span className="text-xs text-foreground text-center w-full leading-tight mb-1" style={{ opacity: 1, fontWeight: 700, display: 'block', color: 'rgb(0, 0, 0)' }}>
-                            {item.title}
-                          </span>
-                        )}
-                        
-                      </div>
+                      {(() => {
+                        const isActive = item.url === "/" 
+                          ? location.pathname === "/"
+                          : location.pathname.startsWith(item.url);
+                        return (
+                          <div className="flex flex-col items-center w-full gap-1.5">
+                            <div className="transition-all duration-300 flex items-center justify-center">
+                              <item.icon 
+                                className={`h-6 w-6 transition-all duration-300 ${isActive ? 'text-foreground stroke-[2]' : 'text-foreground/70'}`}
+                                strokeWidth={1.5} 
+                              />
+                            </div>
+                            {!collapsed && (
+                              <span className={`text-xs text-center w-full leading-tight transition-all duration-300 ${isActive ? 'text-foreground font-semibold' : 'text-foreground/70 font-normal'}`}>
+                                {item.title}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

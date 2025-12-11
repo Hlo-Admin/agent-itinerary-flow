@@ -2,19 +2,18 @@ import { Fragment, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Bot } from "lucide-react";
+import { Bot, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import SearchExperiences from "@/components/booking/SearchExperiences";
 import SearchResults from "@/components/booking/SearchResults";
 import ProductDetail from "@/components/booking/ProductDetail";
 import TravelerInfoForm from "@/components/booking/TravelerInfoForm";
-import PriceSummary from "@/components/booking/PriceSummary";
-import PaymentOptions from "@/components/booking/PaymentOptions";
+import Payment from "@/components/booking/Payment";
 import VoucherView from "@/components/booking/VoucherView";
 import EmailTemplate from "@/components/booking/EmailTemplate";
 import AIChatbot from "@/components/booking/AIChatbot";
 
-type BookingStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type BookingStep = 1 | 2 | 3 | 4 | 5 | 6;
 
 const Bookings = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>(1);
@@ -27,18 +26,16 @@ const Bookings = () => {
     { number: 3, title: "Details" },
     { number: 4, title: "Travelers" },
     { number: 5, title: "Payment" },
-    { number: 6, title: "Confirm" },
-    { number: 7, title: "Voucher" },
-    { number: 8, title: "Email" },
+    { number: 6, title: "Ticket" },
   ];
 
-  const progress = (currentStep / 8) * 100;
+  const progress = (currentStep / 6) * 100;
 
   const handleNext = (data?: any) => {
     if (data) {
       setBookingData({ ...bookingData, ...data });
     }
-    if (currentStep < 8) {
+    if (currentStep < 6) {
       setCurrentStep((prev) => (prev + 1) as BookingStep);
     }
   };
@@ -53,7 +50,7 @@ const Bookings = () => {
     setBookingData(data);
     // Optionally navigate to voucher or confirmation step
     if (data.status === "completed") {
-      setCurrentStep(8); // Voucher step
+      setCurrentStep(6); // Confirmation step
     }
   };
 
@@ -67,8 +64,23 @@ const Bookings = () => {
         <div className="space-y-4 sm:space-y-12 w-full min-w-0 max-w-full p-1.5 sm:p-6 lg:p-8 animate-fade-in">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1 sm:space-y-2 w-full min-w-0 flex-1">
-              <h1 className="text-xl sm:text-4xl font-bold text-foreground tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">New Booking</h1>
-              <p className="text-muted-foreground text-xs sm:text-base">Create a new travel booking for your clients</p>
+              <div className="flex items-center gap-3 sm:gap-4">
+                {currentStep > 1 && (
+                  <Button
+                    onClick={handleBack}
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-lg hover:bg-muted"
+                  >
+                    <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span className="sr-only">Go back</span>
+                  </Button>
+                )}
+                <div className="flex-1">
+                  <h1 className="text-xl sm:text-4xl font-bold text-foreground tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">New Booking</h1>
+                  <p className="text-muted-foreground text-xs sm:text-base">Create a new travel booking for your clients</p>
+                </div>
+              </div>
             </div>
             <Button
               onClick={() => setIsChatbotOpen(!isChatbotOpen)}
@@ -142,11 +154,9 @@ const Bookings = () => {
             {currentStep === 1 && <SearchExperiences onNext={handleNext} />}
             {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
             {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} bookingData={bookingData} />}
-            {currentStep === 5 && <PriceSummary onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-            {currentStep === 6 && <PaymentOptions onNext={handleNext} onBack={handleBack} />}
-            {currentStep === 7 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
-            {currentStep === 8 && <EmailTemplate bookingData={bookingData} />}
+            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+            {currentStep === 5 && <Payment onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+            {currentStep === 6 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
           </div>
         </div>
       </Card>
