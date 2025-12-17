@@ -72,10 +72,22 @@ const mockSuppliers = [
 ];
 
 const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-  const [adultTickets, setAdultTickets] = useState(2);
-  const [childTickets, setChildTickets] = useState(0);
+  // Initialize from bookingDetails if available (from popup)
+  const bookingDetails = tourData?.bookingDetails || {};
+  
+  // Convert timeSlot label to id if needed (popup uses label format "10:00 AM", we need id "10:00")
+  const getTimeSlotId = (timeSlotLabel: string) => {
+    if (!timeSlotLabel) return "";
+    const matchingSlot = timeSlots.find(slot => slot.label === timeSlotLabel);
+    return matchingSlot ? matchingSlot.id : timeSlotLabel;
+  };
+  
+  const [selectedDate, setSelectedDate] = useState(bookingDetails.date || tourData?.date || "");
+  const [selectedTime, setSelectedTime] = useState(
+    bookingDetails.timeSlot ? getTimeSlotId(bookingDetails.timeSlot) : (tourData?.selectedTime || "")
+  );
+  const [adultTickets, setAdultTickets] = useState(bookingDetails.adultCount || tourData?.tickets?.adult || 2);
+  const [childTickets, setChildTickets] = useState(bookingDetails.childCount || tourData?.tickets?.child || 0);
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(tourData?.supplier?.id || null);
 
   // Helper function to get alternate image for specific tours
@@ -440,7 +452,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
         <Card className="h-fit lg:sticky lg:top-8 p-8 space-y-6 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20">
           <div className="flex items-center gap-2 pb-4 border-b border-border">
             <Calendar className="h-5 w-5 text-primary" />
-            <h4 className="text-xl font-semibold text-foreground">Book This Experience</h4>
+            <h4 className="text-xl font-semibold text-foreground">Booking Requirements</h4>
           </div>
 
           <div className="space-y-4">

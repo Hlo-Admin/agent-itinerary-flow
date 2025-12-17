@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Mail, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Download, Mail, RefreshCw, AlertCircle, CheckCircle2, Users, Calendar, Clock, MapPin, Building2, Ticket, CreditCard } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
+import { Badge } from "@/components/ui/badge";
 
 interface VoucherViewProps {
   onNext: () => void;
@@ -10,6 +11,31 @@ interface VoucherViewProps {
 
 const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
   const bookingRef = "TRV" + Math.random().toString(36).substr(2, 9).toUpperCase();
+  
+  // Extract booking data
+  const adults = bookingData?.adults || [];
+  const children = bookingData?.children || [];
+  const tour = bookingData?.tour || {};
+  const supplier = bookingData?.supplier || {};
+  const selectedDate = bookingData?.selectedDate;
+  const selectedTimeSlot = bookingData?.selectedTimeSlot;
+  const tickets = bookingData?.tickets || { adult: 0, child: 0 };
+  
+  // Calculate prices
+  const adultCount = tickets.adult || adults.length || 0;
+  const childCount = tickets.child || children.length || 0;
+  const isPremiumTime = selectedTimeSlot?.type === "premium";
+  const adultPrice = isPremiumTime ? (supplier.adultPremiumPrice || supplier.adultPrice || 0) : (supplier.adultPrice || 0);
+  const childPrice = isPremiumTime ? (supplier.childPremiumPrice || supplier.childPrice || 0) : (supplier.childPrice || 0);
+  const adultTotal = adultPrice * adultCount;
+  const childTotal = childPrice * childCount;
+  const basePrice = adultTotal + childTotal || 1200;
+  const taxes = Math.round(basePrice * 0.15) || 180;
+  const serviceFee = Math.round(basePrice * 0.04) || 50;
+  const totalAmount = basePrice + taxes + serviceFee;
+  
+  // Lead passenger (first adult)
+  const leadPassenger = adults.length > 0 ? adults[0] : { name: "N/A", email: "", phone: "" };
 
   // Helper function to get alternate image for specific tours
   const getAlternateImage = (tourName: string) => {
@@ -31,100 +57,291 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left Side - Booking Details */}
       <div className="lg:col-span-2 space-y-6">
-        <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border border-success/30 bg-success/5 text-success">
-            <CheckCircle2 className="h-6 w-6" />
+        {/* Success Header */}
+        <Card className="p-6 bg-gradient-to-br from-success/10 via-success/5 to-background border-success/20">
+          <div className="flex items-center gap-4">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success/20 border-2 border-success/40">
+              <CheckCircle2 className="h-7 w-7 text-success" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-2xl font-bold text-foreground">Booking Confirmed!</h3>
+              <p className="text-sm text-muted-foreground font-medium mt-1">
+                Booking Reference: <span className="font-bold text-foreground">{bookingRef}</span>
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <Badge variant="secondary" className="bg-success/20 text-success border-success/40 px-3 py-1">
+                Confirmed
+              </Badge>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-semibold text-foreground">Booking confirmed</h3>
-            <p className="text-sm text-muted-foreground font-medium mt-1">Reference: {bookingRef}</p>
-          </div>
-        </div>
+        </Card>
 
-        <Card className="p-7">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3.5">
-              <div>
-                <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passenger Name</h4>
-                <p className="text-base font-bold text-foreground">John Doe</p>
+        {/* Ticket Details Card */}
+        <Card className="p-0 overflow-hidden border-2 border-primary/10">
+          <div className="p-6 bg-gradient-to-r from-primary/5 via-primary/5 to-transparent border-b border-border/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Ticket className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-foreground">Ticket Details</h4>
+                  <p className="text-xs text-muted-foreground">Your booking confirmation</p>
+                </div>
               </div>
-              <div>
-                <h4 className="text-xs font-semibold text-muted-foreground mb-1">Travel Date</h4>
-                <p className="text-base font-bold text-foreground">June 15, 2024</p>
-              </div>
-              <div>
-                <h4 className="text-xs font-semibold text-muted-foreground mb-1">Route</h4>
-                <p className="text-base font-bold text-foreground">New York → London</p>
-              </div>
-              <div>
-                <h4 className="text-xs font-semibold text-muted-foreground mb-1">Passengers</h4>
-                <p className="text-base font-bold text-foreground">2 Adults, 1 Child</p>
+              <div className="text-right">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Ticket Number</p>
+                <p className="text-xl font-bold text-primary mt-1">{bookingRef}</p>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-center space-y-3">
-              <div className="text-center">
-                <h4 className="text-xs font-semibold text-muted-foreground mb-2">Ticket Number</h4>
-                <p className="text-lg font-bold text-foreground mb-3">{bookingRef}</p>
+          </div>
+          
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Booking Information */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Users className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Lead Passenger</h4>
+                    <p className="text-base font-bold text-foreground">{leadPassenger.name || "N/A"}</p>
+                    {leadPassenger.email && (
+                      <p className="text-sm text-muted-foreground mt-1">{leadPassenger.email}</p>
+                    )}
+                  </div>
+                </div>
+                
+                {selectedDate && (
+                  <div className="flex items-start gap-3">
+                    <Calendar className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Travel Date</h4>
+                      <p className="text-base font-bold text-foreground">
+                        {new Date(selectedDate).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                {selectedTimeSlot && (
+                  <div className="flex items-start gap-3">
+                    <Clock className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Time Slot</h4>
+                      <div className="flex items-center gap-2">
+                        <p className="text-base font-bold text-foreground">{selectedTimeSlot.label}</p>
+                        {isPremiumTime && (
+                          <Badge variant="secondary" className="text-xs">Premium</Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {supplier?.name && (
+                  <div className="flex items-start gap-3">
+                    <Building2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Supplier</h4>
+                      <p className="text-base font-bold text-foreground">{supplier.name}</p>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="p-4 bg-white rounded-lg border border-border/50">
-                <QRCodeSVG
-                  value={bookingRef}
-                  size={160}
-                  level="H"
-                  includeMargin={true}
-                />
+              
+              {/* QR Code */}
+              <div className="flex flex-col items-center justify-center space-y-4">
+                <div className="p-5 bg-gradient-to-br from-muted/50 to-background rounded-xl border-2 border-border/50 shadow-lg">
+                  <QRCodeSVG
+                    value={bookingRef}
+                    size={180}
+                    level="H"
+                    includeMargin={true}
+                  />
+                </div>
+                <p className="text-xs text-center text-muted-foreground max-w-[200px]">
+                  Present this QR code at the venue for entry
+                </p>
               </div>
             </div>
           </div>
         </Card>
 
-        <Card className="p-7 border border-border/50">
-          <h4 className="font-semibold text-lg text-foreground mb-5">Financial summary</h4>
-          <div className="space-y-2.5">
-            <div className="flex justify-between">
-              <span className="text-sm text-muted-foreground">Ticket price</span>
-              <span className="font-semibold text-sm text-foreground">$1,200.00</span>
+        {/* Passenger Details Card */}
+        {(adults.length > 0 || children.length > 0) && (
+          <Card className="p-0 overflow-hidden border-2 border-border/50">
+            <div className="p-6 bg-gradient-to-r from-accent-blue/5 via-accent-indigo/5 to-transparent border-b border-border/50">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-accent-blue/10">
+                  <Users className="h-5 w-5 text-accent-blue" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-foreground">Passenger Details</h4>
+                  <p className="text-xs text-muted-foreground">
+                    {adultCount} Adult{adultCount !== 1 ? 's' : ''}
+                    {childCount > 0 && `, ${childCount} Child${childCount !== 1 ? 'ren' : ''}`}
+                  </p>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-muted-foreground">Taxes & fees</span>
-              <span className="font-semibold text-sm text-foreground">$180.00</span>
+            
+            <div className="p-6 space-y-6">
+              {/* Adult Passengers */}
+              {adults.length > 0 && (
+                <div className="space-y-4">
+                  <h5 className="text-sm font-semibold text-foreground uppercase tracking-wide">Adult Passengers</h5>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {adults.map((adult: any, index: number) => (
+                      <div key={index} className="p-4 rounded-lg bg-gradient-to-br from-muted/30 to-muted/10 border border-border/50">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                              <span className="text-xs font-bold text-primary">{index + 1}</span>
+                            </div>
+                            <div>
+                              <p className="font-bold text-foreground">{adult.name || `Adult ${index + 1}`}</p>
+                              {index === 0 && (
+                                <Badge variant="secondary" className="text-[10px] mt-1">Lead Passenger</Badge>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5 mt-3 pl-10">
+                          {adult.email && (
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-semibold">Email:</span> {adult.email}
+                            </p>
+                          )}
+                          {adult.phone && (
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-semibold">Phone:</span> {adult.phone}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Child Passengers */}
+              {children.length > 0 && (
+                <div className="space-y-4 pt-4 border-t border-border/50">
+                  <h5 className="text-sm font-semibold text-foreground uppercase tracking-wide">Child Passengers</h5>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {children.map((child: any, index: number) => (
+                      <div key={index} className="p-4 rounded-lg bg-gradient-to-br from-accent-emerald/10 to-accent-teal/5 border border-accent-emerald/20">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-accent-emerald/20 flex items-center justify-center">
+                              <span className="text-xs font-bold text-accent-emerald">{index + 1}</span>
+                            </div>
+                            <div>
+                              <p className="font-bold text-foreground">{child.name || `Child ${index + 1}`}</p>
+                              <Badge variant="secondary" className="text-[10px] mt-1 bg-accent-emerald/20 text-accent-emerald">Child</Badge>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-1.5 mt-3 pl-10">
+                          {child.dob && (
+                            <p className="text-xs text-muted-foreground">
+                              <span className="font-semibold">Date of Birth:</span> {new Date(child.dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="flex justify-between">
-              <span className="text-sm text-muted-foreground">Service fee</span>
-              <span className="font-semibold text-sm text-foreground">$50.00</span>
+          </Card>
+        )}
+
+        {/* Financial Summary Card */}
+        <Card className="p-0 overflow-hidden border-2 border-border/50">
+          <div className="p-6 bg-gradient-to-r from-accent-indigo/5 via-accent-blue/5 to-transparent border-b border-border/50">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-accent-indigo/10">
+                <CreditCard className="h-5 w-5 text-accent-indigo" />
+              </div>
+              <div>
+                <h4 className="text-lg font-bold text-foreground">Financial Summary</h4>
+                <p className="text-xs text-muted-foreground">Complete payment breakdown</p>
+              </div>
             </div>
-            <div className="border-t border-border pt-3 flex justify-between">
-              <span className="font-semibold text-foreground">Total paid</span>
-              <span className="text-lg font-semibold text-primary">$1,430.00</span>
+          </div>
+          
+          <div className="p-6 space-y-4">
+            {/* Price Breakdown */}
+            {adultCount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">
+                  Adult {adultCount} × ${adultPrice.toFixed(0)}
+                  {isPremiumTime && <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>}
+                </span>
+                <span className="font-semibold text-foreground">${adultTotal.toFixed(2)}</span>
+              </div>
+            )}
+            {childCount > 0 && (
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">
+                  Child {childCount} × ${childPrice.toFixed(0)}
+                  {isPremiumTime && <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>}
+                </span>
+                <span className="font-semibold text-foreground">${childTotal.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="flex justify-between text-sm pt-2 border-t border-border">
+              <span className="text-muted-foreground">Subtotal</span>
+              <span className="font-semibold text-foreground">${basePrice.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between items-center pt-1.5">
-              <span className="text-xs text-muted-foreground">Payment method</span>
-              <span className="text-xs font-semibold text-success">Agent credit</span>
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Taxes & fees</span>
+              <span className="font-medium text-foreground">${taxes.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Service fee</span>
+              <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
+            </div>
+            <div className="border-t-2 border-primary/20 pt-4 flex justify-between items-center">
+              <div>
+                <span className="text-base font-semibold text-foreground block">Total Paid</span>
+                <span className="text-xs text-muted-foreground mt-1">Payment method: Agent credit</span>
+              </div>
+              <span className="text-2xl font-bold text-primary">${totalAmount.toFixed(2)}</span>
             </div>
           </div>
         </Card>
 
+        {/* Action Buttons */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Button variant="outline" className="flex items-center gap-2 h-10 text-sm">
+          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm hover:bg-accent-blue/10 hover:border-accent-blue/30">
             <Mail className="h-4 w-4" />
             Send email
           </Button>
-          <Button variant="outline" className="flex items-center gap-2 h-10 text-sm">
+          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm hover:bg-accent-indigo/10 hover:border-accent-indigo/30">
             <Download className="h-4 w-4" />
             Download PDF
           </Button>
-          <Button variant="outline" className="flex items-center gap-2 h-10 text-sm text-destructive border-destructive/60 hover:bg-destructive hover:text-destructive-foreground">
+          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm text-destructive border-destructive/60 hover:bg-destructive hover:text-destructive-foreground">
             <AlertCircle className="h-4 w-4" />
             Refund
           </Button>
-          <Button variant="outline" className="flex items-center gap-2 h-10 text-sm">
+          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm hover:bg-accent-emerald/10 hover:border-accent-emerald/30">
             <RefreshCw className="h-4 w-4" />
             Rebook
           </Button>
         </div>
 
         <div className="flex justify-end pt-3">
-          <Button onClick={onNext} className="h-11 px-6">
+          <Button onClick={onNext} className="h-12 px-8 text-base font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary">
             View Confirmation Email
           </Button>
         </div>

@@ -118,8 +118,10 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
   const childPrice = getChildPrice();
   const adultTotal = adultPrice * adultCount;
   const childTotal = childPrice * childCount;
-  const basePrice = adultTotal + childTotal;
-  const totalPrice = bookingData?.totalPrice || basePrice;
+  const basePrice = adultTotal + childTotal || 0;
+  const taxes = Math.round(basePrice * 0.15) || 0;
+  const serviceFee = Math.round(basePrice * 0.04) || 0;
+  const totalAmount = basePrice + taxes + serviceFee;
 
   return (
     <div className="space-y-8">
@@ -156,7 +158,7 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                       </Button>
                     )}
                   </div>
-                  <div className="grid gap-4 md:grid-cols-2">
+                  <div className="grid gap-4 md:grid-cols-3">
                     <div className="space-y-2">
                       <Label htmlFor={`adult-${index}-name`} className="text-xs font-medium text-muted-foreground">
                         Full name *
@@ -182,18 +184,18 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                         required
                       />
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`adult-${index}-phone`} className="text-xs font-medium text-muted-foreground">
-                      Phone number *
-                    </Label>
-                    <Input
-                      id={`adult-${index}-phone`}
-                      placeholder="+1 (555) 000-0000"
-                      value={adult.phone}
-                      onChange={(e) => updateAdult(index, "phone", e.target.value)}
-                      required
-                    />
+                    <div className="space-y-2">
+                      <Label htmlFor={`adult-${index}-phone`} className="text-xs font-medium text-muted-foreground">
+                        Phone number *
+                      </Label>
+                      <Input
+                        id={`adult-${index}-phone`}
+                        placeholder="+1 (555) 000-0000"
+                        value={adult.phone}
+                        onChange={(e) => updateAdult(index, "phone", e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -373,33 +375,45 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                 </div>
 
                 <div className="pt-4 border-t border-border space-y-3">
-                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Price Breakdown</Label>
+                  <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Price Summary</Label>
                   <div className="space-y-2 pl-2">
                     {adultCount > 0 && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">
                           Adult {adultCount} × ${adultPrice.toFixed(0)}
                           {isPremiumTime && (
                             <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>
                           )}
                         </span>
-                        <span className="text-sm font-semibold text-foreground">${adultTotal.toFixed(2)}</span>
+                        <span className="font-semibold text-foreground">${adultTotal.toFixed(2)}</span>
                       </div>
                     )}
                     {childCount > 0 && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-muted-foreground">
                           Child {childCount} × ${childPrice.toFixed(0)}
                           {isPremiumTime && (
                             <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>
                           )}
                         </span>
-                        <span className="text-sm font-semibold text-foreground">${childTotal.toFixed(2)}</span>
+                        <span className="font-semibold text-foreground">${childTotal.toFixed(2)}</span>
                       </div>
                     )}
-                    <div className="flex justify-between items-center pt-2 border-t border-border/30">
-                      <span className="text-sm font-semibold text-foreground">Total Price</span>
-                      <span className="text-lg font-bold text-primary">${basePrice.toFixed(2)}</span>
+                    <div className="flex justify-between text-sm pt-2 border-t border-border">
+                      <span className="text-muted-foreground">Subtotal</span>
+                      <span className="font-semibold text-foreground">${basePrice.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Taxes & fees</span>
+                      <span className="font-medium text-foreground">${taxes.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>Service fee</span>
+                      <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between border-t border-border pt-4">
+                      <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
+                      <span className="text-2xl font-semibold text-primary">${totalAmount.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>

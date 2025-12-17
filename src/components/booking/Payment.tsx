@@ -19,7 +19,7 @@ interface PaymentProps {
 const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
   const [activeTab, setActiveTab] = useState("agent-credit");
   const [walletAmount, setWalletAmount] = useState(0);
-  const [walletFlag, setWalletFlag] = useState<string>("No");
+  const [walletEnabled, setWalletEnabled] = useState(false);
   const [walletBalance, setWalletBalance] = useState("850.00");
   const [promoCode, setPromoCode] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -69,20 +69,13 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
   const taxes = Math.round(basePrice * 0.15) || 180;
   const serviceFee = Math.round(basePrice * 0.04) || 50;
   
-  // Calculate wallet redemption based on balance
-  const balanceValue = parseFloat(walletBalance) || 0;
-  const balanceInteger = Math.floor(balanceValue);
-  // Calculate 33% of integer balance, rounded down to nearest 10
-  const redeemableAmount = Math.floor((balanceInteger * 0.33) / 10) * 10;
   // Calculate bill amount before wallet redemption
   const billAmount = basePrice + taxes + serviceFee - discount;
+  // Calculate wallet redemption as 30% of total amount due (if enabled)
+  const walletRedemptionAmount = walletEnabled ? Math.round(billAmount * 0.3 * 100) / 100 : 0;
   // Wallet redemption cannot exceed the bill amount
-  const walletRedemption = walletFlag === "Yes" ? Math.min(redeemableAmount, billAmount) : 0;
+  const walletRedemption = walletEnabled ? Math.min(walletRedemptionAmount, billAmount) : 0;
   const total = billAmount - walletRedemption;
-
-  const handleWalletFlagChange = (value: string) => {
-    setWalletFlag(value);
-  };
 
   const applyPromo = () => {
     // Simple promo code logic
@@ -101,14 +94,10 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2 gap-2 rounded-md border border-border bg-surface-muted p-1 sm:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-2 gap-2 rounded-md border border-border bg-surface-muted p-1 sm:grid-cols-3">
             <TabsTrigger value="agent-credit" className="flex items-center gap-2 text-sm font-medium data-[state=active]:bg-surface data-[state=active]:shadow-sm">
               <Banknote className="h-4 w-4" />
               <span className="hidden sm:inline">Agent credit</span>
-            </TabsTrigger>
-            <TabsTrigger value="wallet" className="flex items-center gap-2 text-sm font-medium data-[state=active]:bg-surface data-[state=active]:shadow-sm">
-              <Wallet className="h-4 w-4" />
-              <span className="hidden sm:inline">Wallet</span>
             </TabsTrigger>
             <TabsTrigger value="net-banking" className="flex items-center gap-2 text-sm font-medium data-[state=active]:bg-surface data-[state=active]:shadow-sm">
               <Building2 className="h-4 w-4" />
@@ -130,36 +119,6 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
                 <p className="text-xs text-muted-foreground">
                   Your agent credit will be used for this booking. The amount will be deducted upon confirmation.
                 </p>
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="wallet" className="mt-6 space-y-4">
-            <Card className="p-5">
-              <div className="space-y-3.5">
-                <div className="flex items-center justify-between border-b border-border pb-3">
-                  <span className="text-sm text-muted-foreground">Wallet balance</span>
-                  <span className="text-lg font-semibold text-foreground">${balanceValue.toFixed(2)}</span>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="wallet-amount" className="text-sm font-medium text-muted-foreground">
-                    Use wallet amount
-                  </Label>
-                  <Input
-                    id="wallet-amount"
-                    type="number"
-                    placeholder="Enter amount"
-                    max={850}
-                    onChange={(e) => setWalletAmount(Math.min(Number(e.target.value), 850))}
-                  />
-                </div>
-                {walletAmount > 0 && (total - walletAmount) > 0 && (
-                  <div className="rounded-md border border-border bg-surface-muted p-3.5">
-                    <p className="text-xs font-medium text-muted-foreground">Remaining amount</p>
-                    <p className="text-xl font-semibold text-primary">${(total - walletAmount).toFixed(2)}</p>
-                    <p className="mt-1 text-xs text-muted-foreground">To be paid via card or other methods</p>
-                  </div>
-                )}
               </div>
             </Card>
           </TabsContent>
@@ -222,54 +181,6 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
           </TabsContent>
         </Tabs>
 
-        {/* Wallet Adjustment Section */}
-        <Card className="p-6">
-          <div className="flex items-center gap-2 mb-4 pb-4 border-b border-border">
-            <Wallet className="h-5 w-5 text-primary" />
-            <h4 className="text-lg font-semibold text-foreground">Wallet Adjustment</h4>
-          </div>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="wallet-flag" className="text-sm font-semibold text-foreground">
-                Wallet Flag
-              </Label>
-              <Select value={walletFlag} onValueChange={handleWalletFlagChange}>
-                <SelectTrigger id="wallet-flag" className="h-11">
-                  <SelectValue placeholder="Select wallet flag" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Yes">Yes</SelectItem>
-                  <SelectItem value="No">No</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {walletFlag === "Yes" && (
-              <div className="space-y-4 pt-2 border-t border-border">
-                <div className="space-y-2">
-                  <Label htmlFor="wallet-balance" className="text-sm font-semibold text-foreground">
-                    Available Balance
-                  </Label>
-                  <div className="h-11 px-3 py-2 bg-muted/50 rounded-md border border-border flex items-center">
-                    <span className="text-sm font-semibold text-foreground">${balanceValue.toFixed(2)}</span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="wallet-redemption" className="text-sm font-semibold text-foreground">
-                    Amount Can Be Redeemed
-                  </Label>
-                  <div className="h-11 px-3 py-2 bg-muted/50 rounded-md border border-border flex items-center">
-                    <span className="text-sm font-semibold text-foreground">${redeemableAmount.toFixed(2)}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Calculated as 33% of balance (rounded down to nearest 10)
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </Card>
-
         {/* Promo Code */}
         <Card className="p-6">
           <div className="space-y-3">
@@ -301,6 +212,7 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
               id="terms"
               checked={termsAccepted}
               onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+              className="rounded-none"
             />
             <div className="flex-1 space-y-1">
               <Label htmlFor="terms" className="text-sm font-medium text-foreground cursor-pointer">
@@ -330,7 +242,7 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
             disabled={!termsAccepted}
           >
             {activeTab !== "net-banking" 
-              ? `Proceed to Payment${activeTab === "wallet" && walletAmount > 0 ? ` - $${(total - walletAmount).toFixed(2)}` : ` - $${total.toFixed(2)}`}`
+              ? `Proceed to Payment - $${total.toFixed(2)}`
               : "Proceed to bank portal"}
           </Button>
         </div>
@@ -454,16 +366,47 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
                 <span className="font-medium">-${discount.toFixed(2)}</span>
               </div>
             )}
-            {walletRedemption > 0 && (
-              <div className="flex justify-between text-sm text-success">
-                <span>Wallet redemption</span>
-                <span className="font-medium">-${walletRedemption.toFixed(2)}</span>
-              </div>
-            )}
             <div className="flex justify-between border-t border-border pt-4">
               <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
-              <span className="text-2xl font-semibold text-primary">${total.toFixed(2)}</span>
+              <span className="text-2xl font-semibold text-primary">${billAmount.toFixed(2)}</span>
             </div>
+
+            {/* Wallet Section */}
+            <div className="space-y-3 pt-4 border-t border-border">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="wallet-enable"
+                  checked={walletEnabled}
+                  onCheckedChange={(checked) => setWalletEnabled(checked === true)}
+                  className="rounded-none"
+                />
+                <Label htmlFor="wallet-enable" className="text-sm font-semibold text-foreground cursor-pointer flex items-center gap-2">
+                  <Wallet className="h-4 w-4" />
+                  Enable Wallet Reduction
+                </Label>
+              </div>
+              
+              {walletEnabled && (
+                <div className="space-y-2 pl-6">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Wallet Balance</span>
+                    <span className="font-semibold text-foreground">${parseFloat(walletBalance || "0").toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Wallet Reduction (30%)</span>
+                    <span className="font-semibold text-success">-${walletRedemption.toFixed(2)}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Final Total */}
+            {walletEnabled && walletRedemption > 0 && (
+              <div className="flex justify-between border-t border-border pt-4 mt-2">
+                <span className="text-sm font-medium text-muted-foreground">Final amount due</span>
+                <span className="text-2xl font-semibold text-primary">${total.toFixed(2)}</span>
+              </div>
+            )}
           </div>
           </div>
         </Card>
@@ -471,14 +414,14 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
 
       {/* Terms & Conditions Dialog */}
       <Dialog open={showTermsDialog} onOpenChange={setShowTermsDialog}>
-        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto [&>button]:right-4 [&>button]:top-4 [&>button]:z-10 [&>button]:h-8 [&>button]:w-8 [&>button]:p-0">
-          <DialogHeader className="pr-8">
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col p-0 [&>button]:right-4 [&>button]:top-4 [&>button]:z-10 [&>button]:h-8 [&>button]:w-8 [&>button]:p-0">
+          <DialogHeader className="pr-8 px-6 pt-6 pb-4 border-b border-border sticky top-0 bg-background z-10">
             <DialogTitle className="text-xl font-bold">Terms & Conditions</DialogTitle>
             <DialogDescription>
               {selectedSupplier?.name || "Supplier"} Terms & Conditions
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-6 mt-4">
+          <div className="space-y-6 px-6 pb-6 overflow-y-auto flex-1">
             {/* What's Included Section */}
             <div>
               <div className="flex items-center gap-3 mb-4">

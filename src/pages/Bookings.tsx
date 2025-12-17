@@ -13,7 +13,7 @@ import VoucherView from "@/components/booking/VoucherView";
 import EmailTemplate from "@/components/booking/EmailTemplate";
 import AIChatbot from "@/components/booking/AIChatbot";
 
-type BookingStep = 1 | 2 | 3 | 4 | 5 | 6;
+type BookingStep = 1 | 2 | 3 | 4 | 5;
 
 const Bookings = () => {
   const [currentStep, setCurrentStep] = useState<BookingStep>(1);
@@ -22,20 +22,19 @@ const Bookings = () => {
 
   const steps = [
     { number: 1, title: "Search" },
-    { number: 2, title: "Results" },
-    { number: 3, title: "Details" },
-    { number: 4, title: "Travelers" },
-    { number: 5, title: "Payment" },
-    { number: 6, title: "Ticket" },
+    { number: 2, title: "Details" },
+    { number: 3, title: "Travelers" },
+    { number: 4, title: "Payment" },
+    { number: 5, title: "Ticket" },
   ];
 
-  const progress = (currentStep / 6) * 100;
+  const progress = (currentStep / 5) * 100;
 
   const handleNext = (data?: any) => {
     if (data) {
       setBookingData({ ...bookingData, ...data });
     }
-    if (currentStep < 6) {
+    if (currentStep < 5) {
       setCurrentStep((prev) => (prev + 1) as BookingStep);
     }
   };
@@ -50,7 +49,7 @@ const Bookings = () => {
     setBookingData(data);
     // Optionally navigate to voucher or confirmation step
     if (data.status === "completed") {
-      setCurrentStep(6); // Confirmation step
+      setCurrentStep(5); // Confirmation step
     }
   };
 
@@ -151,12 +150,11 @@ const Bookings = () => {
             <Progress value={progress} className="h-2" />
           </div>
           <div>
-            {currentStep === 1 && <SearchExperiences onNext={handleNext} />}
-            {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
-            {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-            {currentStep === 5 && <Payment onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-            {currentStep === 6 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
+            {currentStep === 1 && <SearchExperiences onNext={handleNext} searchData={bookingData} />}
+            {currentStep === 2 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
+            {currentStep === 3 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+            {currentStep === 4 && <Payment onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+            {currentStep === 5 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
           </div>
         </div>
       </Card>
