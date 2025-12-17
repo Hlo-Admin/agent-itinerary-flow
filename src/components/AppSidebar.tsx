@@ -32,36 +32,36 @@ export function AppSidebar() {
     <Sidebar 
       collapsible="icon" 
       variant="sidebar"
-      className="border-r border-border/30 bg-background"
+      className="border-r border-sidebar-border bg-sidebar"
       style={{ 
         "--sidebar-width": "6rem",
         "--sidebar-width-icon": "6rem"
       } as React.CSSProperties}
     >
-      <SidebarContent className="px-2 py-4 w-full">
+      <SidebarContent className="px-3 py-6 w-full scrollbar-hide flex flex-col">
         {!collapsed && (
-          <div className="mb-4 pb-3 border-b border-border/20">
-            <div className="flex flex-col items-center gap-1.5">
-              <div className="relative h-12 w-12 rounded-lg bg-gradient-to-br from-accent-blue via-accent-indigo to-accent-purple flex items-center justify-center shadow-lg">
+          <div className="mb-6 pb-4 border-b border-sidebar-border/30">
+            <div className="flex flex-col items-center gap-2">
+              <div className="relative h-12 w-12 rounded-lg bg-primary flex items-center justify-center shadow-lg">
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
-              <h2 className="text-[16px]  text-foreground text-center">B2B</h2>
+              <h2 className="text-sm text-sidebar-foreground text-center font-medium">B2B</h2>
             </div>
           </div>
         )}
         {collapsed && (
-          <div className="mb-4 flex justify-center">
-            <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-accent-blue via-accent-indigo to-accent-purple flex items-center justify-center shadow-lg cursor-pointer">
+          <div className="mb-6 flex justify-center">
+            <div className="h-12 w-12 rounded-lg bg-primary flex items-center justify-center shadow-lg cursor-pointer">
               <Sparkles className="h-6 w-6 text-white" />
             </div>
           </div>
         )}
-        <SidebarGroup className="p-0">
+        <SidebarGroup className="p-0 flex-1">
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-5">
+            <SidebarMenu className="space-y-1.5 w-full">
               {items.map((item, index) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                <SidebarMenuItem key={item.title} className="w-full">
+                  <SidebarMenuButton asChild className="w-full m-0">
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
@@ -69,8 +69,8 @@ export function AppSidebar() {
                         const isActive = item.url === "/" 
                           ? location.pathname === "/"
                           : location.pathname.startsWith(item.url);
-                        return `relative flex flex-col items-center justify-center rounded-md px-0 py-8 w-full transition-all duration-300 ${
-                          isActive ? 'bg-muted/80' : ''
+                        return `relative flex flex-col items-center justify-center rounded-lg px-2 py-3 w-full min-h-[56px] transition-all duration-300 ${
+                          isActive ? 'bg-sidebar-accent shadow-sm' : 'hover:bg-sidebar-accent/50'
                         }`;
                       }}
                       activeClassName=""
@@ -81,14 +81,14 @@ export function AppSidebar() {
                           : location.pathname.startsWith(item.url);
                         return (
                           <div className="flex flex-col items-center w-full gap-1.5">
-                            <div className="transition-all duration-300 flex items-center justify-center">
+                            <div className="transition-all duration-300 flex items-center justify-center w-full">
                               <item.icon 
-                                className={`h-6 w-6 transition-all duration-300 ${isActive ? 'text-foreground stroke-[2]' : 'text-foreground/70'}`}
-                                strokeWidth={1.5} 
+                                className={`h-5 w-5 transition-all duration-300 flex-shrink-0 ${isActive ? 'text-sidebar-foreground' : 'text-sidebar-foreground/70'}`}
+                                strokeWidth={isActive ? 2.5 : 2} 
                               />
                             </div>
                             {!collapsed && (
-                              <span className={`text-xs text-center w-full leading-tight transition-all duration-300 ${isActive ? 'text-foreground font-semibold' : 'text-foreground/70 font-normal'}`}>
+                              <span className={`text-[11px] text-center w-full leading-tight transition-all duration-300 ${isActive ? 'text-sidebar-foreground font-semibold' : 'text-sidebar-foreground/70 font-medium'}`}>
                                 {item.title}
                               </span>
                             )}

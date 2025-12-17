@@ -8,7 +8,10 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle } from "lucide-react";
+import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays } from "lucide-react";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
 
 interface SearchExperiencesProps {
   onNext: (data: any) => void;
@@ -93,7 +96,7 @@ const mockTours = [
 
 const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   const [destination, setDestination] = useState(searchData?.destination || "");
-  const [date, setDate] = useState(searchData?.date || "");
+  const [date, setDate] = useState<Date | undefined>(searchData?.date ? new Date(searchData.date) : undefined);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(searchData?.categories || []);
   const [hasSearched, setHasSearched] = useState(!!(searchData?.destination || searchData?.date));
   const [priceRange, setPriceRange] = useState([0, 200]);
@@ -106,7 +109,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   const [popupAdultCount, setPopupAdultCount] = useState(2);
   const [popupChildCount, setPopupChildCount] = useState(0);
   const [popupTimeSlot, setPopupTimeSlot] = useState("10:00 AM");
-  const [popupDate, setPopupDate] = useState(searchData?.date || "");
+  const [popupDate, setPopupDate] = useState<Date | undefined>(searchData?.date ? new Date(searchData.date) : undefined);
   
   // Mock time slots
   const timeSlots = [
@@ -171,7 +174,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
     setPopupAdultCount(adultCount);
     setPopupChildCount(childCount);
     setPopupTimeSlot(searchData?.selectedTimeSlot || searchData?.bookingDetails?.timeSlot || searchData?.selectedTime || "10:00 AM");
-    setPopupDate(searchData?.date || date || "");
+    setPopupDate(searchData?.date ? new Date(searchData.date) : date);
     setShowBookingPopup(true);
   };
 
@@ -271,12 +274,12 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
       };
       onNext({ 
         destination,
-        date: popupDate || date,
+        date: popupDate ? format(popupDate, 'yyyy-MM-dd') : (date ? format(date, 'yyyy-MM-dd') : ''),
         categories: selectedCategories,
         tour,
         bookingDetails: {
           ...bookingDetails,
-          date: popupDate || date,
+          date: popupDate ? format(popupDate, 'yyyy-MM-dd') : (date ? format(date, 'yyyy-MM-dd') : ''),
           timeSlot: popupTimeSlot,
         }
       });
@@ -305,21 +308,21 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-10 w-full min-w-0 max-w-full overflow-hidden animate-fade-in">
+    <div className="space-y-4 sm:space-y-6 w-full min-w-0 max-w-full animate-fade-in">
       <div className="w-full min-w-0">
-        <h3 className="text-xl sm:text-3xl font-bold text-foreground tracking-tight mb-1 sm:mb-2 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">Find Experiences</h3>
-        <p className="text-xs sm:text-base text-muted-foreground">Search tours and activities for your clients</p>
+        <h3 className="text-lg sm:text-xl font-bold text-foreground tracking-tight mb-1 bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">Find Experiences</h3>
+        <p className="text-xs sm:text-sm text-muted-foreground">Search tours and activities for your clients</p>
       </div>
 
       {/* Search Criteria - First Section */}
-      <Card className="p-4 sm:p-8 border border-border/40 bg-gradient-to-br from-background via-background to-accent-blue/5 w-full min-w-0 max-w-full box-border overflow-hidden shadow-xl animate-scale-in" style={{ animationDelay: '100ms' }}>
-        <div className="flex items-center gap-3 mb-5 sm:mb-6 w-full min-w-0">
-          <div className="p-2 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
-            <Sparkles className="h-5 w-5 text-accent-blue flex-shrink-0" />
+      <Card className="p-4 sm:p-5 md:p-6 border border-border/20 bg-gradient-to-br from-background via-background to-primary/5 w-full min-w-0 max-w-full box-border hover-lift shadow-sm" style={{ overflow: 'visible' }}>
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-5 w-full min-w-0">
+          <div className="p-1.5 sm:p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
           </div>
-          <h4 className="text-base sm:text-lg font-bold text-foreground">Search Criteria</h4>
+          <h4 className="text-sm sm:text-base font-semibold text-foreground">Search Criteria</h4>
         </div>
-        <div className="grid gap-3 sm:gap-6 md:grid-cols-2 w-full min-w-0 max-w-full">
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-2 w-full min-w-0 max-w-full">
           <div className="space-y-2 sm:space-y-3 w-full min-w-0">
             <Label htmlFor="destination" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
               <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
@@ -333,31 +336,46 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
               className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
             />
           </div>
-          <div className="space-y-2 sm:space-y-3 w-full min-w-0">
+          <div className="space-y-2 w-full min-w-0">
             <Label htmlFor="date" className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-foreground">
-              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
+              <CalendarDays className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary flex-shrink-0" />
               Travel Date
             </Label>
-            <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "h-10 sm:h-11 w-full justify-start text-left font-normal text-sm",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarDays className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <CalendarComponent
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </Card>
 
       {/* Quick Filters - Second Section */}
-      <div className="w-full min-w-0 overflow-hidden animate-fade-in" style={{ animationDelay: '200ms' }}>
-        <div className="flex items-center gap-3 mb-5 sm:mb-6 w-full min-w-0">
+      <div className="w-full min-w-0 animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 w-full min-w-0">
           <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
-            <Sparkles className="h-4 w-4 text-accent-purple flex-shrink-0" />
+            <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple flex-shrink-0" />
           </div>
-          <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">Quick Filters</h4>
+          <h4 className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-foreground">Quick Filters</h4>
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-3 lg:grid-cols-5 w-full min-w-0 max-w-full mb-6">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 lg:grid-cols-5 w-full min-w-0 max-w-full mb-4">
           {categories.map((category, index) => {
             const Icon = category.icon;
             const isSelected = selectedCategories.includes(category.name);
@@ -412,31 +430,31 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                 key={category.name}
                 type="button"
                 className={cn(
-                  "group relative flex flex-col items-center justify-center gap-1.5 sm:gap-3 rounded-xl sm:rounded-2xl border-2 bg-background p-2.5 sm:p-5 text-[10px] sm:text-sm font-semibold text-foreground transition-all duration-500 sm:hover:scale-105 sm:hover:shadow-xl w-full min-w-0 max-w-full box-border overflow-hidden animate-scale-in",
+                  "group relative flex flex-col items-center justify-center gap-1.5 sm:gap-2 rounded-lg border-2 bg-background p-2.5 sm:p-3 text-[10px] sm:text-xs font-medium text-foreground transition-all duration-300 hover:scale-[1.02] hover:shadow-md w-full min-w-0 max-w-full box-border overflow-visible animate-scale-in",
                   isSelected 
-                    ? `${colorClass.border} ${colorClass.bg} shadow-lg ring-2 ring-${category.color}/20` 
-                    : "border-border/40 sm:hover:border-accent-blue/40 sm:hover:bg-gradient-to-br sm:hover:from-accent-blue/5 sm:hover:to-accent-indigo/5"
+                    ? `${colorClass.border} ${colorClass.bg} shadow-md` 
+                    : "border-border/30 hover:border-primary/40 hover:bg-primary/5"
                 )}
                 style={{ animationDelay: `${index * 50}ms` }}
                 onClick={() => toggleCategory(category.name)}
               >
                 <div className={cn(
-                  "p-2 sm:p-3 rounded-xl transition-all duration-300 flex-shrink-0 group-hover:scale-110",
+                  "p-1.5 sm:p-2 rounded-lg transition-all duration-300 flex-shrink-0",
                   isSelected 
-                    ? `bg-gradient-to-br ${colorClass.gradient} shadow-md` 
-                    : "bg-gradient-to-br from-muted/60 to-muted/40 group-hover:from-accent-blue/20 group-hover:to-accent-indigo/20"
+                    ? `bg-primary shadow-sm` 
+                    : "bg-muted/50 group-hover:bg-primary/10"
                 )}>
                   <Icon className={cn(
-                    "h-4 w-4 sm:h-5 sm:w-5 transition-all duration-300",
+                    "h-3.5 w-3.5 sm:h-4 sm:w-4 transition-all duration-300",
                     isSelected 
-                      ? "text-white drop-shadow-sm"
-                      : "text-muted-foreground group-hover:text-accent-blue"
+                      ? "text-white"
+                      : "text-muted-foreground group-hover:text-primary"
                   )} />
                 </div>
-                <span className="text-[10px] sm:text-xs text-center line-clamp-2 font-medium">{category.name}</span>
+                <span className="text-[10px] sm:text-xs text-center line-clamp-2 leading-tight">{category.name}</span>
                 {isSelected && (
-                  <div className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-gradient-to-br from-accent-blue to-accent-indigo flex items-center justify-center shadow-lg ring-2 ring-white animate-pulse-glow">
-                    <span className="text-[9px] sm:text-[10px] text-white font-bold">✓</span>
+                  <div className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 rounded-full bg-primary flex items-center justify-center shadow-md ring-1 ring-white/50">
+                    <span className="text-[8px] sm:text-[9px] text-white font-bold">✓</span>
                   </div>
                 )}
               </button>
@@ -445,26 +463,26 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         </div>
       </div>
 
-      <div className="flex justify-end pt-3 sm:pt-4 w-full min-w-0 animate-fade-in" style={{ animationDelay: '300ms' }}>
+      <div className="flex justify-end pt-2 sm:pt-3 w-full min-w-0 animate-fade-in" style={{ animationDelay: '300ms' }}>
         <Button 
           onClick={handleSearch} 
-          className="gap-2 h-11 sm:h-12 px-6 sm:px-8 text-sm sm:text-base font-bold w-full sm:w-auto min-w-0 box-border shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40"
+          className="gap-2 h-10 sm:h-11 px-5 sm:px-6 text-sm font-semibold w-full sm:w-auto min-w-0 box-border shadow-md hover:shadow-lg"
           size="lg"
         >
-          <Search className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+          <Search className="h-4 w-4 flex-shrink-0" />
           <span className="truncate">Search Experiences</span>
         </Button>
       </div>
 
       {/* Results Section - Below Search */}
       {hasSearched && (
-        <div className="space-y-3 sm:space-y-6 w-full min-w-0 max-w-full overflow-hidden mt-8">
+        <div className="space-y-3 sm:space-y-4 w-full min-w-0 max-w-full mt-6">
           {/* Results Header */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
-            <div className="space-y-1 sm:space-y-2 min-w-0 flex-1">
-              <h3 className="text-xl sm:text-3xl lg:text-4xl font-bold text-foreground tracking-tight">Search Results</h3>
-              <p className="text-xs sm:text-base lg:text-lg text-muted-foreground">
-                Found <span className="font-bold text-primary">{filteredTours.length}</span> experiences in {destination || "your destination"}
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
+            <div className="space-y-1 min-w-0 flex-1">
+              <h3 className="text-lg sm:text-xl font-bold text-foreground tracking-tight">Search Results</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Found <span className="font-semibold text-primary">{filteredTours.length}</span> experiences in {destination || "your destination"}
               </p>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
@@ -563,20 +581,20 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                     <Card
                       key={tour.id}
                       className={cn(
-                        "group relative flex flex-row overflow-hidden transition-all duration-500 hover:shadow-2xl border w-full min-w-0 max-w-full box-border animate-scale-in",
+                        "group relative flex flex-row transition-all duration-300 hover:shadow-xl border w-full min-w-0 max-w-full box-border animate-scale-in",
                         isActive 
-                          ? "border-accent-blue border-2 shadow-xl shadow-accent-blue/20 ring-2 ring-accent-blue/20" 
-                          : "border-border/40 hover:border-accent-blue/40 hover:shadow-lg"
+                          ? "border-primary border-2 shadow-lg shadow-primary/20" 
+                          : "border-border/30 hover:border-primary/40 hover:shadow-md"
                       )}
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      style={{ animationDelay: `${index * 100}ms`, overflow: 'visible' }}
                     >
                       {/* Image Section */}
-                      <div className="relative w-32 sm:w-48 md:w-64 h-32 sm:h-48 flex-shrink-0 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-                        <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-accent-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                      <div className="relative w-28 sm:w-40 md:w-56 h-28 sm:h-40 md:h-56 flex-shrink-0 overflow-hidden rounded-l-xl bg-gradient-to-br from-muted to-muted/50">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                         <img 
                           src={tour.image} 
                           alt={tour.name} 
-                          className="h-full w-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110" 
+                          className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105" 
                           loading="lazy"
                           decoding="async"
                           onError={(e) => {
@@ -595,18 +613,18 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                           {tour.category}
                         </div>
                         {isActive && (
-                          <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/10 via-accent-indigo/5 to-transparent border-2 border-accent-blue/50 z-20 animate-pulse-glow" />
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 z-20" />
                         )}
                       </div>
                       
                       {/* Content Section */}
-                      <div className="flex flex-1 flex-col justify-between p-4 sm:p-6 min-w-0 bg-gradient-to-b from-background to-muted/20">
-                        <div className="space-y-2 sm:space-y-3 min-w-0 flex-1">
-                          <div className="space-y-1.5 sm:space-y-2 min-w-0">
-                            <h4 className="text-base sm:text-lg md:text-xl font-bold text-foreground group-hover:text-accent-blue transition-all duration-300 leading-tight line-clamp-2 break-words">
+                      <div className="flex flex-1 flex-col justify-between p-3 sm:p-4 min-w-0 bg-gradient-to-b from-background to-muted/10">
+                        <div className="space-y-2 min-w-0 flex-1">
+                          <div className="space-y-1.5 min-w-0">
+                            <h4 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-all duration-300 leading-tight line-clamp-2 break-words">
                               {tour.name}
                             </h4>
-                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm">
+                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
                               <div className="flex items-center gap-1 flex-shrink-0 px-2 py-0.5 rounded-lg bg-amber/10 border border-amber/20">
                                 <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-amber-500 text-amber-500 flex-shrink-0" />
                                 <span className="font-bold text-foreground text-xs">{tour.rating}</span>
@@ -621,43 +639,43 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                                 <span className="font-medium text-[10px] sm:text-xs truncate">{tour.location}</span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 p-2 sm:p-3 rounded-lg bg-gradient-to-r from-emerald/10 via-emerald/5 to-transparent border border-emerald/20 min-w-0 backdrop-blur-sm">
-                              <div className="p-1 rounded-lg bg-emerald/20 flex-shrink-0">
-                                <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-600" />
+                            <div className="flex items-center gap-1.5 p-1.5 sm:p-2 rounded-lg bg-emerald/5 border border-emerald/10 min-w-0">
+                              <div className="p-0.5 rounded bg-emerald/10 flex-shrink-0">
+                                <CheckCircle2 className="h-3 w-3 text-emerald-600" />
                               </div>
-                              <span className="text-[10px] sm:text-xs font-medium text-foreground line-clamp-1 min-w-0">{tour.cancellation}</span>
+                              <span className="text-[10px] font-medium text-foreground line-clamp-1 min-w-0">{tour.cancellation}</span>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-border/30 mt-2 sm:mt-3 min-w-0">
-                          <div className="flex items-center gap-2 min-w-0 flex-1 px-2 py-1.5 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
-                            <div className="p-1 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20 flex-shrink-0">
-                              <TrendingUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-accent-blue" />
+                        <div className="flex items-center justify-between gap-2 sm:gap-3 pt-2 sm:pt-3 border-t border-border/20 mt-2 min-w-0">
+                          <div className="flex items-center gap-1.5 min-w-0 flex-1 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10">
+                            <div className="p-0.5 rounded bg-primary/10 flex-shrink-0">
+                              <TrendingUp className="h-3 w-3 text-primary" />
                             </div>
-                            <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
-                              <span className="font-bold text-foreground">{tour.suppliers}</span> supplier{tour.suppliers > 1 ? "s" : ""}
+                            <p className="text-[10px] text-muted-foreground truncate">
+                              <span className="font-semibold text-foreground">{tour.suppliers}</span> supplier{tour.suppliers > 1 ? "s" : ""}
                             </p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-accent-blue to-accent-indigo bg-clip-text text-transparent">${tour.price}</p>
-                            <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold">per person</p>
+                            <p className="text-lg sm:text-xl font-bold text-primary">${tour.price}</p>
+                            <p className="text-[9px] text-muted-foreground">per person</p>
                           </div>
-                          <div className="flex gap-2 flex-shrink-0">
-                            <Button variant="outline" size="sm" className="h-8 sm:h-9 text-[10px] sm:text-xs border-border/50 hover:border-accent-blue/50 hover:bg-accent-blue/5 transition-all duration-300">
-                              View Details
+                          <div className="flex gap-1.5 flex-shrink-0">
+                            <Button variant="outline" size="sm" className="h-8 text-[10px] border-border/30 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
+                              View
                             </Button>
                             <Button 
                               size="sm" 
                               className={cn(
-                                "h-8 sm:h-9 px-3 sm:px-4 font-bold text-[10px] sm:text-xs transition-all duration-300",
+                                "h-8 px-3 font-semibold text-[10px] transition-all duration-300",
                                 isActive
-                                  ? "bg-gradient-to-r from-accent-blue to-accent-indigo shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40"
-                                  : "bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-md hover:shadow-lg"
+                                  ? "bg-primary shadow-md shadow-primary/20"
+                                  : "bg-primary hover:bg-primary/90 shadow-sm hover:shadow-md"
                               )}
                               onClick={() => handleSelectTour(tour.id)}
                             >
-                              {isActive ? "✓ Selected" : "Select"}
+                              {isActive ? "✓" : "Select"}
                             </Button>
                           </div>
                         </div>
@@ -704,16 +722,31 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                 {/* Date Selection */}
                 <div className="space-y-2">
                   <Label htmlFor="popup-date" className="text-xs font-semibold uppercase tracking-wide text-muted-foreground flex items-center gap-2">
-                    <Calendar className="h-3.5 w-3.5" />
+                    <CalendarDays className="h-3.5 w-3.5" />
                     Date
                   </Label>
-                  <Input
-                    id="popup-date"
-                    type="date"
-                    value={popupDate}
-                    onChange={(e) => setPopupDate(e.target.value)}
-                    className="h-10"
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "h-10 w-full justify-start text-left font-normal text-sm",
+                          !popupDate && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarDays className="mr-2 h-4 w-4" />
+                        {popupDate ? format(popupDate, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={popupDate}
+                        onSelect={setPopupDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 {/* Ticket Restrictions Info */}
@@ -852,7 +885,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                   </Button>
                   <Button
                     onClick={handleConfirmBooking}
-                    disabled={(popupAdultCount === 0 && popupChildCount === 0) || !popupTimeSlot || !popupDate}
+                    disabled={(popupAdultCount === 0 && popupChildCount === 0) || !popupTimeSlot || !popupDate || !popupDate}
                     className="flex-1 bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90"
                   >
                     Continue

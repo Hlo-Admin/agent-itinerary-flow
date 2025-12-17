@@ -103,15 +103,15 @@ const Clients = () => {
   });
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-semibold text-foreground tracking-tight">Clients</h1>
-          <p className="text-muted-foreground text-sm">Manage your client relationships and bookings</p>
+          <h1 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">Clients</h1>
+          <p className="text-xs text-muted-foreground">Manage your client relationships and bookings</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="w-full sm:w-auto text-sm">
               <UserPlus className="h-4 w-4 mr-2" />
               Add Client
             </Button>
@@ -124,23 +124,23 @@ const Clients = () => {
             <div className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" placeholder="John Doe" />
+                <Input id="name" placeholder="John Doe" className="border-border/30" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="john@example.com" />
+                <Input id="email" type="email" placeholder="john@example.com" className="border-border/30" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" placeholder="+1 (555) 000-0000" />
+                <Input id="phone" placeholder="+1 (555) 000-0000" className="border-border/30" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
-                <Input id="company" placeholder="Company Name" />
+                <Input id="company" placeholder="Company Name" className="border-border/30" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="location">Location</Label>
-                <Input id="location" placeholder="City, Country" />
+                <Input id="location" placeholder="City, Country" className="border-border/30" />
               </div>
             </div>
             <DialogFooter>
@@ -153,18 +153,18 @@ const Clients = () => {
         </Dialog>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search clients by name, email, or company..."
+            placeholder="Search clients..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10"
+            className="pl-10 border-border/30 text-sm"
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px] border-border/30 text-sm">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -175,33 +175,37 @@ const Clients = () => {
         </Select>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Client Directory</CardTitle>
+      <Card className="hover-lift">
+        <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+          <CardTitle className="text-sm font-semibold">Client Directory</CardTitle>
           <CardDescription>
             {filteredClients.length} client{filteredClients.length !== 1 ? "s" : ""} found
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
+        <CardContent className="p-4 sm:p-5 lg:p-6 pt-4 sm:pt-5 lg:pt-6">
+          <div className="overflow-x-auto scrollbar-hide -mx-4 sm:mx-0">
+            <Table className="min-w-[800px] sm:min-w-0">
             <TableHeader>
-              <TableRow>
-                <TableHead>Client</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Company</TableHead>
-                <TableHead>Bookings</TableHead>
-                <TableHead>Total Spent</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="hover:bg-transparent border-b border-border/30">
+                <TableHead className="font-semibold text-foreground">Client</TableHead>
+                <TableHead className="font-semibold text-foreground">Contact</TableHead>
+                <TableHead className="font-semibold text-foreground">Company</TableHead>
+                <TableHead className="font-semibold text-foreground">Bookings</TableHead>
+                <TableHead className="font-semibold text-foreground">Total Spent</TableHead>
+                <TableHead className="font-semibold text-foreground">Status</TableHead>
+                <TableHead className="text-right font-semibold text-foreground">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredClients.map((client) => (
-                <TableRow key={client.id}>
+                <TableRow key={client.id} className="border-b border-border/20 hover:bg-muted/20 transition-colors">
                   <TableCell>
                     <div>
-                      <div className="font-medium">{client.name}</div>
-                      <div className="text-sm text-muted-foreground">{client.location}</div>
+                      <div className="font-semibold">{client.name}</div>
+                      <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
+                        <MapPin className="h-3 w-3" />
+                        {client.location}
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -216,9 +220,9 @@ const Clients = () => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{client.company}</TableCell>
+                  <TableCell className="font-medium">{client.company}</TableCell>
                   <TableCell>
-                    <div className="font-medium">{client.totalBookings}</div>
+                    <div className="font-semibold">{client.totalBookings}</div>
                     <div className="text-xs text-muted-foreground">bookings</div>
                   </TableCell>
                   <TableCell>
@@ -231,11 +235,11 @@ const Clients = () => {
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon">
-                        <Trash2 className="h-4 w-4 text-destructive" />
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive">
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>
@@ -243,6 +247,7 @@ const Clients = () => {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -250,4 +255,3 @@ const Clients = () => {
 };
 
 export default Clients;
-

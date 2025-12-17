@@ -60,72 +60,69 @@ const Bookings = () => {
         "flex-1 overflow-y-auto transition-all duration-500 ease-in-out",
         isChatbotOpen ? "mr-0 sm:mr-96 lg:mr-[420px]" : "mr-0"
       )}>
-        <div className="space-y-4 sm:space-y-12 w-full min-w-0 max-w-full p-1.5 sm:p-6 lg:p-8 animate-fade-in">
-          <div className="flex items-start justify-between gap-4">
-            <div className="space-y-1 sm:space-y-2 w-full min-w-0 flex-1">
-              <div className="flex items-center gap-3 sm:gap-4">
+        <div className="space-y-3 sm:space-y-6 w-full min-w-0 max-w-full p-3 sm:p-4 md:p-6 animate-fade-in">
+          <div className="flex items-start justify-between gap-3 sm:gap-4">
+            <div className="space-y-1 w-full min-w-0 flex-1">
+              <div className="flex items-center gap-2 sm:gap-3">
                 {currentStep > 1 && (
                   <Button
                     onClick={handleBack}
                     variant="ghost"
                     size="icon"
-                    className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-lg hover:bg-muted"
+                    className="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 rounded-lg hover:bg-muted"
                   >
-                    <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <ArrowLeft className="h-4 w-4" />
                     <span className="sr-only">Go back</span>
                   </Button>
                 )}
                 <div className="flex-1">
-                  <h1 className="text-xl sm:text-4xl font-bold text-foreground tracking-tight bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">New Booking</h1>
-                  <p className="text-muted-foreground text-xs sm:text-base">Create a new travel booking for your clients</p>
+                  <h1 className="text-base sm:text-lg font-semibold text-foreground tracking-tight">New Booking</h1>
+                  <p className="text-muted-foreground text-xs mt-0.5">Create a new travel booking for your clients</p>
                 </div>
               </div>
             </div>
             <Button
               onClick={() => setIsChatbotOpen(!isChatbotOpen)}
               className={cn(
-                "h-10 w-10 sm:h-12 sm:w-12 p-0 rounded-xl shadow-lg transition-all duration-300 flex-shrink-0",
+                "h-9 w-9 sm:h-10 sm:w-10 p-0 rounded-lg shadow-md transition-all duration-300 flex-shrink-0 overflow-visible",
                 isChatbotOpen
-                  ? "bg-gradient-to-r from-accent-blue to-accent-indigo text-white"
-                  : "bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 text-accent-blue hover:from-accent-blue/20 hover:to-accent-indigo/20 border border-accent-blue/20"
+                  ? "bg-primary text-white shadow-lg shadow-primary/30"
+                  : "bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
               )}
             >
-              <Bot className="h-5 w-5 sm:h-6 sm:w-6" />
+              <Bot className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
 
-      <Card className="p-1.5 sm:p-8 border border-border/40 w-full min-w-0 max-w-full box-border overflow-hidden shadow-xl bg-gradient-to-br from-background via-background to-muted/10">
-        <div className="space-y-3 sm:space-y-10 w-full min-w-0 max-w-full overflow-hidden">
-          <div className="space-y-3 sm:space-y-8 w-full max-w-full">
-            <div className="w-full max-w-full overflow-x-auto pb-2 -mx-1.5 sm:mx-0 px-1.5 sm:px-0 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
-              <div className="flex items-center gap-1 sm:gap-3 min-w-max">
+      <Card className="p-4 sm:p-5 md:p-6 border border-border/20 w-full min-w-0 max-w-full box-border hover-lift" style={{ overflow: 'visible' }}>
+        <div className="space-y-4 sm:space-y-5 w-full min-w-0 max-w-full">
+          <div className="space-y-3 sm:space-y-4 w-full max-w-full">
+            <div className="w-full max-w-full overflow-x-auto pb-2 -mx-2 sm:mx-0 px-2 sm:px-0 scrollbar-hide">
+              <div className="flex items-center gap-2 sm:gap-4 min-w-max py-1">
                 {steps.map((step, index) => {
                   const isActive = currentStep === step.number;
                   const isComplete = currentStep > step.number;
 
                   return (
                     <Fragment key={step.number}>
-                      <div className="flex flex-col items-center min-w-[32px] sm:min-w-[52px] flex-shrink-0 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
+                      <div className="flex flex-col items-center min-w-[40px] sm:min-w-[48px] flex-shrink-0 animate-fade-in overflow-visible" style={{ animationDelay: `${index * 50}ms` }}>
                         <div
-                          className={`relative flex h-7 w-7 sm:h-10 sm:w-10 items-center justify-center rounded-full border-2 text-[9px] sm:text-sm font-bold transition-all duration-500 ${
+                          className={`relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border-2 text-xs sm:text-sm font-semibold transition-all duration-300 overflow-visible ${
                             isActive
-                              ? "border-accent-blue bg-gradient-to-br from-accent-blue to-accent-indigo text-white shadow-lg shadow-accent-blue/30 scale-110 ring-2 ring-accent-blue/20"
+                              ? "border-primary bg-primary text-white shadow-md shadow-primary/30 scale-105"
                               : isComplete
-                              ? "border-accent-blue/60 bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20 text-accent-blue shadow-md"
-                              : "border-border/50 bg-gradient-to-br from-muted to-muted/80 text-muted-foreground"
+                              ? "border-primary/60 bg-primary/10 text-primary shadow-sm"
+                              : "border-border/40 bg-muted/50 text-muted-foreground"
                           }`}
                         >
                           {step.number}
-                          {isActive && (
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/30 to-transparent animate-pulse" />
-                          )}
                         </div>
                         <span
-                          className={`mt-1.5 sm:mt-2 text-[8px] sm:text-xs font-semibold uppercase tracking-wide whitespace-nowrap transition-all duration-300 ${
+                          className={`mt-1.5 text-[10px] sm:text-xs font-medium uppercase tracking-wide whitespace-nowrap transition-all duration-300 ${
                             isActive 
-                              ? "text-accent-blue font-bold" 
+                              ? "text-primary font-semibold" 
                               : isComplete
-                              ? "text-accent-blue/70"
+                              ? "text-primary/70"
                               : "text-muted-foreground"
                           }`}
                         >
@@ -134,12 +131,12 @@ const Bookings = () => {
                       </div>
                       {index < steps.length - 1 && (
                         <div
-                          className={`h-0.5 min-w-[8px] sm:min-w-[16px] transition-all duration-500 rounded-full ${
+                          className={`h-0.5 min-w-[12px] sm:min-w-[20px] transition-all duration-300 rounded-full ${
                             currentStep > step.number 
-                              ? "bg-gradient-to-r from-accent-blue to-accent-indigo shadow-sm" 
-                              : "bg-border/50"
+                              ? "bg-primary" 
+                              : "bg-border/40"
                           }`}
-                          style={{ width: 'clamp(8px, 2.5vw, 24px)' }}
+                          style={{ width: 'clamp(12px, 3vw, 28px)' }}
                         />
                       )}
                     </Fragment>
@@ -147,7 +144,7 @@ const Bookings = () => {
                 })}
               </div>
             </div>
-            <Progress value={progress} className="h-2" />
+            <Progress value={progress} className="h-1.5" />
           </div>
           <div>
             {currentStep === 1 && <SearchExperiences onNext={handleNext} searchData={bookingData} />}

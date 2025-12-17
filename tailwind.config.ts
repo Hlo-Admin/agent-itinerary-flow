@@ -84,7 +84,7 @@ export default {
         xl: "1rem",
       },
       fontFamily: {
-        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        sans: ['Poppins', 'sans-serif'],
       },
       fontSize: {
         'xs': ['0.8125rem', { lineHeight: '1.25rem' }],

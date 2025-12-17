@@ -102,15 +102,15 @@ const Calendar = () => {
   );
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-semibold text-foreground tracking-tight">Calendar</h1>
-          <p className="text-muted-foreground text-sm">View and manage your bookings schedule</p>
+          <h1 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">Calendar</h1>
+          <p className="text-xs text-muted-foreground">View and manage your bookings schedule</p>
         </div>
         <div className="flex gap-3">
           <Select defaultValue="month">
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-full sm:w-[140px] border-border/30 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -122,34 +122,34 @@ const Calendar = () => {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
+      <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2">
-          <Card>
-            <CardHeader>
+          <Card className="hover-lift">
+            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <CalendarIcon className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-sm font-semibold">
+                  <CalendarIcon className="h-4 w-4 text-primary" />
                   {monthNames[currentMonth]} {currentYear}
                 </CardTitle>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="icon" onClick={() => navigateMonth("prev")}>
+                  <Button variant="outline" size="icon" onClick={() => navigateMonth("prev")} className="border-border/30">
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="icon" onClick={() => navigateMonth("next")}>
+                  <Button variant="outline" size="icon" onClick={() => navigateMonth("next")} className="border-border/30">
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-7 gap-1 mb-2">
+            <CardContent className="p-3 sm:p-4 lg:p-6 pt-3 sm:pt-4 lg:pt-6">
+              <div className="grid grid-cols-7 gap-1 sm:gap-1.5 mb-2">
                 {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                  <div key={day} className="p-2 text-center text-sm font-medium text-muted-foreground">
+                  <div key={day} className="p-1.5 sm:p-2 text-center text-[10px] sm:text-xs md:text-sm font-semibold text-muted-foreground">
                     {day}
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-7 gap-1">
+              <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
                 {Array.from({ length: firstDayOfMonth }).map((_, index) => (
                   <div key={`empty-${index}`} className="aspect-square" />
                 ))}
@@ -164,33 +164,33 @@ const Calendar = () => {
                   return (
                     <div
                       key={day}
-                      className={`aspect-square p-1 border rounded-md ${
-                        isToday ? "bg-primary/10 border-primary" : "border-border"
+                      className={`aspect-square p-1 sm:p-1.5 md:p-2 border rounded-md sm:rounded-lg transition-all hover:shadow-md ${
+                        isToday ? "bg-primary/10 border-primary shadow-sm ring-1 ring-primary/20" : "border-border/30 hover:border-primary/30"
                       }`}
                     >
                       <div
-                        className={`text-sm font-medium mb-1 ${
-                          isToday ? "text-primary" : "text-foreground"
+                        className={`text-[10px] sm:text-xs md:text-sm font-medium mb-0.5 sm:mb-1 ${
+                          isToday ? "text-primary font-bold" : "text-foreground"
                         }`}
                       >
                         {day}
                       </div>
                       {dayBookings.length > 0 && (
-                        <div className="space-y-0.5">
+                        <div className="space-y-1">
                           {dayBookings.slice(0, 2).map((booking) => (
                             <div
                               key={booking.id}
-                              className={`text-xs p-1 rounded truncate ${
+                              className={`text-[9px] sm:text-xs p-0.5 sm:p-1 rounded truncate transition-all ${
                                 booking.status === "confirmed"
-                                  ? "bg-primary/20 text-primary"
-                                  : "bg-muted text-muted-foreground"
+                                  ? "bg-primary/20 text-primary border border-primary/30"
+                                  : "bg-muted text-muted-foreground border border-border/30"
                               }`}
                             >
                               {booking.time}
                             </div>
                           ))}
                           {dayBookings.length > 2 && (
-                            <div className="text-xs text-muted-foreground">
+                            <div className="text-xs text-muted-foreground font-medium">
                               +{dayBookings.length - 2} more
                             </div>
                           )}
@@ -204,25 +204,25 @@ const Calendar = () => {
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Today's Bookings</CardTitle>
-              <CardDescription>
+        <div className="space-y-4 sm:space-y-6">
+          <Card className="hover-lift">
+            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+              <CardTitle className="text-sm font-semibold">Today's Bookings</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
                 {todayBookings.length} booking{todayBookings.length !== 1 ? "s" : ""} scheduled
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-5 lg:p-6 pt-4 sm:pt-5 lg:pt-6">
               {todayBookings.length > 0 ? (
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {todayBookings.map((booking) => (
-                    <div key={booking.id} className="space-y-2 p-3 rounded-lg border border-border">
+                    <div key={booking.id} className="space-y-1.5 sm:space-y-2 p-3 sm:p-4 rounded-lg border border-border/30 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 transition-all">
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
-                          <div className="font-medium text-sm">{booking.destination}</div>
+                          <div className="font-semibold text-sm">{booking.destination}</div>
                           <div className="text-xs text-muted-foreground">{booking.client}</div>
                         </div>
-                        <Badge variant={booking.status === "confirmed" ? "default" : "secondary"}>
+                        <Badge variant={booking.status === "confirmed" ? "default" : "secondary"} className="ml-2">
                           {booking.status}
                         </Badge>
                       </div>
@@ -247,20 +247,20 @@ const Calendar = () => {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Upcoming</CardTitle>
-              <CardDescription>Next 7 days</CardDescription>
+          <Card className="hover-lift">
+            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+              <CardTitle className="text-sm font-semibold">Upcoming</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Next 7 days</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
+            <CardContent className="p-4 sm:p-5 lg:p-6 pt-4 sm:pt-5 lg:pt-6">
+              <div className="space-y-2 sm:space-y-3">
                 {bookings
                   .filter((booking) => booking.date > new Date())
                   .slice(0, 5)
                   .map((booking) => (
-                    <div key={booking.id} className="space-y-1 p-3 rounded-lg border border-border">
+                    <div key={booking.id} className="space-y-1 p-3 sm:p-4 rounded-lg border border-border/30 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 transition-all">
                       <div className="flex items-center justify-between">
-                        <div className="font-medium text-sm">{booking.destination}</div>
+                        <div className="font-semibold text-sm">{booking.destination}</div>
                         <Badge variant={booking.status === "confirmed" ? "default" : "secondary"}>
                           {booking.status}
                         </Badge>
@@ -284,4 +284,3 @@ const Calendar = () => {
 };
 
 export default Calendar;
-

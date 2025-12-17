@@ -15,7 +15,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen flex w-full bg-background overflow-x-hidden">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0 w-0">
-          <header className="h-14 sm:h-16 border-b border-border/30 bg-background/95 backdrop-blur-2xl flex items-center justify-between px-4 sm:px-6 sticky top-0 z-50 shadow-sm">
+          <header className="h-14 sm:h-16 border-b border-border/20 bg-gray-50/95 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 sticky top-0 z-50 shadow-sm">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-2xl">
               {/* <SidebarTrigger className="hover:bg-muted/50 rounded-lg p-2 transition-all" /> */}
               <div className="relative flex-1 max-w-md hidden sm:block">
@@ -36,8 +36,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </header>
-          <main className="flex-1 overflow-y-auto w-full min-w-0">
-            <div className="w-full mx-auto p-4 sm:p-6 lg:p-8 animate-fade-in min-w-0 box-border">
+          <main className="flex-1 overflow-y-auto w-full min-w-0 scrollbar-hide">
+            <div className="w-full mx-auto p-3 sm:p-4 md:p-6 lg:p-8 animate-fade-in min-w-0 box-border">
               {children}
             </div>
           </main>
