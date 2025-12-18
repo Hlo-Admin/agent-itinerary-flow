@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { CreditCard, Wallet, Building2, Banknote, FileText, Users, Clock, Tag, CheckCircle2 } from "lucide-react";
+import { CreditCard, Wallet, Building2, Banknote, FileText, Users, Clock, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface PaymentProps {
@@ -21,8 +21,6 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
   const [walletAmount, setWalletAmount] = useState(0);
   const [walletEnabled, setWalletEnabled] = useState(false);
   const [walletBalance, setWalletBalance] = useState("850.00");
-  const [promoCode, setPromoCode] = useState("");
-  const [discount, setDiscount] = useState(0);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTermsDialog, setShowTermsDialog] = useState(false);
 
@@ -70,19 +68,12 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
   const serviceFee = Math.round(basePrice * 0.04) || 50;
   
   // Calculate bill amount before wallet redemption
-  const billAmount = basePrice + taxes + serviceFee - discount;
+  const billAmount = basePrice + taxes + serviceFee;
   // Calculate wallet redemption as 30% of total amount due (if enabled)
   const walletRedemptionAmount = walletEnabled ? Math.round(billAmount * 0.3 * 100) / 100 : 0;
   // Wallet redemption cannot exceed the bill amount
   const walletRedemption = walletEnabled ? Math.min(walletRedemptionAmount, billAmount) : 0;
   const total = billAmount - walletRedemption;
-
-  const applyPromo = () => {
-    // Simple promo code logic
-    if (promoCode.toUpperCase() === "SAVE20") {
-      setDiscount(20);
-    }
-  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -180,30 +171,6 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
             </Card>
           </TabsContent>
         </Tabs>
-
-        {/* Promo Code */}
-        <Card className="p-6">
-          <div className="space-y-3">
-            <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Have a promo code?</h4>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <div className="relative flex-1">
-                <Tag className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Enter promo code"
-                  value={promoCode}
-                  onChange={(e) => setPromoCode(e.target.value)}
-                  className="pl-11"
-                />
-              </div>
-              <Button onClick={applyPromo} variant="outline" className="sm:w-auto">
-                Apply
-              </Button>
-            </div>
-            {discount > 0 && (
-              <p className="text-xs font-medium text-success">Promo code applied successfully</p>
-            )}
-          </div>
-        </Card>
 
         {/* Terms and Conditions */}
         <Card className="p-6">
@@ -360,12 +327,6 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
               <span>Service fee</span>
               <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
             </div>
-            {discount > 0 && (
-              <div className="flex justify-between text-sm text-success">
-                <span>Promo discount</span>
-                <span className="font-medium">-${discount.toFixed(2)}</span>
-              </div>
-            )}
             <div className="flex justify-between border-t border-border pt-4">
               <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
               <span className="text-2xl font-semibold text-primary">${billAmount.toFixed(2)}</span>
