@@ -74,15 +74,15 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           {/* Header with Logo */}
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">H</span>
+              <span className="text-white text-2xl font-semibold">H</span>
             </div>
-            <h1 className="text-2xl font-bold text-foreground">HAVEN HOTELS</h1>
+            <h1 className="text-2xl font-semibold text-foreground">HAVEN HOTELS</h1>
           </div>
 
           {/* Greeting */}
           <div>
-            <p className="text-lg text-muted-foreground">Hey, {passengerFirstName}</p>
-            <h2 className="text-3xl font-bold text-foreground mt-2">Your reservation is confirmed!</h2>
+            <p className="text-sm text-muted-foreground">Hey, {passengerFirstName}</p>
+            <h2 className="text-2xl font-semibold text-foreground mt-2">Your reservation is confirmed!</h2>
           </div>
 
           {/* Divider */}
@@ -91,7 +91,7 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           {/* Confirmation Number */}
           <div>
             <p className="text-sm text-muted-foreground">Confirmation Number:</p>
-            <p className="text-xl font-bold text-orange-600 mt-1">{bookingRef}</p>
+            <p className="text-xl font-semibold text-orange-600 mt-1">{bookingRef}</p>
           </div>
 
           {/* Hotel/Tour Image */}
@@ -166,7 +166,7 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           {/* Amount */}
           <div>
             <p className="text-sm text-muted-foreground">Amount:</p>
-            <p className="text-2xl font-bold text-foreground mt-1">₹{totalAmount.toLocaleString('en-IN')}</p>
+            <p className="text-2xl font-semibold text-foreground mt-1">₹{totalAmount.toLocaleString('en-IN')}</p>
           </div>
 
           {/* Divider */}
@@ -209,9 +209,9 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                    <span className="text-white text-xl font-bold">H</span>
+                    <span className="text-white text-xl font-semibold">H</span>
                   </div>
-                  <h3 className="text-lg font-bold text-foreground">HAVEN HOTELS</h3>
+                  <h3 className="text-lg font-semibold text-foreground">HAVEN HOTELS</h3>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {tourLocation || supplier.address || "Location details available upon confirmation"}
@@ -224,10 +224,10 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
                   <Facebook className="h-4 w-4" />
                 </Button>
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-muted">
-                  <span className="text-xs font-bold">X</span>
+                  <span className="text-xs font-semibold">X</span>
                 </Button>
                 <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-muted">
-                  <span className="text-xs font-bold">p</span>
+                  <span className="text-xs font-semibold">p</span>
                 </Button>
               </div>
             </div>
