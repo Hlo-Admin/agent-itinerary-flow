@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Download, Mail, RefreshCw, AlertCircle, CheckCircle2, Users, Calendar, Clock, MapPin, Building2, Ticket, CreditCard } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
-import { Badge } from "@/components/ui/badge";
+import { Download, Mail, Facebook } from "lucide-react";
 
 interface VoucherViewProps {
   onNext: () => void;
@@ -10,388 +8,252 @@ interface VoucherViewProps {
 }
 
 const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
-  const bookingRef = "TRV" + Math.random().toString(36).substr(2, 9).toUpperCase();
+  // Use a consistent booking reference (or generate one and store it)
+  const bookingRef = bookingData?.bookingReference || "VJ" + Math.random().toString(36).substr(2, 6).toUpperCase().slice(0, 6);
   
-  // Extract booking data
+  // Extract booking data from all previous steps
   const adults = bookingData?.adults || [];
   const children = bookingData?.children || [];
   const tour = bookingData?.tour || {};
   const supplier = bookingData?.supplier || {};
   const selectedDate = bookingData?.selectedDate;
   const selectedTimeSlot = bookingData?.selectedTimeSlot;
+  const selectedTime = bookingData?.selectedTime;
   const tickets = bookingData?.tickets || { adult: 0, child: 0 };
   
-  // Calculate prices
+  // Get actual ticket counts
   const adultCount = tickets.adult || adults.length || 0;
   const childCount = tickets.child || children.length || 0;
+  
+  // Calculate prices from supplier data
   const isPremiumTime = selectedTimeSlot?.type === "premium";
-  const adultPrice = isPremiumTime ? (supplier.adultPremiumPrice || supplier.adultPrice || 0) : (supplier.adultPrice || 0);
-  const childPrice = isPremiumTime ? (supplier.childPremiumPrice || supplier.childPrice || 0) : (supplier.childPrice || 0);
+  const adultPrice = isPremiumTime 
+    ? (supplier.adultPremiumPrice || supplier.adultPrice || 0) 
+    : (supplier.adultPrice || 0);
+  const childPrice = isPremiumTime 
+    ? (supplier.childPremiumPrice || supplier.childPrice || 0) 
+    : (supplier.childPrice || 0);
   const adultTotal = adultPrice * adultCount;
   const childTotal = childPrice * childCount;
-  const basePrice = adultTotal + childTotal || 1200;
-  const taxes = Math.round(basePrice * 0.15) || 180;
-  const serviceFee = Math.round(basePrice * 0.04) || 50;
-  const totalAmount = basePrice + taxes + serviceFee;
+  const basePrice = adultTotal + childTotal;
+  
+  // Use payment totals if available, otherwise calculate
+  const paymentTotal = bookingData?.totalAmount || bookingData?.finalTotal;
+  const paymentTaxes = bookingData?.taxes;
+  const paymentServiceFee = bookingData?.serviceFee;
+  const paymentDiscount = bookingData?.discount || 0;
+  
+  const taxes = paymentTaxes !== undefined ? paymentTaxes : Math.round(basePrice * 0.15);
+  const serviceFee = paymentServiceFee !== undefined ? paymentServiceFee : Math.round(basePrice * 0.04);
+  const totalAmount = paymentTotal !== undefined 
+    ? paymentTotal 
+    : (basePrice + taxes + serviceFee - paymentDiscount);
   
   // Lead passenger (first adult)
-  const leadPassenger = adults.length > 0 ? adults[0] : { name: "N/A", email: "", phone: "" };
+  const leadPassenger = adults.length > 0 ? adults[0] : { name: "", email: "", phone: "" };
+  const passengerFirstName = leadPassenger.name?.split(' ')[0] || "Guest";
 
-  // Helper function to get alternate image for specific tours
-  const getAlternateImage = (tourName: string) => {
-    // Use images from other tours as alternates
-    const alternateImages: Record<string, string> = {
-      "Museum and Art Gallery Tour": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop&auto=format", // Culinary Food Tasting
-      "Historic Walking Tour of Old Town": "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&h=600&fit=crop&auto=format", // Mountain Hiking
-    };
-    
-    // Return alternate image if tour name matches
-    if (alternateImages[tourName]) {
-      return alternateImages[tourName];
-    }
-    // Fallback to default
-    return "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format";
-  };
+  // Format tour date (this is a tour booking, not hotel, so we show tour date)
+  const tourDate = selectedDate ? new Date(selectedDate) : new Date();
+  
+  // For hotel-style display, we can show the tour date as "check-in" and calculate end date from duration
+  // Tour duration is typically in hours, but for display purposes we'll use the same date
+  const checkInDate = tourDate;
+  const checkOutDate = new Date(tourDate); // Same day for tours, or can be calculated from tour.duration if available
+
+  // Get tour image - prioritize actual tour data
+  const tourImage = tour.image || tour.imageUrl || bookingData?.tour?.image || bookingData?.tour?.imageUrl || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop&auto=format";
+  
+  // Get tour location/address
+  const tourLocation = tour.location || tour.address || supplier.address || "";
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      {/* Left Side - Booking Details */}
-      <div className="lg:col-span-2 space-y-6">
-        {/* Success Header */}
-        <Card className="p-6 bg-gradient-to-br from-success/10 via-success/5 to-background border-success/20">
-          <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success/20 border-2 border-success/40">
-              <CheckCircle2 className="h-7 w-7 text-success" />
+    <div className="max-w-3xl mx-auto space-y-6">
+      <Card className="p-0 overflow-hidden border border-border/50 bg-white">
+        <div className="p-8 space-y-6">
+          {/* Header with Logo */}
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+              <span className="text-white text-2xl font-bold">H</span>
             </div>
-            <div className="flex-1">
-              <h3 className="text-2xl font-bold text-foreground">Booking Confirmed!</h3>
-              <p className="text-sm text-muted-foreground font-medium mt-1">
-                Booking Reference: <span className="font-bold text-foreground">{bookingRef}</span>
+            <h1 className="text-2xl font-bold text-foreground">HAVEN HOTELS</h1>
+          </div>
+
+          {/* Greeting */}
+          <div>
+            <p className="text-lg text-muted-foreground">Hey, {passengerFirstName}</p>
+            <h2 className="text-3xl font-bold text-foreground mt-2">Your reservation is confirmed!</h2>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border/50"></div>
+
+          {/* Confirmation Number */}
+          <div>
+            <p className="text-sm text-muted-foreground">Confirmation Number:</p>
+            <p className="text-xl font-bold text-orange-600 mt-1">{bookingRef}</p>
+          </div>
+
+          {/* Hotel/Tour Image */}
+          <div className="w-full h-64 overflow-hidden rounded-lg">
+            <img
+              src={tourImage}
+              alt={tour.name || "Reservation image"}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop&auto=format";
+              }}
+            />
+          </div>
+
+          {/* Reservation Details - Two Column Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Check-In */}
+            <div>
+              <p className="text-2xl font-semibold text-foreground">{checkInDate.toLocaleDateString('en-US', { weekday: 'long' })}</p>
+              <p className="text-xl font-semibold text-foreground mt-1">{checkInDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              <p className="text-sm text-muted-foreground mt-2 uppercase tracking-wide">Check-In</p>
+            </div>
+
+            {/* Check-Out */}
+            <div>
+              <p className="text-2xl font-semibold text-foreground">{checkOutDate.toLocaleDateString('en-US', { weekday: 'long' })}</p>
+              <p className="text-xl font-semibold text-foreground mt-1">{checkOutDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              <p className="text-sm text-muted-foreground mt-2 uppercase tracking-wide">Check-Out</p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border/50"></div>
+
+          {/* Guest Information - Two Column Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm text-muted-foreground">Name:</p>
+              <p className="text-base font-semibold text-foreground mt-1">
+                {leadPassenger.name || (adults.length > 0 && adults[0]?.name) || "Guest"}
               </p>
             </div>
-            <div className="flex flex-col items-end gap-2">
-              <Badge variant="secondary" className="bg-success/20 text-success border-success/40 px-3 py-1">
-                Confirmed
-              </Badge>
+            <div>
+              <p className="text-sm text-muted-foreground">Experience Type:</p>
+              <p className="text-base font-semibold text-foreground mt-1">
+                {tour.name || "Tour Experience"}
+              </p>
             </div>
           </div>
-        </Card>
 
-        {/* Ticket Details Card */}
-        <Card className="p-0 overflow-hidden border-2 border-primary/10">
-          <div className="p-6 bg-gradient-to-r from-primary/5 via-primary/5 to-transparent border-b border-border/50">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <Ticket className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold text-foreground">Ticket Details</h4>
-                  <p className="text-xs text-muted-foreground">Your booking confirmation</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Ticket Number</p>
-                <p className="text-xl font-bold text-primary mt-1">{bookingRef}</p>
-              </div>
+          <div>
+            <p className="text-sm text-muted-foreground">Number of Guests:</p>
+            <p className="text-base font-semibold text-foreground mt-1">
+              {adultCount} {adultCount === 1 ? 'Adult' : 'Adults'}{childCount > 0 ? `, ${childCount} ${childCount === 1 ? 'Child' : 'Children'}` : ''}
+            </p>
+            {selectedTimeSlot && (
+              <p className="text-sm text-muted-foreground mt-1">
+                Time: {selectedTimeSlot.label || selectedTime || ""}
+              </p>
+            )}
+            {!selectedTimeSlot && selectedTime && (
+              <p className="text-sm text-muted-foreground mt-1">
+                Time: {selectedTime}
+              </p>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border/50"></div>
+
+          {/* Amount */}
+          <div>
+            <p className="text-sm text-muted-foreground">Amount:</p>
+            <p className="text-2xl font-bold text-foreground mt-1">₹{totalAmount.toLocaleString('en-IN')}</p>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border/50"></div>
+
+          {/* Special Requests */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm text-muted-foreground">Special Requests:</p>
+            </div>
+            <div>
+              <p className="text-sm text-foreground">
+                If you have any special requests or need further assistance, please call 887-658-1234.
+              </p>
             </div>
           </div>
-          
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Booking Information */}
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Users className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  <div className="flex-1">
-                    <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Lead Passenger</h4>
-                    <p className="text-base font-bold text-foreground">{leadPassenger.name || "N/A"}</p>
-                    {leadPassenger.email && (
-                      <p className="text-sm text-muted-foreground mt-1">{leadPassenger.email}</p>
-                    )}
+
+          {/* Divider */}
+          <div className="border-t border-border/50"></div>
+
+          {/* Location/Address */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm text-muted-foreground">Location:</p>
+            </div>
+            <div>
+              <p className="text-sm text-foreground">
+                {tourLocation || supplier.address || (tour.name ? `${tour.name}, Location TBD` : "Location details will be provided")}
+              </p>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-border/50"></div>
+
+          {/* Footer */}
+          <div className="pt-6 space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              {/* Logo and Address */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                    <span className="text-white text-xl font-bold">H</span>
                   </div>
+                  <h3 className="text-lg font-bold text-foreground">HAVEN HOTELS</h3>
                 </div>
-                
-                {selectedDate && (
-                  <div className="flex items-start gap-3">
-                    <Calendar className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Travel Date</h4>
-                      <p className="text-base font-bold text-foreground">
-                        {new Date(selectedDate).toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                
-                {selectedTimeSlot && (
-                  <div className="flex items-start gap-3">
-                    <Clock className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Time Slot</h4>
-                      <div className="flex items-center gap-2">
-                        <p className="text-base font-bold text-foreground">{selectedTimeSlot.label}</p>
-                        {isPremiumTime && (
-                          <Badge variant="secondary" className="text-xs">Premium</Badge>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                
-                {supplier?.name && (
-                  <div className="flex items-start gap-3">
-                    <Building2 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                    <div className="flex-1">
-                      <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Supplier</h4>
-                      <p className="text-base font-bold text-foreground">{supplier.name}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* QR Code */}
-              <div className="flex flex-col items-center justify-center space-y-4">
-                <div className="p-5 bg-gradient-to-br from-muted/50 to-background rounded-xl border-2 border-border/50 shadow-lg">
-                  <QRCodeSVG
-                    value={bookingRef}
-                    size={180}
-                    level="H"
-                    includeMargin={true}
-                  />
-                </div>
-                <p className="text-xs text-center text-muted-foreground max-w-[200px]">
-                  Present this QR code at the venue for entry
+                <p className="text-xs text-muted-foreground">
+                  {tourLocation || supplier.address || "Location details available upon confirmation"}
                 </p>
               </div>
-            </div>
-          </div>
-        </Card>
 
-        {/* Passenger Details Card */}
-        {(adults.length > 0 || children.length > 0) && (
-          <Card className="p-0 overflow-hidden border-2 border-border/50">
-            <div className="p-6 bg-gradient-to-r from-accent-blue/5 via-accent-indigo/5 to-transparent border-b border-border/50">
+              {/* Social Media */}
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-accent-blue/10">
-                  <Users className="h-5 w-5 text-accent-blue" />
-                </div>
-                <div>
-                  <h4 className="text-lg font-bold text-foreground">Passenger Details</h4>
-                  <p className="text-xs text-muted-foreground">
-                    {adultCount} Adult{adultCount !== 1 ? 's' : ''}
-                    {childCount > 0 && `, ${childCount} Child${childCount !== 1 ? 'ren' : ''}`}
-                  </p>
-                </div>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-muted">
+                  <Facebook className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-muted">
+                  <span className="text-xs font-bold">X</span>
+                </Button>
+                <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full hover:bg-muted">
+                  <span className="text-xs font-bold">p</span>
+                </Button>
               </div>
             </div>
-            
-            <div className="p-6 space-y-6">
-              {/* Adult Passengers */}
-              {adults.length > 0 && (
-                <div className="space-y-4">
-                  <h5 className="text-sm font-semibold text-foreground uppercase tracking-wide">Adult Passengers</h5>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {adults.map((adult: any, index: number) => (
-                      <div key={index} className="p-4 rounded-lg bg-gradient-to-br from-muted/30 to-muted/10 border border-border/50">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="text-xs font-bold text-primary">{index + 1}</span>
-                            </div>
-                            <div>
-                              <p className="font-bold text-foreground">{adult.name || `Adult ${index + 1}`}</p>
-                              {index === 0 && (
-                                <Badge variant="secondary" className="text-[10px] mt-1">Lead Passenger</Badge>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="space-y-1.5 mt-3 pl-10">
-                          {adult.email && (
-                            <p className="text-xs text-muted-foreground">
-                              <span className="font-semibold">Email:</span> {adult.email}
-                            </p>
-                          )}
-                          {adult.phone && (
-                            <p className="text-xs text-muted-foreground">
-                              <span className="font-semibold">Phone:</span> {adult.phone}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              
-              {/* Child Passengers */}
-              {children.length > 0 && (
-                <div className="space-y-4 pt-4 border-t border-border/50">
-                  <h5 className="text-sm font-semibold text-foreground uppercase tracking-wide">Child Passengers</h5>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    {children.map((child: any, index: number) => (
-                      <div key={index} className="p-4 rounded-lg bg-gradient-to-br from-accent-emerald/10 to-accent-teal/5 border border-accent-emerald/20">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-accent-emerald/20 flex items-center justify-center">
-                              <span className="text-xs font-bold text-accent-emerald">{index + 1}</span>
-                            </div>
-                            <div>
-                              <p className="font-bold text-foreground">{child.name || `Child ${index + 1}`}</p>
-                              <Badge variant="secondary" className="text-[10px] mt-1 bg-accent-emerald/20 text-accent-emerald">Child</Badge>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="space-y-1.5 mt-3 pl-10">
-                          {child.dob && (
-                            <p className="text-xs text-muted-foreground">
-                              <span className="font-semibold">Date of Birth:</span> {new Date(child.dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-        )}
 
-        {/* Financial Summary Card */}
-        <Card className="p-0 overflow-hidden border-2 border-border/50">
-          <div className="p-6 bg-gradient-to-r from-accent-indigo/5 via-accent-blue/5 to-transparent border-b border-border/50">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-accent-indigo/10">
-                <CreditCard className="h-5 w-5 text-accent-indigo" />
-              </div>
-              <div>
-                <h4 className="text-lg font-bold text-foreground">Financial Summary</h4>
-                <p className="text-xs text-muted-foreground">Complete payment breakdown</p>
-              </div>
-            </div>
+            <p className="text-xs text-muted-foreground text-center">© 2024 Haven Hotel</p>
+            <p className="text-xs text-muted-foreground text-center">
+              If you don't want to hear from us, <a href="#" className="text-primary underline">click here</a>.
+            </p>
           </div>
-          
-          <div className="p-6 space-y-4">
-            {/* Price Breakdown */}
-            {adultCount > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Adult {adultCount} × ${adultPrice.toFixed(0)}
-                  {isPremiumTime && <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>}
-                </span>
-                <span className="font-semibold text-foreground">${adultTotal.toFixed(2)}</span>
-              </div>
-            )}
-            {childCount > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">
-                  Child {childCount} × ${childPrice.toFixed(0)}
-                  {isPremiumTime && <Badge variant="secondary" className="ml-2 text-[9px] px-1 py-0">Premium</Badge>}
-                </span>
-                <span className="font-semibold text-foreground">${childTotal.toFixed(2)}</span>
-              </div>
-            )}
-            <div className="flex justify-between text-sm pt-2 border-t border-border">
-              <span className="text-muted-foreground">Subtotal</span>
-              <span className="font-semibold text-foreground">${basePrice.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Taxes & fees</span>
-              <span className="font-medium text-foreground">${taxes.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Service fee</span>
-              <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
-            </div>
-            <div className="border-t-2 border-primary/20 pt-4 flex justify-between items-center">
-              <div>
-                <span className="text-base font-semibold text-foreground block">Total Paid</span>
-                <span className="text-xs text-muted-foreground mt-1">Payment method: Agent credit</span>
-              </div>
-              <span className="text-2xl font-bold text-primary">${totalAmount.toFixed(2)}</span>
-            </div>
-          </div>
-        </Card>
-
-        {/* Action Buttons */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm hover:bg-accent-blue/10 hover:border-accent-blue/30">
-            <Mail className="h-4 w-4" />
-            Send email
-          </Button>
-          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm hover:bg-accent-indigo/10 hover:border-accent-indigo/30">
-            <Download className="h-4 w-4" />
-            Download PDF
-          </Button>
-          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm text-destructive border-destructive/60 hover:bg-destructive hover:text-destructive-foreground">
-            <AlertCircle className="h-4 w-4" />
-            Refund
-          </Button>
-          <Button variant="outline" className="flex items-center gap-2 h-11 text-sm hover:bg-accent-emerald/10 hover:border-accent-emerald/30">
-            <RefreshCw className="h-4 w-4" />
-            Rebook
-          </Button>
         </div>
+      </Card>
 
-        <div className="flex justify-end pt-3">
-          <Button onClick={onNext} className="h-12 px-8 text-base font-semibold bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary">
-            View Confirmation Email
-          </Button>
-        </div>
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <Button className="flex items-center gap-2 h-11 px-6" onClick={() => window.print()}>
+          <Download className="h-4 w-4" />
+          Download PDF
+        </Button>
+        <Button variant="outline" className="flex items-center gap-2 h-11 px-6">
+          <Mail className="h-4 w-4" />
+          Send Email
+        </Button>
+        <Button variant="outline" className="h-11 px-6" onClick={onNext}>
+          Create New Booking
+        </Button>
       </div>
-
-      {/* Right Side - Destination Image */}
-      {bookingData?.tour && (
-        <div className="lg:col-span-1">
-          <Card className="p-0 overflow-hidden sticky top-8">
-            <div className="relative w-full h-96 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-              <img
-                src={bookingData.tour.image || bookingData.tour.imageUrl || "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format"}
-                alt={bookingData.tour.name || "Park image"}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  // For specific tours, use other tour's image instead of placeholder
-                  if (bookingData.tour?.name === "Museum and Art Gallery Tour" || bookingData.tour?.name === "Historic Walking Tour of Old Town") {
-                    target.src = getAlternateImage(bookingData.tour.name);
-                  } else {
-                    target.src = `https://via.placeholder.com/800x400/6366f1/ffffff?text=${encodeURIComponent(bookingData.tour?.name || 'Park Image')}`;
-                  }
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h4 className="text-2xl font-bold text-white drop-shadow-lg mb-2">{bookingData.tour.name}</h4>
-                {bookingData?.supplier?.name && (
-                  <p className="text-sm text-white/90 drop-shadow">{bookingData.supplier.name}</p>
-                )}
-                {bookingData?.selectedDate && (
-                  <p className="text-xs text-white/80 drop-shadow mt-2">
-                    {new Date(bookingData.selectedDate).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                )}
-                {bookingData?.selectedTimeSlot && (
-                  <p className="text-xs text-white/80 drop-shadow">
-                    {bookingData.selectedTimeSlot.label}
-                  </p>
-                )}
-              </div>
-            </div>
-          </Card>
-        </div>
-      )}
     </div>
   );
 };

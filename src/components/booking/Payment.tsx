@@ -414,7 +414,7 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
 
       {/* Terms & Conditions Dialog */}
       <Dialog open={showTermsDialog} onOpenChange={setShowTermsDialog}>
-        <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col p-0 [&>button]:right-4 [&>button]:top-4 [&>button]:z-10 [&>button]:h-8 [&>button]:w-8 [&>button]:p-0">
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] flex flex-col p-0 [&>button]:right-4 [&>button]:top-4 [&>button]:z-10 [&>button]:h-8 [&>button]:w-8 [&>button]:p-0 [&>button]:flex [&>button]:items-center [&>button]:justify-center">
           <DialogHeader className="pr-8 px-6 pt-6 pb-4 border-b border-border sticky top-0 bg-background z-10">
             <DialogTitle className="text-xl font-bold">Terms & Conditions</DialogTitle>
             <DialogDescription>

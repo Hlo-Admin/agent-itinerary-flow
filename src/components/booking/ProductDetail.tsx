@@ -144,14 +144,6 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   const selectedChildTotal = selectedChildPrice * childTickets;
   const selectedGrandTotal = selectedAdultTotal + selectedChildTotal;
 
-  const handleContinue = () => {
-    onNext({
-      tour,
-      selectedDate,
-      selectedTime,
-      tickets: { adult: adultTickets, child: childTickets },
-    });
-  };
 
   return (
     <div className="space-y-6 sm:space-y-8 animate-fade-in">
