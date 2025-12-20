@@ -247,19 +247,19 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
             </div>
           )}
           
-          <div className="p-6 space-y-6">
-            <div className="flex items-center gap-2 pb-4 border-b border-border">
+          <div className="p-4 pt-0 space-y-3">
+            <div className="flex items-center gap-2 pb-2 border-b border-border">
               <FileText className="h-5 w-5 text-primary" />
               <h4 className="text-xl font-semibold text-foreground">Fare Breakup</h4>
             </div>
 
           {/* Booking Details */}
           {(selectedSupplier || adultCount > 0 || childCount > 0) && (
-            <div className="space-y-4 pb-4 border-b border-border">
-              <div className="space-y-2">
+            <div className="space-y-2 pb-3 border-b border-border">
+              <div className="space-y-1.5">
                 <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Booking Details</Label>
                 {selectedSupplier && (
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
                       <Building2 className="h-4 w-4 text-muted-foreground" />
                       <p className="text-sm font-bold text-foreground">{selectedSupplier.name}</p>
@@ -275,7 +275,7 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
                     )}
                   </div>
                 )}
-                <div className="flex items-center gap-2 pt-2">
+                <div className="flex items-center gap-2 pt-1.5">
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <div className="flex-1">
                     {adultCount > 0 && (
@@ -291,7 +291,7 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
           )}
 
           {/* Price Breakdown */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Price Summary</Label>
             {adultCount > 0 && (
               <div className="flex justify-between text-sm">
@@ -327,13 +327,13 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
               <span>Service fee</span>
               <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between border-t border-border pt-4">
+            <div className="flex justify-between border-t border-border pt-3">
               <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
               <span className="text-2xl font-semibold text-primary">${billAmount.toFixed(2)}</span>
             </div>
 
             {/* Wallet Section */}
-            <div className="space-y-3 pt-4 border-t border-border">
+            <div className="space-y-2 pt-3 border-t border-border">
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id="wallet-enable"
@@ -363,7 +363,7 @@ const Payment = ({ onNext, onBack, bookingData }: PaymentProps) => {
 
             {/* Final Total */}
             {walletEnabled && walletRedemption > 0 && (
-              <div className="flex justify-between border-t border-border pt-4 mt-2">
+              <div className="flex justify-between border-t border-border pt-3 mt-2">
                 <span className="text-sm font-medium text-muted-foreground">Final amount due</span>
                 <span className="text-2xl font-semibold text-primary">${total.toFixed(2)}</span>
               </div>

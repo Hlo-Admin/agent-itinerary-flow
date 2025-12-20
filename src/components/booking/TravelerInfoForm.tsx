@@ -287,7 +287,7 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
         {/* Right Side - Destination Price Summary */}
         <div className="lg:col-span-1">
           {selectedTour && selectedSupplier && (
-            <Card className="sticky top-8 space-y-6 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20 overflow-hidden">
+            <Card className="sticky top-8 space-y-4 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20 overflow-hidden">
               {/* Destination Image */}
               {selectedTour && (
                 <div className="relative w-full h-48 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
@@ -309,50 +309,54 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                 </div>
               )}
               
-              <div className="p-6 space-y-4">
-                <div className="flex items-center gap-2 pb-4 border-b border-border">
+              <div className="p-4 pt-0 space-y-2">
+                <div className="flex items-center gap-2 pb-2 border-b border-border">
                   <MapPin className="h-5 w-5 text-primary" />
                   <h4 className="text-lg font-semibold text-foreground">Destination</h4>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="space-y-2">
+                <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
                       <Building2 className="h-4 w-4 text-muted-foreground" />
-                      <p className="text-sm font-bold text-foreground">{selectedTour.name}</p>
+                      <p className="text-sm font-bold text-foreground">{selectedTour.name} (Category Name)</p>
                     </div>
                   {selectedSupplier && (
                     <Badge variant="secondary" className="ml-6">
                       {selectedSupplier.name}
                     </Badge>
                   )}
-                  {selectedDate && (
-                    <div className="flex items-center gap-2 pl-6">
-                      <Calendar className="h-3 w-3 text-muted-foreground" />
-                      <p className="text-xs font-semibold text-foreground">
-                        {new Date(selectedDate).toLocaleDateString('en-US', { 
-                          weekday: 'short', 
-                          year: 'numeric', 
-                          month: 'short', 
-                          day: 'numeric' 
-                        })}
-                      </p>
-                    </div>
-                  )}
-                  {selectedTimeSlot && (
-                    <div className="flex items-center gap-2 pl-6">
-                      <Clock className="h-3 w-3 text-muted-foreground" />
-                      <p className="text-xs font-semibold text-foreground">{selectedTimeSlot.label}</p>
-                      {isPremiumTime && (
-                        <Badge variant="secondary" className="text-[9px] px-1.5 py-0">Premium</Badge>
+                  {(selectedDate || selectedTimeSlot) && (
+                    <div className="flex items-center gap-4 pl-6">
+                      {selectedDate && (
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-3 w-3 text-muted-foreground" />
+                          <p className="text-xs font-semibold text-foreground">
+                            {new Date(selectedDate).toLocaleDateString('en-US', { 
+                              weekday: 'short', 
+                              year: 'numeric', 
+                              month: 'short', 
+                              day: 'numeric' 
+                            })}
+                          </p>
+                        </div>
+                      )}
+                      {selectedTimeSlot && (
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <p className="text-xs font-semibold text-foreground">{selectedTimeSlot.label}</p>
+                          {isPremiumTime && (
+                            <Badge variant="secondary" className="text-[9px] px-1.5 py-0">Premium</Badge>
+                          )}
+                        </div>
                       )}
                     </div>
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-border space-y-3">
+                <div className="pt-3 border-t border-border space-y-2">
                   <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Passenger Count</Label>
-                  <div className="space-y-2 pl-2">
+                  <div className="space-y-1.5 pl-2">
                     {adultCount > 0 && (
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Adults</span>
@@ -366,7 +370,7 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                       </div>
                     )}
                     {(adultCount > 0 || childCount > 0) && (
-                      <div className="flex justify-between items-center pt-2 border-t border-border/30">
+                      <div className="flex justify-between items-center pt-1.5 border-t border-border/30">
                         <span className="text-sm font-semibold text-foreground">Total Passengers</span>
                         <span className="text-lg font-bold text-primary">{adultCount + childCount}</span>
                       </div>
@@ -374,9 +378,9 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-border space-y-3">
+                <div className="pt-3 border-t border-border space-y-2">
                   <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Price Summary</Label>
-                  <div className="space-y-2 pl-2">
+                  <div className="space-y-1.5 pl-2">
                     {adultCount > 0 && (
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">
@@ -399,7 +403,7 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                         <span className="font-semibold text-foreground">${childTotal.toFixed(2)}</span>
                       </div>
                     )}
-                    <div className="flex justify-between text-sm pt-2 border-t border-border">
+                    <div className="flex justify-between text-sm pt-1.5 border-t border-border">
                       <span className="text-muted-foreground">Subtotal</span>
                       <span className="font-semibold text-foreground">${basePrice.toFixed(2)}</span>
                     </div>
@@ -411,7 +415,7 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                       <span>Service fee</span>
                       <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between border-t border-border pt-4">
+                    <div className="flex justify-between border-t border-border pt-3">
                       <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
                       <span className="text-2xl font-semibold text-primary">${totalAmount.toFixed(2)}</span>
                     </div>

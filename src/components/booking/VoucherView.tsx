@@ -68,9 +68,9 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
   const tourLocation = tour.location || tour.address || supplier.address || "";
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <Card className="p-0 overflow-hidden border border-border/50 bg-white">
-        <div className="p-8 space-y-6">
+    <div className="max-w-3xl mx-auto space-y-4">
+      <Card className="p-0 overflow-visible border border-border/50 bg-white">
+        <div className="p-6 space-y-4">
           {/* Header with Logo */}
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
@@ -79,10 +79,19 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
             <h1 className="text-2xl font-semibold text-foreground">HAVEN HOTELS</h1>
           </div>
 
-          {/* Greeting */}
-          <div>
-            <p className="text-sm text-muted-foreground">Hey, {passengerFirstName}</p>
-            <h2 className="text-2xl font-semibold text-foreground mt-2">Your reservation is confirmed!</h2>
+          {/* Greeting with QR Code */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1">
+              <p className="text-sm text-muted-foreground">Hey, {passengerFirstName}</p>
+              <h2 className="text-2xl font-semibold text-foreground mt-1">Your reservation is confirmed!</h2>
+            </div>
+            <div className="flex-shrink-0">
+              <img 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(bookingRef)}`}
+                alt="QR Code"
+                className="w-[100px] h-[100px]"
+              />
+            </div>
           </div>
 
           {/* Divider */}
@@ -91,11 +100,11 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           {/* Confirmation Number */}
           <div>
             <p className="text-sm text-muted-foreground">Confirmation Number:</p>
-            <p className="text-xl font-semibold text-orange-600 mt-1">{bookingRef}</p>
+            <p className="text-xl font-semibold text-orange-600 mt-0.5">{bookingRef}</p>
           </div>
 
           {/* Hotel/Tour Image */}
-          <div className="w-full h-64 overflow-hidden rounded-lg">
+          <div className="w-full h-56 overflow-hidden rounded-lg">
             <img
               src={tourImage}
               alt={tour.name || "Reservation image"}
@@ -108,19 +117,19 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           </div>
 
           {/* Reservation Details - Two Column Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Check-In */}
             <div>
               <p className="text-2xl font-semibold text-foreground">{checkInDate.toLocaleDateString('en-US', { weekday: 'long' })}</p>
-              <p className="text-xl font-semibold text-foreground mt-1">{checkInDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-              <p className="text-sm text-muted-foreground mt-2 uppercase tracking-wide">Check-In</p>
+              <p className="text-xl font-semibold text-foreground mt-0.5">{checkInDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              <p className="text-sm text-muted-foreground mt-1 uppercase tracking-wide">Check-In</p>
             </div>
 
             {/* Check-Out */}
             <div>
               <p className="text-2xl font-semibold text-foreground">{checkOutDate.toLocaleDateString('en-US', { weekday: 'long' })}</p>
-              <p className="text-xl font-semibold text-foreground mt-1">{checkOutDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-              <p className="text-sm text-muted-foreground mt-2 uppercase tracking-wide">Check-Out</p>
+              <p className="text-xl font-semibold text-foreground mt-0.5">{checkOutDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+              <p className="text-sm text-muted-foreground mt-1 uppercase tracking-wide">Check-Out</p>
             </div>
           </div>
 
@@ -128,16 +137,16 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           <div className="border-t border-border/50"></div>
 
           {/* Guest Information - Two Column Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Name:</p>
-              <p className="text-base font-semibold text-foreground mt-1">
+              <p className="text-base font-semibold text-foreground mt-0.5">
                 {leadPassenger.name || (adults.length > 0 && adults[0]?.name) || "Guest"}
               </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Experience Type:</p>
-              <p className="text-base font-semibold text-foreground mt-1">
+              <p className="text-base font-semibold text-foreground mt-0.5">
                 {tour.name || "Tour Experience"}
               </p>
             </div>
@@ -145,16 +154,16 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
 
           <div>
             <p className="text-sm text-muted-foreground">Number of Guests:</p>
-            <p className="text-base font-semibold text-foreground mt-1">
+            <p className="text-base font-semibold text-foreground mt-0.5">
               {adultCount} {adultCount === 1 ? 'Adult' : 'Adults'}{childCount > 0 ? `, ${childCount} ${childCount === 1 ? 'Child' : 'Children'}` : ''}
             </p>
             {selectedTimeSlot && (
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-sm text-muted-foreground mt-0.5">
                 Time: {selectedTimeSlot.label || selectedTime || ""}
               </p>
             )}
             {!selectedTimeSlot && selectedTime && (
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="text-sm text-muted-foreground mt-0.5">
                 Time: {selectedTime}
               </p>
             )}
@@ -166,14 +175,14 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           {/* Amount */}
           <div>
             <p className="text-sm text-muted-foreground">Amount:</p>
-            <p className="text-2xl font-semibold text-foreground mt-1">₹{totalAmount.toLocaleString('en-IN')}</p>
+            <p className="text-2xl font-semibold text-foreground mt-0.5">₹{totalAmount.toLocaleString('en-IN')}</p>
           </div>
 
           {/* Divider */}
           <div className="border-t border-border/50"></div>
 
           {/* Special Requests */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Special Requests:</p>
             </div>
@@ -188,7 +197,7 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           <div className="border-t border-border/50"></div>
 
           {/* Location/Address */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-muted-foreground">Location:</p>
             </div>
@@ -203,7 +212,7 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           <div className="border-t border-border/50"></div>
 
           {/* Footer */}
-          <div className="pt-6 space-y-4">
+          <div className="pt-4 space-y-3">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               {/* Logo and Address */}
               <div className="space-y-2">

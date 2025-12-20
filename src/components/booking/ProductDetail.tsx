@@ -442,70 +442,66 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
         </div>
 
         <Card className="h-fit lg:sticky lg:top-8 p-8 space-y-6 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20">
-          <div className="flex items-center gap-2 pb-4 border-b border-border">
+          <div className="flex items-center gap-2 pb-2 border-b border-border">
             <Calendar className="h-5 w-5 text-primary" />
             <h4 className="text-xl font-semibold text-foreground">Booking Requirements</h4>
           </div>
 
           <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="tour-date" className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
-                Select Date
-              </Label>
-              <Input
-                id="tour-date"
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-                className="h-11"
-              />
-            </div>
+            {/* Date and Time in same row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="tour-date" className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Select Date
+                </Label>
+                <Input
+                  id="tour-date"
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="h-11"
+                />
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tour-time" className="text-sm font-semibold text-foreground">
-                Select Time Slot
-              </Label>
-              <Select value={selectedTime} onValueChange={setSelectedTime}>
-                <SelectTrigger id="tour-time" className="h-11">
-                  <SelectValue placeholder="Select a time slot" />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeSlots.map((slot) => (
-                    <SelectItem key={slot.id} value={slot.id}>
-                      <div className="flex items-center justify-between w-full">
-                        <span>{slot.label}</span>
-                        {slot.type === "premium" && (
-                          <Badge variant="secondary" className="ml-2 text-[10px]">Premium</Badge>
-                        )}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {selectedTimeSlot && (
-                <p className="text-xs text-muted-foreground">
-                  {selectedTimeSlot.type === "premium" 
-                    ? "Premium time slot - Higher pricing applies" 
-                    : "Standard time slot"}
-                </p>
-              )}
+              <div className="space-y-1">
+                <Label htmlFor="tour-time" className="text-sm font-semibold text-foreground">
+                  Select Time Slot
+                </Label>
+                <Select value={selectedTime} onValueChange={setSelectedTime}>
+                  <SelectTrigger id="tour-time" className="h-11">
+                    <SelectValue placeholder="Select a time slot" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {timeSlots.map((slot) => (
+                      <SelectItem key={slot.id} value={slot.id}>
+                        <div className="flex items-center justify-between w-full">
+                          <span>{slot.label}</span>
+                          {slot.type === "premium" && (
+                            <Badge variant="secondary" className="ml-2 text-[10px]">Premium</Badge>
+                          )}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
+           
           </div>
 
-          <div className="space-y-4 pt-4 border-t border-border">
+          <div className="space-y-4 pt-2 border-t border-border">
             <Label className="text-sm font-semibold text-foreground">Ticket Quantity</Label>
             
-            <div className="space-y-3">
+            {/* Adult and Child in same row */}
+            <div className="grid grid-cols-2 gap-3">
               {[
                 { label: "Adult", count: adultTickets, setCount: setAdultTickets },
                 { label: "Child (5-12)", count: childTickets, setCount: setChildTickets },
               ].map((ticket) => (
-                <div key={ticket.label} className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
-                  <div>
-                    <p className="font-semibold text-foreground text-sm">{ticket.label}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
+                <div key={ticket.label} className="flex flex-col gap-2 p-3 rounded-lg bg-muted/30">
+                  <p className="font-semibold text-foreground text-sm">{ticket.label}</p>
+                  <div className="flex items-center justify-center gap-3">
                     <Button
                       size="icon"
                       variant="outline"
@@ -547,21 +543,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                   <p className="text-xs text-muted-foreground mb-1">Supplier</p>
                   <p className="text-sm font-semibold text-foreground">{selectedSupplierData.name}</p>
                 </div>
-                {selectedTimeSlot && (
-                  <div>
-                    <p className="text-xs text-muted-foreground mb-1">Time Slot</p>
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-semibold text-foreground">{selectedTimeSlot.label}</p>
-                      {isPremiumTime && (
-                        <Badge variant="secondary" className="text-[10px]">Premium</Badge>
-                      )}
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <p className="text-xs text-muted-foreground mb-1">Total Price</p>
-                  <p className="text-lg font-bold text-primary">${selectedGrandTotal.toFixed(2)}</p>
-                </div>
+                
                 <div className="space-y-1 pt-2 border-t border-border/50">
                   {adultTickets > 0 && (
                     <div className="flex justify-between text-xs">

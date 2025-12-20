@@ -1,7 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import ReactECharts from 'echarts-for-react';
+import { useMemo } from 'react';
 import { TrendingUp, DollarSign, Ticket, Calendar } from "lucide-react";
 
 const Dashboard = () => {
@@ -125,6 +126,176 @@ const Dashboard = () => {
     return `₹${num.toLocaleString('en-IN')}`;
   };
 
+  // Pie Chart Options
+  const pieChartOption = useMemo(() => ({
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)',
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 12
+      }
+    },
+    legend: {
+      orient: 'vertical',
+      left: 'right',
+      top: 'center',
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 12
+      },
+      itemWidth: 10,
+      itemHeight: 10
+    },
+    series: [
+      {
+        name: 'Parks',
+        type: 'pie',
+        radius: ['30%', '70%'],
+        center: ['40%', '50%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 8,
+          borderColor: '#ffffff',
+          borderWidth: 2
+        },
+        label: {
+          show: true,
+          formatter: '{b}: {d}%',
+          fontSize: 11,
+          color: '#1e293b'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 12,
+            fontWeight: 'bold'
+          }
+        },
+        data: topParksData.map((item, index) => ({
+          value: item.value,
+          name: item.name,
+          itemStyle: {
+            color: COLORS[index % COLORS.length]
+          }
+        })),
+        animation: true,
+        animationType: 'scale'
+      }
+    ]
+  }), [topParksData]);
+
+  // Bar Chart Options
+  const barChartOption = useMemo(() => ({
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      },
+      backgroundColor: '#ffffff',
+      borderColor: '#e2e8f0',
+      borderWidth: 1,
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 12
+      }
+    },
+    legend: {
+      data: ['Tickets', "Value ('000)"],
+      textStyle: {
+        color: '#1e293b',
+        fontSize: 12
+      },
+      itemWidth: 10,
+      itemHeight: 10,
+      top: 10
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: fortNightsData.map(item => item.period),
+      axisLabel: {
+        color: '#64748b',
+        fontSize: 12
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#e2e8f0'
+        }
+      }
+    },
+    yAxis: [
+      {
+        type: 'value',
+        name: 'Tickets',
+        position: 'left',
+        axisLabel: {
+          color: '#2196F3',
+          fontSize: 12
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#2196F3'
+          }
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#e2e8f0',
+            opacity: 0.3,
+            type: 'dashed'
+          }
+        }
+      },
+      {
+        type: 'value',
+        name: "Value ('000)",
+        position: 'right',
+        axisLabel: {
+          color: '#4ECDC4',
+          fontSize: 12
+        },
+        axisLine: {
+          lineStyle: {
+            color: '#4ECDC4'
+          }
+        },
+        splitLine: {
+          show: false
+        }
+      }
+    ],
+    series: [
+      {
+        name: 'Tickets',
+        type: 'bar',
+        yAxisIndex: 0,
+        data: fortNightsData.map(item => item.tickets),
+        itemStyle: {
+          color: '#2196F3',
+          borderRadius: [8, 8, 0, 0]
+        }
+      },
+      {
+        name: "Value ('000)",
+        type: 'bar',
+        yAxisIndex: 1,
+        data: fortNightsData.map(item => item.value),
+        itemStyle: {
+          color: '#4ECDC4',
+          borderRadius: [8, 8, 0, 0]
+        }
+      }
+    ]
+  }), [fortNightsData]);
+
   return (
     <div className="space-y-4 sm:space-y-6 animate-fade-in">
       {/* Header Section */}
@@ -222,37 +393,11 @@ const Dashboard = () => {
             <CardTitle className="text-sm font-semibold">Top 10 Parks Sales Pie Chart</CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5">
-            <ResponsiveContainer width="100%" height={280} className="sm:h-[320px]">
-              <PieChart>
-                <Pie
-                  data={topParksData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={90}
-                  innerRadius={30}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {topParksData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    borderRadius: '6px', 
-                    border: '1px solid hsl(var(--border))',
-                    fontSize: '12px',
-                    padding: '8px 12px'
-                  }} 
-                />
-                <Legend 
-                  wrapperStyle={{ fontSize: '12px', paddingTop: '12px' }}
-                  iconSize={10}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <ReactECharts
+              option={pieChartOption}
+              style={{ height: '280px', width: '100%' }}
+              opts={{ renderer: 'canvas' }}
+            />
           </CardContent>
         </Card>
 
@@ -264,18 +409,11 @@ const Dashboard = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5">
-            <ResponsiveContainer width="100%" height={280} className="sm:h-[320px]">
-              <BarChart data={fortNightsData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                <XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" tick={{ fontSize: 12 }} />
-                <YAxis yAxisId="left" orientation="left" stroke="#2196F3" tick={{ fontSize: 12 }} />
-                <YAxis yAxisId="right" orientation="right" stroke="#4ECDC4" tick={{ fontSize: 12 }} />
-                <Tooltip contentStyle={{ borderRadius: '6px', border: '1px solid hsl(var(--border))', fontSize: '12px', padding: '8px 12px' }} />
-                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }} iconSize={10} />
-                <Bar yAxisId="left" dataKey="tickets" fill="#2196F3" name="Tickets" radius={[8, 8, 0, 0]} />
-                <Bar yAxisId="right" dataKey="value" fill="#4ECDC4" name="Value ('000)" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <ReactECharts
+              option={barChartOption}
+              style={{ height: '280px', width: '100%' }}
+              opts={{ renderer: 'canvas' }}
+            />
           </CardContent>
         </Card>
       </div>

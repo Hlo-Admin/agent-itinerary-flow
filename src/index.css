@@ -141,12 +141,52 @@
   
   body {
     @apply bg-background text-foreground antialiased w-full overflow-x-hidden;
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 0.875rem; /* 14px base - smaller than default 16px */
+    line-height: 1.5;
     letter-spacing: -0.01em;
     max-width: 100vw;
     width: 100%;
     position: relative;
+  }
+
+  /* Global icon size reduction - exclude ECharts SVGs */
+  svg:not([id*="echarts"]):not([class*="echarts"]) {
+    width: 0.8125em;
+    height: 0.8125em;
+  }
+  
+  /* Ensure ECharts canvases and SVGs are properly sized */
+  canvas[id*="echarts"],
+  svg[id*="echarts"] {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+  
+  /* Reduce specific icon sizes */
+  [class*="h-4"] svg,
+  [class*="w-4"] svg,
+  svg.h-4,
+  svg.w-4 {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  
+  [class*="h-5"] svg,
+  [class*="w-5"] svg,
+  svg.h-5,
+  svg.w-5 {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  
+  [class*="h-6"] svg,
+  [class*="w-6"] svg,
+  svg.h-6,
+  svg.w-6 {
+    width: 1rem;
+    height: 1rem;
   }
   
   #root {
