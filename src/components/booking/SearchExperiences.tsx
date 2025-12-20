@@ -327,7 +327,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
       {/* Search Criteria - First Section */}
       <Card className="p-3 sm:p-4 md:p-5 border border-border/20 bg-gradient-to-br from-background via-background to-primary/5 w-full min-w-0 max-w-full box-border hover-lift shadow-sm" style={{ overflow: 'visible' }}>
         <div className="flex items-center gap-2 sm:gap-3 w-full min-w-0">
-          <h3 className="text-base sm:text-lg font-bold text-foreground tracking-tight whitespace-nowrap flex-shrink-0">Find Experiences</h3>
+          <h3 className="text-base sm:text-md text-foreground tracking-tight whitespace-nowrap flex-shrink-0">Find Experiences</h3>
           <div className="flex-1 min-w-0">
             <Input
               id="destination"

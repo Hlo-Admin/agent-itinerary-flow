@@ -310,10 +310,7 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
               )}
               
               <div className="p-4 pt-0 space-y-2">
-                <div className="flex items-center gap-2 pb-2 border-b border-border">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <h4 className="text-lg font-semibold text-foreground">Destination</h4>
-                </div>
+                
 
                 <div className="space-y-2">
                   <div className="space-y-1.5">
