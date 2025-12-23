@@ -23,7 +23,7 @@ const items = [
 ];
 
 export function AppSidebar({ showExtendedSidebar, setShowExtendedSidebar }: { showExtendedSidebar: boolean; setShowExtendedSidebar: (show: boolean) => void }) {
-  const { state, isMobile } = useSidebar();
+  const { state, isMobile, setOpen, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
 
@@ -33,6 +33,21 @@ export function AppSidebar({ showExtendedSidebar, setShowExtendedSidebar }: { sh
 
   const closeExtendedSidebar = () => {
     setShowExtendedSidebar(false);
+  };
+
+  const handleMenuItemClick = () => {
+    // Close the sidebar when a menu item is clicked
+    if (isMobile) {
+      // On mobile, close the offcanvas sidebar
+      setOpenMobile(false);
+    } else {
+      // On desktop, collapse the sidebar if it's expanded
+      if (!collapsed) {
+        setOpen(false);
+      }
+    }
+    // Also close extended sidebar if open
+    closeExtendedSidebar();
   };
 
   const dashboardSubItems = [
@@ -75,6 +90,7 @@ export function AppSidebar({ showExtendedSidebar, setShowExtendedSidebar }: { sh
                     activeClassName=""
                     onClick={() => {
                       closeExtendedSidebar();
+                      handleMenuItemClick();
                     }}
                   >
                     {subItem.title}
@@ -157,6 +173,7 @@ export function AppSidebar({ showExtendedSidebar, setShowExtendedSidebar }: { sh
                               isActive ? 'bg-sidebar-accent shadow-sm' : 'hover:bg-sidebar-accent/50'
                             }`}
                             activeClassName=""
+                            onClick={handleMenuItemClick}
                           >
                             <div className="flex flex-col items-center w-full gap-1">
                               <div className="transition-all duration-300 flex items-center justify-center w-full">

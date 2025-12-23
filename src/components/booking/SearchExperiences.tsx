@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, Heart } from "lucide-react";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { format } from "date-fns";
 
 interface SearchExperiencesProps {
@@ -92,6 +93,25 @@ const mockTours = [
   },
 ];
 
+// Mock destination suggestions
+const destinationSuggestions = [
+  "Dubai",
+  "Abu Dhabi",
+  "Sharjah",
+  "Ras Al Khaimah",
+  "Fujairah",
+  "Burj Khalifa",
+  "Palm Jumeirah",
+  "Dubai Mall",
+  "Dubai Marina",
+  "Jumeirah Beach",
+  "Desert Safari",
+  "Dubai Aquarium",
+  "IMG Worlds",
+  "Dubai Parks",
+  "Global Village",
+];
+
 const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   const [destination, setDestination] = useState(searchData?.destination || "");
   const [date, setDate] = useState<Date | undefined>(searchData?.date ? new Date(searchData.date) : undefined);
@@ -115,6 +135,9 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   const [favoritesCategoryFilter, setFavoritesCategoryFilter] = useState("all");
   const [favoritesSortBy, setFavoritesSortBy] = useState("popular");
   const [showFavoritesFilters, setShowFavoritesFilters] = useState(false);
+  const [showDestinationDropdown, setShowDestinationDropdown] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const inputRef = useRef<HTMLInputElement>(null);
   
   // Mock time slots
   const timeSlots = [
@@ -198,11 +221,53 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
     "desert-safaris": ["Safari", "Adventure", "Outdoor"],
   };
 
+  // Map category names to tour categories for the new category dropdown
+  const categoryNameToTourCategories: Record<string, string[]> = {
+    "all": [],
+    "Themes & Adventure Parks": ["Outdoor", "Adventure", "Theme"],
+    "Public & Green Parks": ["Park", "Nature"],
+    "Land Marks & Observation Decks": ["Landmark", "Observation", "History"],
+    "Family Entertainment + Food Shows & Malls": ["Food Tours", "Food", "Entertainment"],
+    "Cultural + Heritage Museums": ["Museums", "History", "Cultural", "Museum"],
+    "Animal & Nature Parks": ["Nature", "Animal", "Wildlife"],
+    "Cruises": ["Cruise", "Boat"],
+    "Water Parks": ["Water"],
+  };
+
+  // Safe category selection handler
+  const handleCategoryChange = (value: string) => {
+    try {
+      setSelectedCategory(value);
+    } catch (error) {
+      console.error("Error changing category:", error);
+      setSelectedCategory("all");
+    }
+  };
+
   // Filter tours based on category, price range, and selected categories from quick filters
   const filteredTours = mockTours
     .filter((tour) => {
       // Price range filter
       const priceMatch = tour.price >= priceRange[0] && tour.price <= priceRange[1];
+      
+      // Category filter from new dropdown (next to search field)
+      let newCategoryMatch = true;
+      if (selectedCategory && selectedCategory !== "all") {
+        try {
+          const mappedCategories = categoryNameToTourCategories[selectedCategory] || [];
+          if (mappedCategories.length > 0) {
+            newCategoryMatch = mappedCategories.some((cat) => {
+              const tourCategoryLower = (tour.category || "").toLowerCase();
+              const mappedCatLower = (cat || "").toLowerCase();
+              return tourCategoryLower.includes(mappedCatLower) || mappedCatLower.includes(tourCategoryLower);
+            });
+          }
+        } catch (error) {
+          // If there's any error in filtering, show all results
+          console.error("Error in category filtering:", error);
+          newCategoryMatch = true;
+        }
+      }
       
       // Category filter from dropdown
       let categoryMatch = true;
@@ -240,7 +305,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         });
       }
       
-      return priceMatch && categoryMatch && quickFilterMatch;
+      return priceMatch && categoryMatch && quickFilterMatch && newCategoryMatch;
     })
     .sort((a, b) => {
       // Sort based on sortBy value
@@ -311,9 +376,22 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   const favoriteTours = mockTours.filter((tour) => favorites.includes(tour.id));
 
   const handleSearch = () => {
-    setHasSearched(true);
-    // Don't call onNext here - we want to show results on the same page
+    // Navigate to results screen
+    onNext({
+      destination,
+      date: date ? format(date, 'yyyy-MM-dd') : '',
+      searchCategory: selectedCategory,
+      categories: selectedCategories,
+      searchPerformed: true,
+    });
   };
+
+  // Filter destination suggestions based on input
+  const filteredDestinations = destination
+    ? destinationSuggestions.filter((suggestion) =>
+        suggestion.toLowerCase().includes(destination.toLowerCase())
+      )
+    : destinationSuggestions;
 
   const colorMap: Record<string, string> = {
     "accent-blue": "from-accent-blue/90 to-accent-indigo/90",
@@ -328,21 +406,74 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
       <Card className="p-3 sm:p-4 md:p-5 border border-border/20 bg-gradient-to-br from-background via-background to-primary/5 w-full min-w-0 max-w-full box-border hover-lift shadow-sm" style={{ overflow: 'visible' }}>
         <div className="flex items-center gap-2 sm:gap-3 w-full min-w-0">
           <h3 className="text-base sm:text-md text-foreground tracking-tight whitespace-nowrap flex-shrink-0">Find Experiences</h3>
-          <div className="flex-1 min-w-0">
-            <Input
-              id="destination"
-              placeholder="Search by city or attraction"
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              className="h-10 sm:h-12 text-sm sm:text-base w-full min-w-0 box-border"
-            />
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <Popover open={showDestinationDropdown && destination.length > 0} onOpenChange={setShowDestinationDropdown}>
+              <PopoverTrigger asChild>
+                <div className="relative flex-1 min-w-0">
+                  <Input
+                    ref={inputRef}
+                    id="destination"
+                    placeholder="Search by city or attraction"
+                    value={destination}
+                    onChange={(e) => {
+                      setDestination(e.target.value);
+                      setShowDestinationDropdown(true);
+                    }}
+                    onFocus={() => {
+                      if (destination.length > 0) {
+                        setShowDestinationDropdown(true);
+                      }
+                    }}
+                    className="h-9 sm:h-10 text-sm w-full min-w-0 box-border"
+                  />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
+                <Command>
+                  <CommandList>
+                    <CommandEmpty>No destinations found.</CommandEmpty>
+                    <CommandGroup>
+                      {filteredDestinations.slice(0, 8).map((suggestion) => (
+                        <CommandItem
+                          key={suggestion}
+                          value={suggestion}
+                          onSelect={() => {
+                            setDestination(suggestion);
+                            setShowDestinationDropdown(false);
+                            inputRef.current?.blur();
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
+                          {suggestion}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            
+            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
+              <SelectTrigger className="h-9 sm:h-10 flex-1 text-sm min-w-0">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category.name} value={category.name}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setShowFavorites(!showFavorites)}
             className={cn(
-              "h-10 sm:h-12 px-3 sm:px-4 gap-1.5 sm:gap-2 text-xs sm:text-sm flex-shrink-0",
+              "h-9 sm:h-10 px-3 sm:px-4 gap-1.5 sm:gap-2 text-xs sm:text-sm flex-shrink-0",
               showFavorites && "bg-rose-50 border-rose-200"
             )}
           >
@@ -751,238 +882,6 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         </div>
       )}
 
-      {/* Results Section - Below Search */}
-      {hasSearched && !showFavorites && (
-        <div className="space-y-2 sm:space-y-3 w-full min-w-0 max-w-full mt-2 sm:mt-3">
-          {/* Results Header */}
-          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
-            <div className="space-y-0.5 min-w-0 flex-1">
-              <h3 className="text-lg sm:text-xl font-bold text-foreground tracking-tight">Search Results</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                Found <span className="font-semibold text-primary">{filteredTours.length}</span> experiences in {destination || "your destination"}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              <Button
-                onClick={() => setShowFilters(!showFilters)}
-                variant="outline"
-                size="sm"
-                className="lg:hidden h-9 text-xs"
-              >
-                <Filter className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid gap-2 sm:gap-3 lg:grid-cols-12 w-full min-w-0 max-w-full">
-            {/* Filters Sidebar */}
-            <div className={cn(
-              "lg:col-span-3",
-              showFilters ? "block fixed inset-0 z-50 lg:relative lg:inset-auto lg:z-auto bg-background/95 backdrop-blur-lg lg:bg-transparent lg:backdrop-blur-none p-4 lg:p-0 overflow-y-auto" : "hidden lg:block"
-            )}>
-              <Card className="p-4 sm:p-6 lg:sticky lg:top-8 border border-primary/10 bg-gradient-to-br from-background to-muted/20">
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                    <h4 className="text-base sm:text-lg font-bold uppercase tracking-wider text-foreground">Filters</h4>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="lg:hidden h-8 w-8"
-                    onClick={() => setShowFilters(false)}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                <div className="space-y-3 sm:space-y-4">
-                  <div className="space-y-1.5 sm:space-y-2">
-                    <Label className="text-xs sm:text-sm font-bold uppercase tracking-wider text-foreground">Category</Label>
-                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                      <SelectTrigger className="h-10 sm:h-12 text-sm sm:text-base">
-                        <SelectValue placeholder="All categories" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All categories</SelectItem>
-                        <SelectItem value="themes-adventure">Themes & Adventure Parks</SelectItem>
-                        <SelectItem value="public-green">Public & Green Parks</SelectItem>
-                        <SelectItem value="landmarks-observation">Land Marks & Observation Decks</SelectItem>
-                        <SelectItem value="family-entertainment">Family Entertainment + Food Shows & Malls</SelectItem>
-                        <SelectItem value="cultural-heritage">Cultural + Heritage Museums</SelectItem>
-                        <SelectItem value="animal-nature">Animal & Nature Parks</SelectItem>
-                        <SelectItem value="cruises">Cruises</SelectItem>
-                        <SelectItem value="water-parks">Water Parks</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs sm:text-sm font-bold uppercase tracking-wider text-foreground">
-                        Price Range
-                      </Label>
-                      <span className="text-sm sm:text-base font-bold text-primary">${priceRange[0]} - ${priceRange[1]}</span>
-                    </div>
-                    <Slider value={priceRange} onValueChange={setPriceRange} max={200} step={10} className="w-full" />
-                  </div>
-
-                  <div className="space-y-1.5 sm:space-y-2">
-                    <Label className="text-xs sm:text-sm font-bold uppercase tracking-wider text-foreground">Sort By</Label>
-                    <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="h-10 sm:h-12 text-sm sm:text-base">
-                        <SelectValue placeholder="Most popular" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="popular">Most popular</SelectItem>
-                        <SelectItem value="price-low">Price: low to high</SelectItem>
-                        <SelectItem value="price-high">Price: high to low</SelectItem>
-                        <SelectItem value="rating">Highest rated</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            {/* Results List */}
-            <div className="lg:col-span-9 w-full min-w-0 max-w-full overflow-hidden">
-              <div className="space-y-2 sm:space-y-3 w-full min-w-0 max-w-full">
-                {filteredTours.map((tour, index) => {
-                  const isActive = selectedTour === tour.id;
-                  const gradientClass = colorMap[tour.color] || colorMap["accent-blue"];
-                  
-                  return (
-                    <Card
-                      key={tour.id}
-                      className={cn(
-                        "group relative flex flex-row transition-all duration-300 hover:shadow-xl border w-full min-w-0 max-w-full box-border animate-scale-in",
-                        isActive 
-                          ? "border-primary border-2 shadow-lg shadow-primary/20" 
-                          : "border-border/30 hover:border-primary/40 hover:shadow-md"
-                      )}
-                      style={{ animationDelay: `${index * 100}ms`, overflow: 'visible' }}
-                    >
-                      {/* Image Section */}
-                      <div className="relative w-28 sm:w-40 md:w-56 h-28 sm:h-40 md:h-56 flex-shrink-0 overflow-hidden rounded-l-xl bg-gradient-to-br from-muted to-muted/50">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
-                        <img 
-                          src={tour.image} 
-                          alt={tour.name} 
-                          className="h-full w-full object-cover transition-all duration-300 group-hover:scale-105" 
-                          loading="lazy"
-                          decoding="async"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            if (tour.name === "Museum and Art Gallery Tour" || tour.name === "Historic Walking Tour of Old Town") {
-                              target.src = getAlternateImage(tour.name);
-                            } else {
-                              target.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${encodeURIComponent(tour.name)}`;
-                            }
-                          }}
-                        />
-                        <div className={cn(
-                          "absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[9px] sm:text-xs font-bold backdrop-blur-xl text-white shadow-xl border border-white/20 transition-all duration-300 group-hover:scale-105",
-                          `bg-gradient-to-r ${gradientClass}`
-                        )}>
-                          {tour.category}
-                        </div>
-                        {isActive && (
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 z-20" />
-                        )}
-                      </div>
-                      
-                      {/* Content Section */}
-                      <div className="relative flex flex-1 flex-col justify-between p-2.5 sm:p-3 min-w-0 bg-gradient-to-b from-background to-muted/10">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className={cn(
-                            "absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8 rounded-full transition-all duration-300 z-10",
-                            isFavorite(tour.id)
-                              ? "bg-rose-500/90 hover:bg-rose-600 text-white shadow-lg"
-                              : "bg-white/80 hover:bg-white border border-border/30 text-muted-foreground hover:text-rose-500 shadow-md"
-                          )}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFavorite(tour.id);
-                          }}
-                        >
-                          <Heart className={cn(
-                            "h-3.5 w-3.5 sm:h-4 sm:w-4",
-                            isFavorite(tour.id) && "fill-white"
-                          )} />
-                          <span className="sr-only">Add to favorites</span>
-                        </Button>
-                        <div className="space-y-1.5 min-w-0 flex-1">
-                          <div className="space-y-1 min-w-0">
-                            <h4 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-all duration-300 leading-tight line-clamp-2 break-words pr-8 sm:pr-10">
-                              {tour.name} <span className="text-muted-foreground font-normal">({tour.category})</span>
-                            </h4>
-                            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs">
-                              <div className="flex items-center gap-1 flex-shrink-0 px-2 py-0.5 rounded-lg bg-amber/10 border border-amber/20">
-                                <Star className="h-3 w-3 sm:h-3.5 sm:w-3.5 fill-amber-500 text-amber-500 flex-shrink-0" />
-                                <span className="font-bold text-foreground text-xs">{tour.rating}</span>
-                                <span className="text-muted-foreground text-[10px] sm:text-xs">({tour.reviews})</span>
-                              </div>
-                              <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 px-2 py-0.5 rounded-lg bg-muted/50">
-                                <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
-                                <span className="font-medium text-[10px] sm:text-xs">{tour.duration}</span>
-                              </div>
-                              <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 px-2 py-0.5 rounded-lg bg-muted/30">
-                                <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0 text-accent-blue" />
-                                <span className="font-medium text-[10px] sm:text-xs truncate">{tour.location}</span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-1.5 p-1.5 sm:p-2 rounded-lg bg-emerald/5 border border-emerald/10 min-w-0">
-                              <div className="p-0.5 rounded bg-emerald/10 flex-shrink-0">
-                                <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                              </div>
-                              <span className="text-[10px] font-medium text-foreground line-clamp-1 min-w-0">{tour.cancellation}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between gap-1.5 sm:gap-2 pt-1.5 sm:pt-2 border-t border-border/20 mt-1.5 min-w-0">
-                          <div className="flex items-center gap-1.5 min-w-0 flex-1 px-2 py-1 rounded-lg bg-primary/5 border border-primary/10">
-                            <div className="p-0.5 rounded bg-primary/10 flex-shrink-0">
-                              <TrendingUp className="h-3 w-3 text-primary" />
-                            </div>
-                            <p className="text-[10px] text-muted-foreground truncate">
-                              <span className="font-semibold text-foreground">{tour.suppliers}</span> supplier{tour.suppliers > 1 ? "s" : ""}
-                            </p>
-                          </div>
-                          <div className="text-right flex-shrink-0">
-                            <p className="text-lg sm:text-xl font-bold text-primary">${tour.price}</p>
-                            <p className="text-[9px] text-muted-foreground">per person</p>
-                          </div>
-                          <div className="flex gap-1.5 flex-shrink-0 items-center">
-                            <Button variant="outline" size="sm" className="h-8 text-[10px] border-border/30 hover:border-primary/40 hover:bg-primary/5 transition-all duration-300">
-                              View
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              className={cn(
-                                "h-8 px-3 font-semibold text-[10px] transition-all duration-300",
-                                isActive
-                                  ? "bg-primary shadow-md shadow-primary/20"
-                                  : "bg-primary hover:bg-primary/90 shadow-sm hover:shadow-md"
-                              )}
-                              onClick={() => handleSelectTour(tour.id)}
-                            >
-                              {isActive ? "✓" : "Select"}
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Booking Details Popup */}
       <Dialog open={showBookingPopup} onOpenChange={setShowBookingPopup}>
