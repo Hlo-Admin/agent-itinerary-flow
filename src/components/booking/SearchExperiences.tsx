@@ -8,7 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, Heart, History, ArrowRight, Users } from "lucide-react";
+import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, Heart, History, Eye, Users } from "lucide-react";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -137,7 +137,28 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   const [showFavoritesFilters, setShowFavoritesFilters] = useState(false);
   const [showDestinationDropdown, setShowDestinationDropdown] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
+  const [selectedBookingForView, setSelectedBookingForView] = useState<any>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Mock recent bookings data (park-related)
+  const recentBookings = [
+    { sno: 1, refNo: "BK-2024-001", leadPaxName: "VISHNU PRASATH", parkName: "Dubai Parks & Resorts", bookingDate: "2025-Dec-20", eventDate: "2025-Dec-25", status: "Booked" },
+    { sno: 2, refNo: "BK-2024-002", leadPaxName: "AHMED KHAN", parkName: "IMG Worlds of Adventure", bookingDate: "2025-Dec-19", eventDate: "2025-Dec-24", status: "Booked" },
+    { sno: 3, refNo: "BK-2024-003", leadPaxName: "SARA AHMED", parkName: "Atlantis Aquaventure", bookingDate: "2025-Dec-18", eventDate: "2025-Dec-23", status: "Booked" },
+    { sno: 4, refNo: "BK-2024-004", leadPaxName: "JOHN MILLER", parkName: "Global Village", bookingDate: "2025-Dec-17", eventDate: "2025-Dec-22", status: "Booked" },
+    { sno: 5, refNo: "BK-2024-005", leadPaxName: "FATIMA ALI", parkName: "Ferrari World Abu Dhabi", bookingDate: "2025-Dec-16", eventDate: "2025-Dec-21", status: "Booked" },
+    { sno: 6, refNo: "BK-2024-006", leadPaxName: "RAJESH KUMAR", parkName: "Ski Dubai", bookingDate: "2025-Dec-15", eventDate: "2025-Dec-20", status: "Booked" },
+    { sno: 7, refNo: "BK-2024-007", leadPaxName: "MARIA SANTOS", parkName: "Wild Wadi Waterpark", bookingDate: "2025-Dec-14", eventDate: "2025-Dec-19", status: "Booked" },
+    { sno: 8, refNo: "BK-2024-008", leadPaxName: "MICHAEL CHEN", parkName: "Warner Bros. World", bookingDate: "2025-Dec-13", eventDate: "2025-Dec-18", status: "Booked" },
+    { sno: 9, refNo: "BK-2024-009", leadPaxName: "EMMA WILLIAMS", parkName: "Yas Waterworld", bookingDate: "2025-Dec-12", eventDate: "2025-Dec-17", status: "Booked" },
+    { sno: 10, refNo: "BK-2024-010", leadPaxName: "JAMES BROWN", parkName: "Legoland Dubai", bookingDate: "2025-Dec-11", eventDate: "2025-Dec-16", status: "Booked" },
+  ];
+
+  const handleViewBooking = (booking: any) => {
+    setSelectedBookingForView(booking);
+    setShowBookingConfirmation(true);
+  };
   
   // Mock time slots
   const timeSlots = [
@@ -646,199 +667,41 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border/30 bg-muted/30">
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">S.No</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">GDS Ref.No</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pax Name</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Route</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">SNO</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ref No</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Lead Pax Name</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Park Name</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Booking Date</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Journey Date</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Booked Fare</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ticket Time Limit</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Event Date</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border/20">
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">1</td>
-                <td className="px-4 py-3 text-foreground font-medium">OBS5EZA</td>
-                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
-                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-17</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
+              {recentBookings.map((booking) => (
+                <tr key={booking.sno} className="hover:bg-muted/20 transition-colors">
+                  <td className="px-4 py-3 text-foreground">{booking.sno}</td>
+                  <td className="px-4 py-3 text-foreground font-medium">{booking.refNo}</td>
+                  <td className="px-4 py-3 text-primary font-medium">{booking.leadPaxName}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{booking.parkName}</td>
+                  <td className="px-4 py-3 text-primary">{booking.bookingDate}</td>
+                  <td className="px-4 py-3 text-primary">{booking.eventDate}</td>
                 <td className="px-4 py-3">
-                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
+                    <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">
+                      {booking.status.toUpperCase()}
+                    </Badge>
                 </td>
                 <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <button 
+                      onClick={() => handleViewBooking(booking)}
+                      className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+                      title="View Booking"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
                   </button>
                 </td>
               </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">2</td>
-                <td className="px-4 py-3 text-foreground font-medium">OHRY3X</td>
-                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
-                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-09</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">3</td>
-                <td className="px-4 py-3 text-foreground font-medium">OQWAAM</td>
-                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
-                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-11</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">4</td>
-                <td className="px-4 py-3 text-foreground font-medium">QZWJNU</td>
-                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
-                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-23</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">5</td>
-                <td className="px-4 py-3 text-foreground font-medium">PK7L2M</td>
-                <td className="px-4 py-3 text-primary font-medium">AHMED KHAN</td>
-                <td className="px-4 py-3 text-muted-foreground">DXB-RUH</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-25</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-15</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 720.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-26 08:00...</td>
-                <td className="px-4 py-3">
-                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">6</td>
-                <td className="px-4 py-3 text-foreground font-medium">RT9X4N</td>
-                <td className="px-4 py-3 text-primary font-medium">SARA AHMED</td>
-                <td className="px-4 py-3 text-muted-foreground">AUH-KWI</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-24</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-20</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 580.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-25 10:30...</td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">7</td>
-                <td className="px-4 py-3 text-foreground font-medium">JM3K8P</td>
-                <td className="px-4 py-3 text-primary font-medium">JOHN MILLER</td>
-                <td className="px-4 py-3 text-muted-foreground">DXB-MCT</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-23</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-05</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 450.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-24 12:00...</td>
-                <td className="px-4 py-3">
-                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">8</td>
-                <td className="px-4 py-3 text-foreground font-medium">WQ5T2R</td>
-                <td className="px-4 py-3 text-primary font-medium">FATIMA ALI</td>
-                <td className="px-4 py-3 text-muted-foreground">SHJ-BAH</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-22</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-18</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 520.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-23 09:15...</td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">9</td>
-                <td className="px-4 py-3 text-foreground font-medium">YN8H6L</td>
-                <td className="px-4 py-3 text-primary font-medium">RAJESH KUMAR</td>
-                <td className="px-4 py-3 text-muted-foreground">DXB-DEL</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-21</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-28</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 890.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-22 14:45...</td>
-                <td className="px-4 py-3">
-                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
-              <tr className="hover:bg-muted/20 transition-colors">
-                <td className="px-4 py-3 text-foreground">10</td>
-                <td className="px-4 py-3 text-foreground font-medium">ZC4M9V</td>
-                <td className="px-4 py-3 text-primary font-medium">MARIA SANTOS</td>
-                <td className="px-4 py-3 text-muted-foreground">AUH-MNL</td>
-                <td className="px-4 py-3 text-primary">2025-Nov-20</td>
-                <td className="px-4 py-3 text-primary">2025-Dec-10</td>
-                <td className="px-4 py-3 text-muted-foreground">AED 1,250.00</td>
-                <td className="px-4 py-3 text-muted-foreground">2025-Nov-21 16:30...</td>
-                <td className="px-4 py-3">
-                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </td>
-              </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -1115,6 +978,87 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         </div>
       )}
 
+
+      {/* Booking Confirmation Popup - for viewing recent bookings */}
+      <Dialog open={showBookingConfirmation} onOpenChange={setShowBookingConfirmation}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold flex items-center gap-2">
+              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+              Booking Confirmation
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Booking details for reference {selectedBookingForView?.refNo}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedBookingForView && (
+            <div className="space-y-4">
+              {/* Booking Status Banner */}
+              <div className="flex items-center justify-center p-4 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
+                <div className="text-center">
+                  <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
+                  <p className="text-lg font-bold text-emerald-600">Booking Confirmed</p>
+                  <p className="text-sm text-muted-foreground">Your booking has been successfully confirmed</p>
+                </div>
+              </div>
+
+              {/* Booking Details */}
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Reference No</p>
+                    <p className="text-sm font-bold text-foreground">{selectedBookingForView.refNo}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Status</p>
+                    <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs px-2 py-0.5">
+                      {selectedBookingForView.status.toUpperCase()}
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-primary/10">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Park Name</p>
+                  <p className="text-sm font-bold text-foreground">{selectedBookingForView.parkName}</p>
+                </div>
+
+                <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Lead Passenger</p>
+                  <p className="text-sm font-bold text-primary">{selectedBookingForView.leadPaxName}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Booking Date</p>
+                    <p className="text-sm font-medium text-foreground">{selectedBookingForView.bookingDate}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Event Date</p>
+                    <p className="text-sm font-medium text-foreground">{selectedBookingForView.eventDate}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowBookingConfirmation(false)}
+                  className="flex-1"
+                >
+                  Close
+                </Button>
+                <Button
+                  className="flex-1 bg-gradient-to-r from-primary to-primary/90"
+                >
+                  Download Voucher
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Booking Details Popup */}
       <Dialog open={showBookingPopup} onOpenChange={setShowBookingPopup}>

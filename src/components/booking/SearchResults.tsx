@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Star, Clock, MapPin, CheckCircle2, Sparkles, TrendingUp, Filter, X, Calendar, Users, DollarSign, Plus, Minus, AlertCircle, ChevronDown, Check } from "lucide-react";
+import { Star, Clock, MapPin, CheckCircle2, Sparkles, TrendingUp, Filter, X, Calendar, Users, DollarSign, Plus, Minus, AlertCircle, ChevronDown, Check, Heart } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -89,6 +89,18 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
   const [selectedTour, setSelectedTour] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [showBookingPopup, setShowBookingPopup] = useState(false);
+  const [favorites, setFavorites] = useState<number[]>([]);
+
+  // Toggle favorite
+  const toggleFavorite = (tourId: number) => {
+    setFavorites((prev) =>
+      prev.includes(tourId)
+        ? prev.filter((id) => id !== tourId)
+        : [...prev, tourId]
+    );
+  };
+
+  const isFavorite = (tourId: number) => favorites.includes(tourId);
   const [selectedTourForPopup, setSelectedTourForPopup] = useState<any>(null);
   const [popupAdultCount, setPopupAdultCount] = useState(2);
   const [popupChildCount, setPopupChildCount] = useState(0);
@@ -502,8 +514,31 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                   </div>
                   
                   {/* Content Section */}
-                  <div className="flex flex-1 flex-col justify-between p-4 sm:p-6 min-w-0 bg-gradient-to-b from-background to-muted/20">
-                    <div className="space-y-2 sm:space-y-3 min-w-0 flex-1">
+                  <div className="relative flex flex-1 flex-col justify-between p-4 sm:p-6 min-w-0 bg-gradient-to-b from-background to-muted/20">
+                    {/* Favorite Button */}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn(
+                        "absolute top-2 right-2 sm:top-3 sm:right-3 h-8 w-8 sm:h-9 sm:w-9 rounded-full transition-all duration-300 z-10",
+                        isFavorite(tour.id)
+                          ? "bg-rose-500 hover:bg-rose-600 text-white shadow-lg"
+                          : "bg-muted/80 hover:bg-rose-100 text-muted-foreground hover:text-rose-500"
+                      )}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleFavorite(tour.id);
+                      }}
+                    >
+                      <Heart className={cn(
+                        "h-4 w-4 sm:h-5 sm:w-5",
+                        isFavorite(tour.id) && "fill-white"
+                      )} />
+                      <span className="sr-only">
+                        {isFavorite(tour.id) ? "Remove from favorites" : "Add to favorites"}
+                      </span>
+                    </Button>
+                    <div className="space-y-2 sm:space-y-3 min-w-0 flex-1 pr-10">
                       <div className="space-y-1.5 sm:space-y-2 min-w-0">
                         <h4 className="text-base sm:text-lg md:text-xl font-bold text-foreground group-hover:text-accent-blue transition-all duration-300 leading-tight line-clamp-2 break-words">
                           {tour.name}

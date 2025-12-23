@@ -44,6 +44,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  Heart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -190,6 +191,18 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   const [selectedTour, setSelectedTour] = useState<number | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [showBookingPopup, setShowBookingPopup] = useState(false);
+  const [favorites, setFavorites] = useState<number[]>([]);
+
+  // Toggle favorite
+  const toggleFavorite = (tourId: number) => {
+    setFavorites((prev) =>
+      prev.includes(tourId)
+        ? prev.filter((id) => id !== tourId)
+        : [...prev, tourId]
+    );
+  };
+
+  const isFavorite = (tourId: number) => favorites.includes(tourId);
   const [selectedTourForPopup, setSelectedTourForPopup] = useState<any>(null);
   const [popupAdultCount, setPopupAdultCount] = useState(2);
   const [popupChildCount, setPopupChildCount] = useState(0);
@@ -671,6 +684,29 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
 
                     {/* Content Section */}
                     <div className="relative flex flex-1 flex-col justify-between p-2.5 sm:p-3 min-w-0 bg-gradient-to-b from-background to-muted/10">
+                      {/* Favorite Button */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={cn(
+                          "absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8 rounded-full transition-all duration-300 z-10",
+                          isFavorite(tour.id)
+                            ? "bg-rose-500/90 hover:bg-rose-600 text-white shadow-lg"
+                            : "bg-muted/80 hover:bg-rose-100 text-muted-foreground hover:text-rose-500"
+                        )}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(tour.id);
+                        }}
+                      >
+                        <Heart className={cn(
+                          "h-3.5 w-3.5 sm:h-4 sm:w-4",
+                          isFavorite(tour.id) && "fill-white"
+                        )} />
+                        <span className="sr-only">
+                          {isFavorite(tour.id) ? "Remove from favorites" : "Add to favorites"}
+                        </span>
+                      </Button>
                       <div className="space-y-1.5 min-w-0 flex-1">
                         <div className="space-y-1 min-w-0">
                           <h4 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-all duration-300 leading-tight line-clamp-2 break-words pr-8 sm:pr-10">
@@ -1052,38 +1088,16 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     <div className="space-y-6 sm:space-y-8 animate-fade-in">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="text-3xl font-semibold text-foreground tracking-tight mb-2">
+          <h3 className="text-3xl font-semibold text-foreground tracking-tight">
             {tour.name}
           </h3>
-          <div className="flex flex-wrap items-center gap-5 text-sm">
-            <div className="flex items-center gap-1.5">
-              <Star className="h-4 w-4 fill-primary text-primary" />
-              <span className="font-semibold text-foreground">
-                {tour.rating}
-              </span>
-              <span className="text-muted-foreground">
-                ({tour.reviews} reviews)
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <Clock className="h-4 w-4" />
-              {tour.duration}
-            </div>
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <MapPin className="h-4 w-4" />
-              {tour.location}
-            </div>
-          </div>
         </div>
-        <Button onClick={onBack} variant="outline" size="lg">
-          Back to Results
-        </Button>
       </div>
 
       <div className="grid gap-6 sm:gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6 animate-slide-in-right">
           <Tabs defaultValue="pricing" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 h-14 bg-gradient-to-r from-muted/80 via-muted/60 to-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
+            <TabsList className="grid w-full grid-cols-3 h-14 bg-gradient-to-r from-muted/80 via-muted/60 to-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
               <TabsTrigger
                 value="pricing"
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
@@ -1376,7 +1390,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           <div className="flex items-center gap-2 pb-2 border-b border-border">
             <Calendar className="h-5 w-5 text-primary" />
             <h4 className="text-xl font-semibold text-foreground">
-              Booking Requirements
+              Booking Summary
             </h4>
           </div>
 

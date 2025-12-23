@@ -6,6 +6,19 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Plus,
   Trash2,
   MapPin,
@@ -18,6 +31,7 @@ import {
   CreditCard,
   Wallet,
   AlertCircle,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -131,6 +145,7 @@ const TravelerInfoForm = ({
 
   // Terms acceptance state
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showTermsDialog, setShowTermsDialog] = useState(false);
 
   // Payment method state
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
@@ -388,9 +403,16 @@ const TravelerInfoForm = ({
                   className="text-sm font-medium text-foreground cursor-pointer"
                 >
                   I agree to the{" "}
-                  <span className="text-primary hover:underline font-semibold cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowTermsDialog(true);
+                    }}
+                    className="text-primary hover:underline font-semibold cursor-pointer"
+                  >
                     Terms & Conditions
-                  </span>
+                  </button>
                 </Label>
                 <p className="text-xs text-muted-foreground">
                   By proceeding, you acknowledge that you have read and agree to
@@ -400,19 +422,125 @@ const TravelerInfoForm = ({
             </div>
           </Card>
 
+          {/* Terms and Conditions Dialog */}
+          <Dialog open={showTermsDialog} onOpenChange={setShowTermsDialog}>
+            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-lg font-bold">
+                  <FileText className="h-5 w-5 text-primary" />
+                  Terms & Conditions
+                </DialogTitle>
+                <DialogDescription>
+                  Please read and understand the following terms before
+                  proceeding with your booking.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 text-sm text-muted-foreground">
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-foreground">
+                    1. Booking Confirmation
+                  </h4>
+                  <p>
+                    Your booking is confirmed only after receiving payment
+                    confirmation and a booking reference number via email.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-foreground">
+                    2. Cancellation Policy
+                  </h4>
+                  <p>
+                    Cancellations made 48 hours before the scheduled date are
+                    eligible for a full refund. Cancellations within 24-48 hours
+                    will incur a 50% cancellation fee. No refunds for
+                    cancellations within 24 hours of the scheduled date.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-foreground">
+                    3. Modification Policy
+                  </h4>
+                  <p>
+                    Booking modifications are subject to availability and may
+                    incur additional charges. Please contact our support team at
+                    least 24 hours before your scheduled date.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-foreground">
+                    4. Liability
+                  </h4>
+                  <p>
+                    The service provider is not liable for any injuries,
+                    accidents, or losses incurred during the experience.
+                    Participants are advised to follow all safety guidelines
+                    provided.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-foreground">
+                    5. Age Requirements
+                  </h4>
+                  <p>
+                    Some experiences may have age restrictions. Please ensure
+                    all participants meet the minimum age requirements specified
+                    for the selected experience.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-foreground">
+                    6. Health & Safety
+                  </h4>
+                  <p>
+                    Participants must be in good health condition suitable for
+                    the selected activity. Please inform us of any medical
+                    conditions or special requirements.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-foreground">
+                    7. Weather Conditions
+                  </h4>
+                  <p>
+                    Outdoor experiences may be subject to weather conditions. In
+                    case of adverse weather, alternative dates or refunds will
+                    be offered at our discretion.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowTermsDialog(false)}
+                >
+                  Close
+                </Button>
+                <Button
+                  onClick={() => {
+                    setTermsAccepted(true);
+                    setShowTermsDialog(false);
+                  }}
+                >
+                  I Accept
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+
           <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:justify-between">
             {onBack && (
               <Button onClick={onBack} variant="outline">
                 Back
               </Button>
             )}
-            <Button
-              onClick={handleSubmit}
-              className={onBack ? "" : "ml-auto"}
-              disabled={!termsAccepted || !selectedPaymentMethod}
-            >
-              Confirm Booking
-            </Button>
           </div>
         </div>
 
@@ -616,7 +744,7 @@ const TravelerInfoForm = ({
           )}
 
           {/* Credit Limit & Payment Method - Single Row */}
-          <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg border border-border/50 bg-muted/20">
+          <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg border border-border/50 bg-muted/20 overflow-visible">
             <div className="flex items-center gap-2">
               <Wallet className="h-4 w-4 text-emerald-600" />
               <span
@@ -627,47 +755,86 @@ const TravelerInfoForm = ({
                     : "text-red-500"
                 )}
               >
-                Agent Limit - AED {agentCreditLimit.toLocaleString()}
+                Available credit balance - AED{" "}
+                {agentCreditLimit.toLocaleString()}
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() =>
-                  termsAccepted && setSelectedPaymentMethod("gateway")
-                }
-                disabled={!termsAccepted}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1 rounded text-xs border transition-all",
-                  !termsAccepted && "opacity-50 cursor-not-allowed",
-                  selectedPaymentMethod === "gateway"
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border hover:border-primary/50"
-                )}
-              >
-                <CreditCard className="h-3.5 w-3.5" />
-                Gateway
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  termsAccepted &&
-                  agentCreditLimit >= totalAmount &&
-                  setSelectedPaymentMethod("credit")
-                }
-                disabled={!termsAccepted || agentCreditLimit < totalAmount}
-                className={cn(
-                  "flex items-center gap-1.5 px-3 py-1 rounded text-xs border transition-all",
-                  (!termsAccepted || agentCreditLimit < totalAmount) &&
-                    "opacity-50 cursor-not-allowed",
-                  selectedPaymentMethod === "credit"
-                    ? "border-emerald-500 bg-emerald-50 text-emerald-600"
-                    : "border-border hover:border-emerald-500/50"
-                )}
-              >
-                <Wallet className="h-3.5 w-3.5" />
-                Credit
-              </button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (termsAccepted) {
+                          setSelectedPaymentMethod("gateway");
+                          handleSubmit();
+                        }
+                      }}
+                      disabled={!termsAccepted}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded text-xs border transition-all",
+                        !termsAccepted && "opacity-50 cursor-not-allowed",
+                        selectedPaymentMethod === "gateway"
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border hover:border-primary/50 hover:bg-primary/5"
+                      )}
+                    >
+                      <CreditCard className="h-3.5 w-3.5" />
+                      Gateway
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    align="center"
+                    sideOffset={5}
+                    className="bg-foreground text-background z-50"
+                  >
+                    <p className="text-xs whitespace-nowrap">
+                      Pay securely via payment gateway
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (termsAccepted && agentCreditLimit >= totalAmount) {
+                          setSelectedPaymentMethod("credit");
+                          handleSubmit();
+                        }
+                      }}
+                      disabled={
+                        !termsAccepted || agentCreditLimit < totalAmount
+                      }
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded text-xs border transition-all",
+                        (!termsAccepted || agentCreditLimit < totalAmount) &&
+                          "opacity-50 cursor-not-allowed",
+                        selectedPaymentMethod === "credit"
+                          ? "border-emerald-500 bg-emerald-50 text-emerald-600"
+                          : "border-border hover:border-emerald-500/50 hover:bg-emerald-50/50"
+                      )}
+                    >
+                      <Wallet className="h-3.5 w-3.5" />
+                      Credit
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    side="top"
+                    align="end"
+                    sideOffset={5}
+                    className="bg-foreground text-background z-50"
+                  >
+                    <p className="text-xs whitespace-nowrap">
+                      Use your available credit balance
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         </div>

@@ -84,89 +84,95 @@ const Bookings = () => {
     <div className="relative flex h-full w-full min-w-0 max-w-full overflow-hidden">
       {/* Main Booking Section */}
       <div className="flex-1 overflow-y-auto">
-        <div className="space-y-1 sm:space-y-2 w-full min-w-0 max-w-full p-2 sm:p-3 md:p-3 md:pt-0 animate-fade-in">
-          {currentStep === 5 ? (
-            /* Final step - Show only Home button */
-            <div className="flex items-center gap-3">
-              <Button
-                onClick={() => setCurrentStep(1)}
-                variant="outline"
-                className="h-9 sm:h-10 px-4 sm:px-6 gap-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors"
-              >
-                <Home className="h-4 w-4" />
-                <span className="text-sm sm:text-base font-medium">Home</span>
-              </Button>
-            </div>
-          ) : (
-            /* Other steps - Show breadcrumbs */
-            <div className="flex items-start justify-between gap-2 sm:gap-3">
-              <div className="space-y-0.5 w-full min-w-0 flex-1">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  {currentStep > 1 && (
-                    <Button
-                      onClick={handleBack}
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 rounded-lg hover:bg-muted"
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                      <span className="sr-only">Go back</span>
-                    </Button>
-                  )}
-                  <div className="flex-1">
-                    <Breadcrumb>
-                      <BreadcrumbList>
-                        {(() => {
-                          const breadcrumbs = getBreadcrumbs();
-                          return breadcrumbs.map((crumb, index) => {
-                            const Icon = crumb.icon;
-                            const isLast = index === breadcrumbs.length - 1;
-                            
-                            return (
-                              <Fragment key={index}>
-                                <BreadcrumbItem>
-                                  {isLast ? (
-                                    <BreadcrumbPage className="flex items-center gap-1.5 sm:gap-2">
-                                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-                                      <span className="text-sm sm:text-base text-muted-foreground">{crumb.label}</span>
-                                    </BreadcrumbPage>
-                                  ) : (
-                                    <BreadcrumbLink
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        crumb.onClick();
-                                      }}
-                                      className="flex items-center gap-1.5 sm:gap-2 cursor-pointer hover:text-primary transition-colors"
-                                    >
-                                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                                      <span className="text-sm sm:text-base text-primary">{crumb.label}</span>
-                                    </BreadcrumbLink>
-                                  )}
-                                </BreadcrumbItem>
-                                {!isLast && <BreadcrumbSeparator />}
-                              </Fragment>
-                            );
-                          });
-                        })()}
-                      </BreadcrumbList>
-                    </Breadcrumb>
+        {/* Fixed Header with Breadcrumb */}
+        <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/20 shadow-sm">
+          <div className="w-full min-w-0 max-w-full px-3 py-1.5 sm:px-4 sm:py-2 animate-fade-in">
+            {currentStep === 5 ? (
+              /* Final step - Show only Home button */
+              <div className="flex items-center gap-3">
+                <Button
+                  onClick={() => setCurrentStep(1)}
+                  variant="outline"
+                  className="h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  <Home className="h-5 w-5" />
+                  <span className="text-base sm:text-lg font-medium">Home</span>
+                </Button>
+              </div>
+            ) : (
+              /* Other steps - Show breadcrumbs */
+              <div className="flex items-center justify-between gap-3">
+                <div className="w-full min-w-0 flex-1">
+                  <div className="flex items-center gap-3">
+                    {currentStep > 1 && (
+                      <Button
+                        onClick={handleBack}
+                        variant="ghost"
+                        size="icon"
+                        className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-lg hover:bg-muted"
+                      >
+                        <ArrowLeft className="h-5 w-5" />
+                        <span className="sr-only">Go back</span>
+                      </Button>
+                    )}
+                    <div className="flex-1">
+                      <Breadcrumb>
+                        <BreadcrumbList className="gap-1 sm:gap-2">
+                          {(() => {
+                            const breadcrumbs = getBreadcrumbs();
+                            return breadcrumbs.map((crumb, index) => {
+                              const Icon = crumb.icon;
+                              const isLast = index === breadcrumbs.length - 1;
+                              
+                              return (
+                                <Fragment key={index}>
+                                  <BreadcrumbItem>
+                                    {isLast ? (
+                                      <BreadcrumbPage className="flex items-center gap-2">
+                                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                                        <span className="text-base sm:text-lg font-medium text-muted-foreground">{crumb.label}</span>
+                                      </BreadcrumbPage>
+                                    ) : (
+                                      <BreadcrumbLink
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          crumb.onClick();
+                                        }}
+                                        className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors"
+                                      >
+                                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                                        <span className="text-base sm:text-lg font-medium text-primary">{crumb.label}</span>
+                                      </BreadcrumbLink>
+                                    )}
+                                  </BreadcrumbItem>
+                                  {!isLast && <BreadcrumbSeparator className="text-lg" />}
+                                </Fragment>
+                              );
+                            });
+                          })()}
+                        </BreadcrumbList>
+                      </Breadcrumb>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-
-      <Card className="p-3 sm:p-4 md:p-5 border border-border/20 w-full min-w-0 max-w-full box-border hover-lift" style={{ overflow: 'visible' }}>
-        <div className="space-y-3 sm:space-y-4 w-full min-w-0 max-w-full">
-          <div>
-            {currentStep === 1 && <SearchExperiences onNext={handleNext} searchData={bookingData} />}
-            {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
-            {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-            {currentStep === 5 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
+            )}
           </div>
         </div>
-      </Card>
+
+        {/* Scrollable Content */}
+        <div className="w-full min-w-0 max-w-full p-2 sm:p-3 md:p-3 pt-2">
+          <Card className="p-3 sm:p-4 md:p-5 border border-border/20 w-full min-w-0 max-w-full box-border hover-lift" style={{ overflow: 'visible' }}>
+            <div className="space-y-3 sm:space-y-4 w-full min-w-0 max-w-full">
+              <div>
+                {currentStep === 1 && <SearchExperiences onNext={handleNext} searchData={bookingData} />}
+                {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
+                {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
+                {currentStep === 4 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+                {currentStep === 5 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
