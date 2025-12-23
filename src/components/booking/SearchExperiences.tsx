@@ -8,7 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, Heart } from "lucide-react";
+import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, Heart, History, ArrowRight, Users } from "lucide-react";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -406,10 +406,10 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
       <Card className="p-3 sm:p-4 md:p-5 border border-border/20 bg-gradient-to-br from-background via-background to-primary/5 w-full min-w-0 max-w-full box-border hover-lift shadow-sm" style={{ overflow: 'visible' }}>
         <div className="flex items-center gap-2 sm:gap-3 w-full min-w-0">
           <h3 className="text-base sm:text-md text-foreground tracking-tight whitespace-nowrap flex-shrink-0">Find Experiences</h3>
-          <div className="flex items-center gap-2 flex-1 min-w-0">
+          <div className="flex items-center gap-2 min-w-0">
             <Popover open={showDestinationDropdown && destination.length > 0} onOpenChange={setShowDestinationDropdown}>
               <PopoverTrigger asChild>
-                <div className="relative flex-1 min-w-0">
+                <div className="relative w-48 sm:w-64 md:w-72 min-w-0 flex-shrink-0">
                   <Input
                     ref={inputRef}
                     id="destination"
@@ -424,8 +424,23 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                         setShowDestinationDropdown(true);
                       }
                     }}
-                    className="h-9 sm:h-10 text-sm w-full min-w-0 box-border"
+                    className="h-9 sm:h-10 text-sm w-full min-w-0 box-border pr-8"
                   />
+                  {destination && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDestination("");
+                        setShowDestinationDropdown(false);
+                        setSelectedCategory("all");
+                        inputRef.current?.focus();
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  )}
                 </div>
               </PopoverTrigger>
               <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
@@ -454,9 +469,12 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
               </PopoverContent>
             </Popover>
             
-            <Select value={selectedCategory} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="h-9 sm:h-10 flex-1 text-sm min-w-0">
-                <SelectValue placeholder="Select Category" />
+            <Select value={selectedCategory} onValueChange={handleCategoryChange} disabled={!destination.trim()}>
+              <SelectTrigger className={cn(
+                "h-9 sm:h-10 w-36 sm:w-44 md:w-48 text-sm min-w-0 flex-shrink-0",
+                !destination.trim() && "opacity-50 cursor-not-allowed"
+              )}>
+                <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
@@ -610,6 +628,111 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
           <span className="truncate">Search Experiences</span>
         </Button>
       </div>
+
+      {/* Recent Bookings Section */}
+      <Card className="mt-6 animate-fade-in border border-border/30 shadow-sm" style={{ animationDelay: '400ms' }}>
+        {/* Header */}
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-border/30 bg-gradient-to-r from-primary/5 to-transparent">
+          <div className="p-1.5 rounded-lg bg-primary/10">
+            <History className="h-4 w-4 text-primary" />
+          </div>
+          <h4 className="text-sm font-semibold text-foreground">Recent Bookings</h4>
+        </div>
+        
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border/30 bg-muted/30">
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">S.No</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">GDS Ref.No</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pax Name</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Route</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Booking Date</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Journey Date</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Booked Fare</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ticket Time Limit</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border/20">
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">1</td>
+                <td className="px-4 py-3 text-foreground font-medium">OBS5EZA</td>
+                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
+                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-17</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
+                <td className="px-4 py-3">
+                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">2</td>
+                <td className="px-4 py-3 text-foreground font-medium">OHRY3X</td>
+                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
+                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-09</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
+                <td className="px-4 py-3">
+                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">3</td>
+                <td className="px-4 py-3 text-foreground font-medium">OQWAAM</td>
+                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
+                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-11</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
+                <td className="px-4 py-3">
+                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">4</td>
+                <td className="px-4 py-3 text-foreground font-medium">QZWJNU</td>
+                <td className="px-4 py-3 text-primary font-medium">VISHNU PRASATH</td>
+                <td className="px-4 py-3 text-muted-foreground">DXB-BAH</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-26</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-23</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
+                <td className="px-4 py-3">
+                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Card>
 
       {/* Favorite List Section */}
       {showFavorites && (

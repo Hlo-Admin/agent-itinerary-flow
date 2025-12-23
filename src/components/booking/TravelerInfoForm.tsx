@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Trash2, MapPin, Calendar, Clock, Users, DollarSign, CheckCircle2, Building2 } from "lucide-react";
 
 interface TravelerInfoFormProps {
@@ -92,6 +93,9 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
     setChildren(updated);
   };
 
+  // Terms acceptance state
+  const [termsAccepted, setTermsAccepted] = useState(false);
+
   const handleSubmit = () => {
     onNext({ adults, children });
   };
@@ -124,20 +128,19 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
   const totalAmount = basePrice + taxes + serviceFee;
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-1">
-        <h3 className="text-2xl font-semibold text-foreground">Lead passenger information</h3>
-        <p className="text-sm text-muted-foreground">Enter details for the primary traveler</p>
-      </div>
-
+    <div>
       {/* Main Content Grid - Left: Travelers, Right: Price Summary */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left Side - Traveler Information */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-2xl font-semibold text-foreground">Lead passenger information</h3>
+            <p className="text-sm text-muted-foreground">Enter details for the primary traveler</p>
+          </div>
 
       {/* Adult Passengers */}
       {adultCount > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
             <h3 className="text-lg font-semibold text-foreground">
@@ -272,14 +275,40 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
         </div>
       )}
 
+          {/* Terms and Conditions Checkbox */}
+          <Card className="p-4 border border-border/50">
+            <div className="flex items-start space-x-3">
+              <Checkbox
+                id="terms"
+                checked={termsAccepted}
+                onCheckedChange={(checked) => setTermsAccepted(checked === true)}
+              />
+              <div className="flex-1 space-y-1">
+                <Label htmlFor="terms" className="text-sm font-medium text-foreground cursor-pointer">
+                  I agree to the{" "}
+                  <span className="text-primary hover:underline font-semibold cursor-pointer">
+                    Terms & Conditions
+                  </span>
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  By proceeding, you acknowledge that you have read and agree to the supplier's terms and conditions.
+                </p>
+              </div>
+            </div>
+          </Card>
+
           <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:justify-between">
             {onBack && (
               <Button onClick={onBack} variant="outline">
                 Back
               </Button>
             )}
-            <Button onClick={handleSubmit} className={onBack ? "" : "ml-auto"}>
-              Continue to payment
+            <Button 
+              onClick={handleSubmit} 
+              className={onBack ? "" : "ml-auto"}
+              disabled={!termsAccepted}
+            >
+              Confirm Booking
             </Button>
           </div>
         </div>
@@ -287,10 +316,10 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
         {/* Right Side - Destination Price Summary */}
         <div className="lg:col-span-1">
           {selectedTour && selectedSupplier && (
-            <Card className="sticky top-8 space-y-4 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20 overflow-hidden">
+            <Card className="space-y-2 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20 overflow-hidden">
               {/* Destination Image */}
               {selectedTour && (
-                <div className="relative w-full h-48 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+                <div className="relative w-full h-36 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
                   <img
                     src={selectedTour.image || selectedTour.imageUrl || "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format"}
                     alt={selectedTour.name || "Destination"}
@@ -309,51 +338,49 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                 </div>
               )}
               
-              <div className="p-4 pt-0 space-y-2">
-                
-
+              <div className="p-3 pt-0 space-y-1.5">
                 <div className="space-y-2">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2">
-                      <Building2 className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-start gap-2">
+                    <Building2 className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                    <div className="space-y-1.5">
                       <p className="text-sm font-bold text-foreground">{selectedTour.name} (Category Name)</p>
-                    </div>
-                  {selectedSupplier && (
-                    <Badge variant="secondary" className="ml-6">
-                      {selectedSupplier.name}
-                    </Badge>
-                  )}
-                  {(selectedDate || selectedTimeSlot) && (
-                    <div className="flex items-center gap-4 pl-6">
-                      {selectedDate && (
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-3 w-3 text-muted-foreground" />
-                          <p className="text-xs font-semibold text-foreground">
-                            {new Date(selectedDate).toLocaleDateString('en-US', { 
-                              weekday: 'short', 
-                              year: 'numeric', 
-                              month: 'short', 
-                              day: 'numeric' 
-                            })}
-                          </p>
-                        </div>
+                      {selectedSupplier && (
+                        <Badge variant="secondary">
+                          {selectedSupplier.name}
+                        </Badge>
                       )}
-                      {selectedTimeSlot && (
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-3 w-3 text-muted-foreground" />
-                          <p className="text-xs font-semibold text-foreground">{selectedTimeSlot.label}</p>
-                          {isPremiumTime && (
-                            <Badge variant="secondary" className="text-[9px] px-1.5 py-0">Premium</Badge>
+                      {(selectedDate || selectedTimeSlot) && (
+                        <div className="flex items-center gap-4">
+                          {selectedDate && (
+                            <div className="flex items-center gap-1.5">
+                              <Calendar className="h-3 w-3 text-muted-foreground" />
+                              <p className="text-xs font-semibold text-foreground">
+                                {new Date(selectedDate).toLocaleDateString('en-US', { 
+                                  weekday: 'short', 
+                                  year: 'numeric', 
+                                  month: 'short', 
+                                  day: 'numeric' 
+                                })}
+                              </p>
+                            </div>
+                          )}
+                          {selectedTimeSlot && (
+                            <div className="flex items-center gap-1.5">
+                              <Clock className="h-3 w-3 text-muted-foreground" />
+                              <p className="text-xs font-semibold text-foreground">{selectedTimeSlot.label}</p>
+                              {isPremiumTime && (
+                                <Badge variant="secondary" className="text-[9px] px-1.5 py-0">Premium</Badge>
+                              )}
+                            </div>
                           )}
                         </div>
                       )}
                     </div>
-                  )}
-                </div>
+                  </div>
 
-                <div className="pt-3 border-t border-border space-y-2">
+                <div className="pt-2 border-t border-border space-y-1.5">
                   <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Passenger Count</Label>
-                  <div className="space-y-1.5 pl-2">
+                  <div className="space-y-1 pl-2">
                     {adultCount > 0 && (
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-muted-foreground">Adults</span>
@@ -375,9 +402,9 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-border space-y-2">
+                <div className="pt-2 border-t border-border space-y-1.5">
                   <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Price Summary</Label>
-                  <div className="space-y-1.5 pl-2">
+                  <div className="space-y-1 pl-2">
                     {adultCount > 0 && (
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">
@@ -412,9 +439,9 @@ const TravelerInfoForm = ({ onNext, onBack, bookingData }: TravelerInfoFormProps
                       <span>Service fee</span>
                       <span className="font-medium text-foreground">${serviceFee.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between border-t border-border pt-3">
+                    <div className="flex justify-between border-t border-border pt-2">
                       <span className="text-sm font-medium text-muted-foreground">Total amount due</span>
-                      <span className="text-2xl font-semibold text-primary">${totalAmount.toFixed(2)}</span>
+                      <span className="text-xl font-semibold text-primary">${totalAmount.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>

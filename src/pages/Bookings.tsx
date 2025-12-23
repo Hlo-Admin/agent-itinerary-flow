@@ -1,7 +1,7 @@
 import { useState, Fragment } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Home, BarChart3, Building2, Users, CreditCard, Ticket } from "lucide-react";
+import { ArrowLeft, Home, BarChart3, Search, Building2, Users, Ticket } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,9 +11,9 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import SearchExperiences from "@/components/booking/SearchExperiences";
+import SearchResults from "@/components/booking/SearchResults";
 import ProductDetail from "@/components/booking/ProductDetail";
 import TravelerInfoForm from "@/components/booking/TravelerInfoForm";
-import Payment from "@/components/booking/Payment";
 import VoucherView from "@/components/booking/VoucherView";
 
 type BookingStep = 1 | 2 | 3 | 4 | 5;
@@ -39,9 +39,9 @@ const Bookings = () => {
 
   const breadcrumbSteps = [
     { step: 1, label: "Search", icon: BarChart3 },
-    { step: 2, label: "Details", icon: Building2 },
-    { step: 3, label: "Travelers", icon: Users },
-    { step: 4, label: "Payment", icon: CreditCard },
+    { step: 2, label: "Results", icon: Search },
+    { step: 3, label: "Details", icon: Building2 },
+    { step: 4, label: "Travelers", icon: Users },
     { step: 5, label: "Ticket", icon: Ticket },
   ];
 
@@ -85,69 +85,84 @@ const Bookings = () => {
       {/* Main Booking Section */}
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-1 sm:space-y-2 w-full min-w-0 max-w-full p-2 sm:p-3 md:p-3 md:pt-0 animate-fade-in">
-          <div className="flex items-start justify-between gap-2 sm:gap-3">
-            <div className="space-y-0.5 w-full min-w-0 flex-1">
-              <div className="flex items-center gap-2 sm:gap-3">
-                {currentStep > 1 && (
-                  <Button
-                    onClick={handleBack}
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 rounded-lg hover:bg-muted"
-                  >
-                    <ArrowLeft className="h-4 w-4" />
-                    <span className="sr-only">Go back</span>
-                  </Button>
-                )}
-                <div className="flex-1">
-                  <Breadcrumb>
-                    <BreadcrumbList>
-                      {(() => {
-                        const breadcrumbs = getBreadcrumbs();
-                        return breadcrumbs.map((crumb, index) => {
-                          const Icon = crumb.icon;
-                          const isLast = index === breadcrumbs.length - 1;
-                          
-                          return (
-                            <Fragment key={index}>
-                              <BreadcrumbItem>
-                                {isLast ? (
-                                  <BreadcrumbPage className="flex items-center gap-1.5 sm:gap-2">
-                                    <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
-                                    <span className="text-sm sm:text-base text-muted-foreground">{crumb.label}</span>
-                                  </BreadcrumbPage>
-                                ) : (
-                                  <BreadcrumbLink
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      crumb.onClick();
-                                    }}
-                                    className="flex items-center gap-1.5 sm:gap-2 cursor-pointer hover:text-primary transition-colors"
-                                  >
-                                    <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                                    <span className="text-sm sm:text-base text-primary">{crumb.label}</span>
-                                  </BreadcrumbLink>
-                                )}
-                              </BreadcrumbItem>
-                              {!isLast && <BreadcrumbSeparator />}
-                            </Fragment>
-                          );
-                        });
-                      })()}
-                    </BreadcrumbList>
-                  </Breadcrumb>
+          {currentStep === 5 ? (
+            /* Final step - Show only Home button */
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => setCurrentStep(1)}
+                variant="outline"
+                className="h-9 sm:h-10 px-4 sm:px-6 gap-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                <span className="text-sm sm:text-base font-medium">Home</span>
+              </Button>
+            </div>
+          ) : (
+            /* Other steps - Show breadcrumbs */
+            <div className="flex items-start justify-between gap-2 sm:gap-3">
+              <div className="space-y-0.5 w-full min-w-0 flex-1">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  {currentStep > 1 && (
+                    <Button
+                      onClick={handleBack}
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 sm:h-9 sm:w-9 flex-shrink-0 rounded-lg hover:bg-muted"
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                      <span className="sr-only">Go back</span>
+                    </Button>
+                  )}
+                  <div className="flex-1">
+                    <Breadcrumb>
+                      <BreadcrumbList>
+                        {(() => {
+                          const breadcrumbs = getBreadcrumbs();
+                          return breadcrumbs.map((crumb, index) => {
+                            const Icon = crumb.icon;
+                            const isLast = index === breadcrumbs.length - 1;
+                            
+                            return (
+                              <Fragment key={index}>
+                                <BreadcrumbItem>
+                                  {isLast ? (
+                                    <BreadcrumbPage className="flex items-center gap-1.5 sm:gap-2">
+                                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
+                                      <span className="text-sm sm:text-base text-muted-foreground">{crumb.label}</span>
+                                    </BreadcrumbPage>
+                                  ) : (
+                                    <BreadcrumbLink
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        crumb.onClick();
+                                      }}
+                                      className="flex items-center gap-1.5 sm:gap-2 cursor-pointer hover:text-primary transition-colors"
+                                    >
+                                      <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
+                                      <span className="text-sm sm:text-base text-primary">{crumb.label}</span>
+                                    </BreadcrumbLink>
+                                  )}
+                                </BreadcrumbItem>
+                                {!isLast && <BreadcrumbSeparator />}
+                              </Fragment>
+                            );
+                          });
+                        })()}
+                      </BreadcrumbList>
+                    </Breadcrumb>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
 
       <Card className="p-3 sm:p-4 md:p-5 border border-border/20 w-full min-w-0 max-w-full box-border hover-lift" style={{ overflow: 'visible' }}>
         <div className="space-y-3 sm:space-y-4 w-full min-w-0 max-w-full">
           <div>
             {currentStep === 1 && <SearchExperiences onNext={handleNext} searchData={bookingData} />}
-            {currentStep === 2 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-            {currentStep === 3 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-            {currentStep === 4 && <Payment onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+            {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
+            {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
+            {currentStep === 4 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
             {currentStep === 5 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
           </div>
         </div>

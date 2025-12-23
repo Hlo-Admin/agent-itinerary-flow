@@ -1,13 +1,24 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { SidebarProvider, useSidebar, SidebarInset } from "@/components/ui/sidebar";
+import {
+  SidebarProvider,
+  useSidebar,
+  SidebarInset,
+} from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { Menu } from "lucide-react";
+import {
+  Menu,
+  LayoutGrid,
+  Maximize2,
+  Bell,
+  CircleDollarSign,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 function SidebarMenuButton() {
   const { toggleSidebar } = useSidebar();
-  
+
   return (
     <Button
       variant="ghost"
@@ -31,23 +42,71 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider
       defaultOpen={false}
-      style={{
-        "--sidebar-width": "5rem",
-        "--sidebar-width-icon": "5rem",
-      } as React.CSSProperties}
+      style={
+        {
+          "--sidebar-width": "5rem",
+          "--sidebar-width-icon": "5rem",
+        } as React.CSSProperties
+      }
     >
-      <AppSidebar showExtendedSidebar={showExtendedSidebar} setShowExtendedSidebar={setShowExtendedSidebar} />
+      <AppSidebar
+        showExtendedSidebar={showExtendedSidebar}
+        setShowExtendedSidebar={setShowExtendedSidebar}
+      />
       <SidebarInset className="flex-1 w-full min-w-0">
         {!showExtendedSidebar && (
           <header className="h-10 sm:h-11 border-b border-border/20 bg-gray-50/95 backdrop-blur-sm flex items-center justify-between px-3 sm:px-4 sticky top-0 z-50 shadow-sm">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-2xl">
               <SidebarMenuButton />
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
-              <span className="text-sm sm:text-base font-semibold text-foreground">Codetez</span>
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-br from-accent-blue via-accent-indigo to-accent-purple flex items-center justify-center text-white font-bold text-xs hover:scale-110 hover:shadow-lg hover:shadow-accent-blue/30 transition-all duration-300 cursor-pointer shadow-md ring-2 ring-white/20">
-                B
-              </div>
+            <div className="flex items-center gap-1 sm:gap-2">
+              {/* Apps/Grid Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-muted/50 rounded-lg transition-all text-muted-foreground hover:text-foreground"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+
+              {/* Maximize Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-muted/50 rounded-lg transition-all text-muted-foreground hover:text-foreground"
+              >
+                <Maximize2 className="h-4 w-4" />
+              </Button>
+
+              {/* Notification Bell */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-muted/50 rounded-lg transition-all text-muted-foreground hover:text-foreground relative"
+              >
+                <Bell className="h-4 w-4" />
+                <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-red-500" />
+              </Button>
+
+              {/* Currency/Dollar Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-muted/50 rounded-lg transition-all text-muted-foreground hover:text-foreground"
+              >
+                <CircleDollarSign className="h-4 w-4" />
+              </Button>
+
+              {/* User Avatar */}
+              <Avatar className="h-8 w-8 cursor-pointer ring-2 ring-border/50 hover:ring-primary/50 transition-all">
+                <AvatarImage
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxpTZCmFkj1ydyZrkkxlyxEvijxB0aNtDCeQ&s"
+                  alt="User"
+                />
+                <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white text-xs font-semibold">
+                  U
+                </AvatarFallback>
+              </Avatar>
             </div>
           </header>
         )}
