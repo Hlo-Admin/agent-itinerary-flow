@@ -616,12 +616,12 @@ const TravelerInfoForm = ({
           )}
 
           {/* Credit Limit & Payment Method - Single Row */}
-          <div className="flex items-center justify-between gap-2 p-2 rounded-lg border border-border/50 bg-muted/20">
-            <div className="flex items-center gap-1.5">
-              <Wallet className="h-3 w-3 text-emerald-600" />
+          <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg border border-border/50 bg-muted/20">
+            <div className="flex items-center gap-2">
+              <Wallet className="h-4 w-4 text-emerald-600" />
               <span
                 className={cn(
-                  "text-[10px] font-bold",
+                  "text-xs font-bold",
                   agentCreditLimit >= totalAmount
                     ? "text-emerald-600"
                     : "text-red-500"
@@ -630,7 +630,7 @@ const TravelerInfoForm = ({
                 Agent Limit - AED {agentCreditLimit.toLocaleString()}
               </span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() =>
@@ -638,14 +638,14 @@ const TravelerInfoForm = ({
                 }
                 disabled={!termsAccepted}
                 className={cn(
-                  "flex items-center gap-1 px-2 py-0.5 rounded text-[10px] border transition-all",
+                  "flex items-center gap-1.5 px-3 py-1 rounded text-xs border transition-all",
                   !termsAccepted && "opacity-50 cursor-not-allowed",
                   selectedPaymentMethod === "gateway"
                     ? "border-primary bg-primary/10 text-primary"
                     : "border-border hover:border-primary/50"
                 )}
               >
-                <CreditCard className="h-2.5 w-2.5" />
+                <CreditCard className="h-3.5 w-3.5" />
                 Gateway
               </button>
               <button
@@ -657,7 +657,7 @@ const TravelerInfoForm = ({
                 }
                 disabled={!termsAccepted || agentCreditLimit < totalAmount}
                 className={cn(
-                  "flex items-center gap-1 px-2 py-0.5 rounded text-[10px] border transition-all",
+                  "flex items-center gap-1.5 px-3 py-1 rounded text-xs border transition-all",
                   (!termsAccepted || agentCreditLimit < totalAmount) &&
                     "opacity-50 cursor-not-allowed",
                   selectedPaymentMethod === "credit"
@@ -665,7 +665,7 @@ const TravelerInfoForm = ({
                     : "border-border hover:border-emerald-500/50"
                 )}
               >
-                <Wallet className="h-2.5 w-2.5" />
+                <Wallet className="h-3.5 w-3.5" />
                 Credit
               </button>
             </div>

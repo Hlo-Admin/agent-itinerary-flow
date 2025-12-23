@@ -194,12 +194,19 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
   const [popupAdultCount, setPopupAdultCount] = useState(2);
   const [popupChildCount, setPopupChildCount] = useState(0);
   const [popupTimeSlot, setPopupTimeSlot] = useState("10:00 AM");
-  const [popupDate, setPopupDate] = useState<Date | undefined>(
-    tourData?.date ? new Date(tourData.date) : undefined
-  );
 
-  // Initialize from bookingDetails if available (from popup)
+  // Initialize from bookingDetails if available (from popup) - MUST be defined before useState calls that use it
   const bookingDetails = tourData?.bookingDetails || {};
+
+  const [popupDate, setPopupDate] = useState<Date | undefined>(() => {
+    if (tourData?.bookingDetails?.date) {
+      return new Date(tourData.bookingDetails.date);
+    }
+    if (tourData?.date) {
+      return new Date(tourData.date);
+    }
+    return undefined;
+  });
 
   // Convert timeSlot label to id if needed (popup uses label format "10:00 AM", we need id "10:00")
   const getTimeSlotId = (timeSlotLabel: string) => {
@@ -208,19 +215,24 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     return matchingSlot ? matchingSlot.id : timeSlotLabel;
   };
 
-  const [selectedDate, setSelectedDate] = useState(
-    bookingDetails.date || tourData?.date || ""
-  );
+  const [selectedDate, setSelectedDate] = useState(() => {
+    if (tourData?.bookingDetails?.date) {
+      // Convert Date object to YYYY-MM-DD string format
+      const date = new Date(tourData.bookingDetails.date);
+      return date.toISOString().split("T")[0];
+    }
+    return tourData?.date || "";
+  });
   const [selectedTime, setSelectedTime] = useState(
-    bookingDetails.timeSlot
-      ? getTimeSlotId(bookingDetails.timeSlot)
+    tourData?.bookingDetails?.timeSlot
+      ? getTimeSlotId(tourData.bookingDetails.timeSlot)
       : tourData?.selectedTime || ""
   );
   const [adultTickets, setAdultTickets] = useState(
-    bookingDetails.adultCount || tourData?.tickets?.adult || 2
+    tourData?.bookingDetails?.adultCount || tourData?.tickets?.adult || 2
   );
   const [childTickets, setChildTickets] = useState(
-    bookingDetails.childCount || tourData?.tickets?.child || 0
+    tourData?.bookingDetails?.childCount || tourData?.tickets?.child || 0
   );
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
     tourData?.supplier?.id || null
