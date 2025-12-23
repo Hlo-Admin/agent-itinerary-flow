@@ -605,6 +605,7 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                         <CalendarComponent
                           mode="single"
                           selected={popupDate}
+                          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                           onSelect={(date) => {
                             setPopupDate(date);
                             setDatePopoverOpen(false);

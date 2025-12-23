@@ -404,9 +404,10 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
     <div className="space-y-2 sm:space-y-3 w-full min-w-0 max-w-full animate-fade-in">
       {/* Search Criteria - First Section */}
       <Card className="p-3 sm:p-4 md:p-5 border border-border/20 bg-gradient-to-br from-background via-background to-primary/5 w-full min-w-0 max-w-full box-border hover-lift shadow-sm" style={{ overflow: 'visible' }}>
-        <div className="flex items-center gap-2 sm:gap-3 w-full min-w-0">
-          <h3 className="text-base sm:text-md text-foreground tracking-tight whitespace-nowrap flex-shrink-0">Find Experiences</h3>
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="flex items-center justify-between gap-2 sm:gap-3 w-full min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <h3 className="text-base sm:text-md text-foreground tracking-tight whitespace-nowrap flex-shrink-0">Find Experiences</h3>
+            <div className="flex items-center gap-2 min-w-0">
             <Popover open={showDestinationDropdown && destination.length > 0} onOpenChange={setShowDestinationDropdown}>
               <PopoverTrigger asChild>
                 <div className="relative w-48 sm:w-64 md:w-72 min-w-0 flex-shrink-0">
@@ -485,6 +486,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                 ))}
               </SelectContent>
             </Select>
+            </div>
           </div>
           <Button
             variant="outline"
@@ -720,6 +722,114 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                 <td className="px-4 py-3 text-primary">2025-Dec-23</td>
                 <td className="px-4 py-3 text-muted-foreground">AED 645.00</td>
                 <td className="px-4 py-3 text-muted-foreground">2025-Nov-27 06:30...</td>
+                <td className="px-4 py-3">
+                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">5</td>
+                <td className="px-4 py-3 text-foreground font-medium">PK7L2M</td>
+                <td className="px-4 py-3 text-primary font-medium">AHMED KHAN</td>
+                <td className="px-4 py-3 text-muted-foreground">DXB-RUH</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-25</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-15</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 720.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-26 08:00...</td>
+                <td className="px-4 py-3">
+                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">6</td>
+                <td className="px-4 py-3 text-foreground font-medium">RT9X4N</td>
+                <td className="px-4 py-3 text-primary font-medium">SARA AHMED</td>
+                <td className="px-4 py-3 text-muted-foreground">AUH-KWI</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-24</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-20</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 580.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-25 10:30...</td>
+                <td className="px-4 py-3">
+                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">7</td>
+                <td className="px-4 py-3 text-foreground font-medium">JM3K8P</td>
+                <td className="px-4 py-3 text-primary font-medium">JOHN MILLER</td>
+                <td className="px-4 py-3 text-muted-foreground">DXB-MCT</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-23</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-05</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 450.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-24 12:00...</td>
+                <td className="px-4 py-3">
+                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">8</td>
+                <td className="px-4 py-3 text-foreground font-medium">WQ5T2R</td>
+                <td className="px-4 py-3 text-primary font-medium">FATIMA ALI</td>
+                <td className="px-4 py-3 text-muted-foreground">SHJ-BAH</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-22</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-18</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 520.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-23 09:15...</td>
+                <td className="px-4 py-3">
+                  <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">9</td>
+                <td className="px-4 py-3 text-foreground font-medium">YN8H6L</td>
+                <td className="px-4 py-3 text-primary font-medium">RAJESH KUMAR</td>
+                <td className="px-4 py-3 text-muted-foreground">DXB-DEL</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-21</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-28</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 890.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-22 14:45...</td>
+                <td className="px-4 py-3">
+                  <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">CONFIRMED</Badge>
+                </td>
+                <td className="px-4 py-3">
+                  <button className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </td>
+              </tr>
+              <tr className="hover:bg-muted/20 transition-colors">
+                <td className="px-4 py-3 text-foreground">10</td>
+                <td className="px-4 py-3 text-foreground font-medium">ZC4M9V</td>
+                <td className="px-4 py-3 text-primary font-medium">MARIA SANTOS</td>
+                <td className="px-4 py-3 text-muted-foreground">AUH-MNL</td>
+                <td className="px-4 py-3 text-primary">2025-Nov-20</td>
+                <td className="px-4 py-3 text-primary">2025-Dec-10</td>
+                <td className="px-4 py-3 text-muted-foreground">AED 1,250.00</td>
+                <td className="px-4 py-3 text-muted-foreground">2025-Nov-21 16:30...</td>
                 <td className="px-4 py-3">
                   <Badge variant="outline" className="border-teal-400 text-teal-600 bg-teal-50 text-[10px] px-2 py-0.5">TICKETED</Badge>
                 </td>
@@ -1062,6 +1172,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                           mode="single"
                           selected={popupDate}
                           onSelect={setPopupDate}
+                          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                           initialFocus
                         />
                       </PopoverContent>

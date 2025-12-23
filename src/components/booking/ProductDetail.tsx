@@ -824,6 +824,9 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                               mode="single"
                               selected={popupDate}
                               onSelect={setPopupDate}
+                              disabled={(date) =>
+                                date < new Date(new Date().setHours(0, 0, 0, 0))
+                              }
                               initialFocus
                             />
                           </PopoverContent>
@@ -1082,12 +1085,6 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 Overview
               </TabsTrigger>
               <TabsTrigger
-                value="itinerary"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-purple data-[state=active]:to-accent-pink data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-purple/30 font-semibold transition-all duration-300 rounded-lg"
-              >
-                Itinerary
-              </TabsTrigger>
-              <TabsTrigger
                 value="included"
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
               >
@@ -1323,63 +1320,6 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               </Card>
             </TabsContent>
 
-            <TabsContent value="itinerary" className="mt-6 animate-fade-in">
-              <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-xl bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
-                      <Clock className="h-5 w-5 text-accent-purple" />
-                    </div>
-                    <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                      Day Schedule
-                    </h4>
-                  </div>
-                  <div className="space-y-5">
-                    {[
-                      {
-                        time: "09:00",
-                        activity: "Meeting point at Central Square",
-                      },
-                      {
-                        time: "09:30",
-                        activity: "Historic district walking tour begins",
-                      },
-                      {
-                        time: "11:00",
-                        activity: "Visit to the ancient cathedral",
-                      },
-                      {
-                        time: "12:00",
-                        activity: "Tour concludes at the Old Town Gate",
-                      },
-                    ].map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex gap-5 group animate-fade-in"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
-                        <div className="flex flex-col items-center">
-                          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-accent-purple/20 to-accent-pink/20 flex items-center justify-center border-2 border-accent-purple/30 group-hover:border-accent-purple/60 group-hover:scale-110 transition-all duration-300 shadow-sm group-hover:shadow-md">
-                            <span className="text-sm font-bold text-accent-purple">
-                              {item.time}
-                            </span>
-                          </div>
-                          {index < 3 && (
-                            <div className="w-0.5 h-12 bg-gradient-to-b from-accent-purple/30 to-accent-pink/30 mt-2" />
-                          )}
-                        </div>
-                        <div className="flex-1 pt-2">
-                          <p className="text-base font-medium text-foreground group-hover:text-accent-purple transition-all duration-300">
-                            {item.activity}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Card>
-            </TabsContent>
-
             <TabsContent value="included" className="mt-6 animate-fade-in">
               <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
                 <div className="space-y-6">
@@ -1444,6 +1384,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
+                  min={new Date().toISOString().split("T")[0]}
                   className="h-11"
                 />
               </div>
@@ -1798,6 +1739,9 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             mode="single"
                             selected={popupDate}
                             onSelect={setPopupDate}
+                            disabled={(date) =>
+                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            }
                             initialFocus
                           />
                         </PopoverContent>
