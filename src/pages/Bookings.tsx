@@ -81,12 +81,10 @@ const Bookings = () => {
   };
 
   return (
-    <div className="relative flex h-full w-full min-w-0 max-w-full overflow-hidden">
-      {/* Main Booking Section */}
-      <div className="flex-1 overflow-y-auto">
-        {/* Fixed Header with Breadcrumb */}
-        <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border/20 shadow-sm">
-          <div className="w-full min-w-0 max-w-full px-3 py-1.5 sm:px-4 sm:py-2 animate-fade-in">
+    <div className="relative flex flex-col h-full w-full min-w-0 max-w-full">
+      {/* Fixed Header with Breadcrumb */}
+      <div className="sticky top-0 z-40 flex-shrink-0 bg-background">
+        <div className="w-full min-w-0 max-w-full pt-2 pl-3 pb-2 sm:pt-2 sm:pl-4 md:pt-2 md:pl-5 lg:pt-2 lg:pl-6">
             {currentStep === 5 ? (
               /* Final step - Show only Home button */
               <div className="flex items-center gap-3">
@@ -95,7 +93,7 @@ const Bookings = () => {
                   variant="outline"
                   className="h-10 sm:h-11 px-5 sm:px-6 gap-2 rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors"
                 >
-                  <Home className="h-5 w-5" />
+                  <Home className="h-7 w-7" />
                   <span className="text-base sm:text-lg font-medium">Home</span>
                 </Button>
               </div>
@@ -111,7 +109,7 @@ const Bookings = () => {
                         size="icon"
                         className="h-9 w-9 sm:h-10 sm:w-10 flex-shrink-0 rounded-lg hover:bg-muted"
                       >
-                        <ArrowLeft className="h-5 w-5" />
+                        <ArrowLeft className="h-7 w-7" />
                         <span className="sr-only">Go back</span>
                       </Button>
                     )}
@@ -129,7 +127,7 @@ const Bookings = () => {
                                   <BreadcrumbItem>
                                     {isLast ? (
                                       <BreadcrumbPage className="flex items-center gap-2">
-                                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 text-muted-foreground" />
                                         <span className="text-base sm:text-lg font-medium text-muted-foreground">{crumb.label}</span>
                                       </BreadcrumbPage>
                                     ) : (
@@ -140,7 +138,7 @@ const Bookings = () => {
                                         }}
                                         className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors"
                                       >
-                                        <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
                                         <span className="text-base sm:text-lg font-medium text-primary">{crumb.label}</span>
                                       </BreadcrumbLink>
                                     )}
@@ -157,10 +155,11 @@ const Bookings = () => {
                 </div>
               </div>
             )}
-          </div>
         </div>
+      </div>
 
-        {/* Scrollable Content */}
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto w-full min-w-0 max-w-full min-h-0">
         <div className="w-full min-w-0 max-w-full p-2 sm:p-3 md:p-3 pt-2">
           <Card className="p-3 sm:p-4 md:p-5 border border-border/20 w-full min-w-0 max-w-full box-border hover-lift" style={{ overflow: 'visible' }}>
             <div className="space-y-3 sm:space-y-4 w-full min-w-0 max-w-full">

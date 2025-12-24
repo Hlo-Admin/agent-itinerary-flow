@@ -432,11 +432,11 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
             <Popover open={showDestinationDropdown && destination.length > 0} onOpenChange={setShowDestinationDropdown}>
               <PopoverTrigger asChild>
                 <div className="relative w-48 sm:w-64 md:w-72 min-w-0 flex-shrink-0">
-                  <Input
+            <Input
                     ref={inputRef}
-                    id="destination"
-                    placeholder="Search by city or attraction"
-                    value={destination}
+              id="destination"
+              placeholder="Search by city or attraction"
+              value={destination}
                     onChange={(e) => {
                       setDestination(e.target.value);
                       setShowDestinationDropdown(true);
@@ -463,7 +463,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                       <X className="h-3.5 w-3.5" />
                     </button>
                   )}
-                </div>
+          </div>
               </PopoverTrigger>
               <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0" align="start">
                 <Command>
@@ -507,7 +507,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                 ))}
               </SelectContent>
             </Select>
-            </div>
+          </div>
           </div>
           <Button
             variant="outline"
@@ -981,76 +981,76 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
 
       {/* Booking Confirmation Popup - for viewing recent bookings */}
       <Dialog open={showBookingConfirmation} onOpenChange={setShowBookingConfirmation}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-bold flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+        <DialogContent className="sm:max-w-[380px]">
+          <DialogHeader className="pb-2">
+            <DialogTitle className="text-base font-bold flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
               Booking Confirmation
             </DialogTitle>
             <DialogDescription className="text-xs">
-              Booking details for reference {selectedBookingForView?.refNo}
+              Reference: {selectedBookingForView?.refNo}
             </DialogDescription>
           </DialogHeader>
           
           {selectedBookingForView && (
-            <div className="space-y-4">
+            <div className="space-y-2">
               {/* Booking Status Banner */}
-              <div className="flex items-center justify-center p-4 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
+              <div className="flex items-center justify-center p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
                 <div className="text-center">
-                  <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
-                  <p className="text-lg font-bold text-emerald-600">Booking Confirmed</p>
-                  <p className="text-sm text-muted-foreground">Your booking has been successfully confirmed</p>
+                  <CheckCircle2 className="h-8 w-8 text-emerald-500 mx-auto mb-1" />
+                  <p className="text-base font-bold text-emerald-600">Booking Confirmed</p>
+                  <p className="text-xs text-muted-foreground">Successfully confirmed</p>
                 </div>
               </div>
 
               {/* Booking Details */}
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Reference No</p>
-                    <p className="text-sm font-bold text-foreground">{selectedBookingForView.refNo}</p>
+              <div className="space-y-2">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Reference No</p>
+                    <p className="text-xs font-bold text-foreground">{selectedBookingForView.refNo}</p>
                   </div>
-                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Status</p>
-                    <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-xs px-2 py-0.5">
+                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Status</p>
+                    <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-1.5 py-0.5">
                       {selectedBookingForView.status.toUpperCase()}
                     </Badge>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-primary/10">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Park Name</p>
-                  <p className="text-sm font-bold text-foreground">{selectedBookingForView.parkName}</p>
+                <div className="p-2 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-primary/10">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Park Name</p>
+                  <p className="text-xs font-bold text-foreground">{selectedBookingForView.parkName}</p>
                 </div>
 
-                <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Lead Passenger</p>
-                  <p className="text-sm font-bold text-primary">{selectedBookingForView.leadPaxName}</p>
+                <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
+                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Lead Passenger</p>
+                  <p className="text-xs font-bold text-primary">{selectedBookingForView.leadPaxName}</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Booking Date</p>
-                    <p className="text-sm font-medium text-foreground">{selectedBookingForView.bookingDate}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Booking Date</p>
+                    <p className="text-xs font-medium text-foreground">{selectedBookingForView.bookingDate}</p>
                   </div>
-                  <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Event Date</p>
-                    <p className="text-sm font-medium text-foreground">{selectedBookingForView.eventDate}</p>
+                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Event Date</p>
+                    <p className="text-xs font-medium text-foreground">{selectedBookingForView.eventDate}</p>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2 pt-1">
                 <Button
                   variant="outline"
                   onClick={() => setShowBookingConfirmation(false)}
-                  className="flex-1"
+                  className="flex-1 h-8 text-xs"
                 >
                   Close
                 </Button>
                 <Button
-                  className="flex-1 bg-gradient-to-r from-primary to-primary/90"
+                  className="flex-1 h-8 text-xs bg-gradient-to-r from-primary to-primary/90"
                 >
                   Download Voucher
                 </Button>

@@ -195,7 +195,7 @@ const TravelerInfoForm = ({
       {/* Main Content Grid - Left: Travelers, Right: Price Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left Side - Traveler Information */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-3">
           <div className="space-y-1">
             <h3 className="text-2xl font-semibold text-foreground">
               Lead passenger information
@@ -207,19 +207,32 @@ const TravelerInfoForm = ({
 
           {/* Adult Passengers */}
           {adultCount > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-semibold text-foreground">
-                  Adult Passengers ({adultCount})
-                </h3>
-              </div>
-              <div className="space-y-4">
-                {adults.map((adult, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="space-y-3">
+            <Card className="p-3">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between pb-2 border-b border-border/30">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    <h3 className="text-base font-semibold text-foreground">
+                      Adult Passengers ({adultCount})
+                    </h3>
+                  </div>
+                  {adultCount > adults.length && (
+                    <Button
+                      onClick={addAdult}
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs"
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Adult
+                    </Button>
+                  )}
+                </div>
+                <div className="space-y-3">
+                  {adults.map((adult, index) => (
+                    <div key={index} className={cn("space-y-2", index > 0 && "pt-2 border-t border-border/20")}>
                       <div className="flex items-center justify-between">
-                        <Label className="text-sm font-medium text-muted-foreground">
+                        <Label className="text-xs font-medium text-muted-foreground">
                           Adult {index + 1} {index === 0 && "(Lead Passenger)"}
                         </Label>
                         {adults.length > 1 && index !== 0 && (
@@ -227,14 +240,14 @@ const TravelerInfoForm = ({
                             onClick={() => removeAdult(index)}
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="h-6 w-6"
                           >
-                            <Trash2 className="h-4 w-4 text-destructive" />
+                            <Trash2 className="h-3 w-3 text-destructive" />
                           </Button>
                         )}
                       </div>
-                      <div className="grid gap-4 md:grid-cols-3">
-                        <div className="space-y-2">
+                      <div className="grid gap-2 md:grid-cols-3">
+                        <div className="space-y-1">
                           <Label
                             htmlFor={`adult-${index}-name`}
                             className="text-xs font-medium text-muted-foreground"
@@ -248,10 +261,11 @@ const TravelerInfoForm = ({
                             onChange={(e) =>
                               updateAdult(index, "name", e.target.value)
                             }
+                            className="h-9 text-sm"
                             required
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                           <Label
                             htmlFor={`adult-${index}-email`}
                             className="text-xs font-medium text-muted-foreground"
@@ -266,10 +280,11 @@ const TravelerInfoForm = ({
                             onChange={(e) =>
                               updateAdult(index, "email", e.target.value)
                             }
+                            className="h-9 text-sm"
                             required
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                           <Label
                             htmlFor={`adult-${index}-phone`}
                             className="text-xs font-medium text-muted-foreground"
@@ -283,43 +298,46 @@ const TravelerInfoForm = ({
                             onChange={(e) =>
                               updateAdult(index, "phone", e.target.value)
                             }
+                            className="h-9 text-sm"
                             required
                           />
                         </div>
                       </div>
                     </div>
-                  </Card>
-                ))}
+                  ))}
+                </div>
               </div>
-              {adultCount > adults.length && (
-                <Button
-                  onClick={addAdult}
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add another adult
-                </Button>
-              )}
-            </div>
+            </Card>
           )}
 
           {/* Child Passengers */}
           {childCount > 0 && (
-            <div className="space-y-4 border-t border-border pt-6">
-              <div className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" />
-                <h3 className="text-lg font-semibold text-foreground">
-                  Child Passengers ({childCount})
-                </h3>
-              </div>
-              <div className="space-y-4">
-                {children.map((child, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="space-y-3">
+            <Card className="p-3">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between pb-2 border-b border-border/30">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    <h3 className="text-base font-semibold text-foreground">
+                      Child Passengers ({childCount})
+                    </h3>
+                  </div>
+                  {childCount > children.length && (
+                    <Button
+                      onClick={addChild}
+                      variant="outline"
+                      size="sm"
+                      className="h-7 text-xs"
+                    >
+                      <Plus className="h-3 w-3 mr-1" />
+                      Add Child
+                    </Button>
+                  )}
+                </div>
+                <div className="space-y-3">
+                  {children.map((child, index) => (
+                    <div key={index} className={cn("space-y-2", index > 0 && "pt-2 border-t border-border/20")}>
                       <div className="flex items-center justify-between">
-                        <Label className="text-sm font-medium text-muted-foreground">
+                        <Label className="text-xs font-medium text-muted-foreground">
                           Child {index + 1}
                         </Label>
                         {children.length > 1 && (
@@ -327,14 +345,14 @@ const TravelerInfoForm = ({
                             onClick={() => removeChild(index)}
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className="h-6 w-6"
                           >
-                            <Trash2 className="h-4 w-4 text-destructive" />
+                            <Trash2 className="h-3 w-3 text-destructive" />
                           </Button>
                         )}
                       </div>
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div className="space-y-2">
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <div className="space-y-1">
                           <Label
                             htmlFor={`child-${index}-name`}
                             className="text-xs font-medium text-muted-foreground"
@@ -348,10 +366,11 @@ const TravelerInfoForm = ({
                             onChange={(e) =>
                               updateChild(index, "name", e.target.value)
                             }
+                            className="h-9 text-sm"
                             required
                           />
                         </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
                           <Label
                             htmlFor={`child-${index}-dob`}
                             className="text-xs font-medium text-muted-foreground"
@@ -365,26 +384,16 @@ const TravelerInfoForm = ({
                             onChange={(e) =>
                               updateChild(index, "dob", e.target.value)
                             }
+                            className="h-9 text-sm"
                             required
                           />
                         </div>
                       </div>
                     </div>
-                  </Card>
-                ))}
+                  ))}
+                </div>
               </div>
-              {childCount > children.length && (
-                <Button
-                  onClick={addChild}
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add another child
-                </Button>
-              )}
-            </div>
+            </Card>
           )}
 
           {/* Terms and Conditions Checkbox */}

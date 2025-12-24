@@ -467,13 +467,13 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     const tour = mockTours.find((t) => t.id === selectedTour);
     if (tour) {
       const bookingDetails = getBookingDetails(tour);
-      onNext({
+    onNext({
         destination: tourData?.destination,
         date: popupDate
           ? format(popupDate, "yyyy-MM-dd")
           : tourData?.date || "",
         categories: tourData?.categories || [],
-        tour,
+      tour,
         bookingDetails: {
           ...bookingDetails,
           date: popupDate
@@ -488,7 +488,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
 
   // If showing results (coming from search), show results list with popup
   if (showResults) {
-    return (
+  return (
       <div className="space-y-2 sm:space-y-3 w-full min-w-0 max-w-full animate-fade-in">
         {/* Results Header */}
         <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
@@ -503,7 +503,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               </span>{" "}
               experiences in {tourData?.destination || "your destination"}
             </p>
-          </div>
+            </div>
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <Button
               onClick={() => setShowFilters(!showFilters)}
@@ -728,20 +728,20 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 px-2 py-0.5 rounded-lg bg-muted/50">
                               <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" />
                               <span className="font-medium text-[10px] sm:text-xs">
-                                {tour.duration}
+              {tour.duration}
                               </span>
-                            </div>
+            </div>
                             <div className="flex items-center gap-1 text-muted-foreground flex-shrink-0 px-2 py-0.5 rounded-lg bg-muted/30">
                               <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0 text-accent-blue" />
                               <span className="font-medium text-[10px] sm:text-xs truncate">
-                                {tour.location}
+              {tour.location}
                               </span>
-                            </div>
-                          </div>
+            </div>
+          </div>
                           <div className="flex items-center gap-1.5 p-1.5 sm:p-2 rounded-lg bg-emerald/5 border border-emerald/10 min-w-0">
                             <div className="p-0.5 rounded bg-emerald/10 flex-shrink-0">
                               <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                            </div>
+        </div>
                             <span className="text-[10px] font-medium text-foreground line-clamp-1 min-w-0">
                               {tour.cancellation}
                             </span>
@@ -788,7 +788,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             onClick={() => handleSelectTour(tour.id)}
                           >
                             {isActive ? "✓" : "Select"}
-                          </Button>
+        </Button>
                         </div>
                       </div>
                     </div>
@@ -1104,20 +1104,20 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               >
                 Pricing
               </TabsTrigger>
-              <TabsTrigger
-                value="overview"
+              <TabsTrigger 
+                value="overview" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-blue data-[state=active]:to-accent-indigo data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 Overview
               </TabsTrigger>
-              <TabsTrigger
+              <TabsTrigger 
                 value="included"
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 What's Included
               </TabsTrigger>
             </TabsList>
-
+            
             <TabsContent
               value="pricing"
               className="mt-6 space-y-4 animate-fade-in"
@@ -1126,11 +1126,11 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="p-2 rounded-xl bg-gradient-to-br from-accent-emerald/20 to-accent-teal/20">
                     <BadgeIcon className="h-5 w-5 text-accent-emerald" />
-                  </div>
+                </div>
                   <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                     Compare Supplier Prices
                   </h4>
-                </div>
+                    </div>
                 <div className="space-y-4">
                   {mockSuppliers.map((supplier, index) => {
                     const adultPrice = isPremiumTime
@@ -1176,7 +1176,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                                   Selected
                                 </Badge>
                               )}
-                            </div>
+                  </div>
 
                             <div className="grid gap-4 md:grid-cols-3 mb-4">
                               <div>
@@ -1197,7 +1197,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                                           Premium
                                         </Badge>
                                       )}
-                                    </div>
+                </div>
                                   )}
                                   {childTickets > 0 && (
                                     <div className="flex items-center gap-1">
@@ -1212,10 +1212,10 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                                           Premium
                                         </Badge>
                                       )}
-                                    </div>
+                    </div>
                                   )}
-                                </div>
-                              </div>
+                  </div>
+                          </div>
 
                               {/* <div>
                                 <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">Your commission</p>
@@ -1238,8 +1238,8 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                                     <p className="text-xs text-muted-foreground">
                                       Child: {childTickets} × ${childPrice}
                                     </p>
-                                  )}
-                                </div>
+                          )}
+                        </div>
                               </div>
                             </div>
                           </div>
@@ -1254,9 +1254,9 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             <p className="mt-1 text-xs text-muted-foreground">
                               for {totalTickets} ticket
                               {totalTickets > 1 ? "s" : ""}
-                            </p>
-                          </div>
+                          </p>
                         </div>
+                      </div>
                       </Card>
                     );
                   })}
@@ -1345,7 +1345,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 </div>
               </Card>
             </TabsContent>
-
+            
             <TabsContent value="included" className="mt-6 animate-fade-in">
               <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
                 <div className="space-y-6">
@@ -1397,23 +1397,23 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           <div className="space-y-4">
             {/* Date and Time in same row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className="space-y-2">
                 <Label
                   htmlFor="tour-date"
                   className="text-sm font-semibold text-foreground flex items-center gap-2"
                 >
-                  <Calendar className="h-4 w-4" />
-                  Select Date
-                </Label>
-                <Input
-                  id="tour-date"
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
+                <Calendar className="h-4 w-4" />
+                Select Date
+              </Label>
+              <Input
+                id="tour-date"
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
                   min={new Date().toISOString().split("T")[0]}
-                  className="h-11"
-                />
-              </div>
+                className="h-11"
+              />
+            </div>
 
               <div className="space-y-1">
                 <Label
@@ -1421,7 +1421,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                   className="text-sm font-semibold text-foreground"
                 >
                   Select Time Slot
-                </Label>
+              </Label>
                 <Select value={selectedTime} onValueChange={setSelectedTime}>
                   <SelectTrigger id="tour-time" className="h-11">
                     <SelectValue placeholder="Select a time slot" />
@@ -1503,12 +1503,10 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           {/* Trip Summary */}
           <div className="space-y-3 border-t border-border pt-4">
             <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
-              Trip Summary
+              Trip  
             </h4>
 
-            {/* Route Info */}
-            <div className="space-y-3">
-              {/* Outbound Journey */}
+            {/* <div className="space-y-3">
               <div className="flex items-start justify-between gap-2 text-xs">
                 <div className="flex-1">
                   <p className="font-semibold text-foreground">
@@ -1553,7 +1551,6 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 </div>
               </div>
 
-              {/* Return Journey */}
               <div className="flex items-start justify-between gap-2 text-xs">
                 <div className="flex-1">
                   <p className="font-semibold text-foreground">
@@ -1601,7 +1598,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Ticket Count & Trip Type */}
             <div className="flex justify-between items-center pt-2 border-t border-border/50">
@@ -1617,14 +1614,14 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           {/* Fare Breakdown */}
           {selectedSupplierData && (
             <div className="space-y-2 border-t border-border pt-4">
-              <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">
                   Adult ({adultTickets} x AED {selectedAdultPrice.toFixed(2)})
                 </span>
                 <span className="font-medium text-foreground">
                   AED {selectedAdultTotal.toFixed(2)}
                 </span>
-              </div>
+            </div>
               {childTickets > 0 && (
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">
@@ -1633,7 +1630,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                   <span className="font-medium text-foreground">
                     AED {selectedChildTotal.toFixed(2)}
                   </span>
-                </div>
+            </div>
               )}
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">
@@ -1650,7 +1647,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Discount(-)</span>
                 <span className="font-medium text-primary">AED 0.00</span>
-              </div>
+          </div>
 
               {/* Grand Total */}
               <div className="flex justify-between items-center pt-3 border-t border-border mt-2">
@@ -1660,8 +1657,8 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 <span className="text-lg font-bold text-primary">
                   AED {(selectedGrandTotal + totalTickets * 250).toFixed(2)}
                 </span>
-              </div>
             </div>
+          </div>
           )}
 
           <Button
