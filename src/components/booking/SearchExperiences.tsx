@@ -143,16 +143,16 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
 
   // Mock recent bookings data (park-related)
   const recentBookings = [
-    { sno: 1, refNo: "BK-2024-001", leadPaxName: "VISHNU PRASATH", parkName: "Dubai Parks & Resorts", bookingDate: "2025-Dec-20", eventDate: "2025-Dec-25", status: "Booked" },
-    { sno: 2, refNo: "BK-2024-002", leadPaxName: "AHMED KHAN", parkName: "IMG Worlds of Adventure", bookingDate: "2025-Dec-19", eventDate: "2025-Dec-24", status: "Booked" },
-    { sno: 3, refNo: "BK-2024-003", leadPaxName: "SARA AHMED", parkName: "Atlantis Aquaventure", bookingDate: "2025-Dec-18", eventDate: "2025-Dec-23", status: "Booked" },
-    { sno: 4, refNo: "BK-2024-004", leadPaxName: "JOHN MILLER", parkName: "Global Village", bookingDate: "2025-Dec-17", eventDate: "2025-Dec-22", status: "Booked" },
-    { sno: 5, refNo: "BK-2024-005", leadPaxName: "FATIMA ALI", parkName: "Ferrari World Abu Dhabi", bookingDate: "2025-Dec-16", eventDate: "2025-Dec-21", status: "Booked" },
-    { sno: 6, refNo: "BK-2024-006", leadPaxName: "RAJESH KUMAR", parkName: "Ski Dubai", bookingDate: "2025-Dec-15", eventDate: "2025-Dec-20", status: "Booked" },
-    { sno: 7, refNo: "BK-2024-007", leadPaxName: "MARIA SANTOS", parkName: "Wild Wadi Waterpark", bookingDate: "2025-Dec-14", eventDate: "2025-Dec-19", status: "Booked" },
-    { sno: 8, refNo: "BK-2024-008", leadPaxName: "MICHAEL CHEN", parkName: "Warner Bros. World", bookingDate: "2025-Dec-13", eventDate: "2025-Dec-18", status: "Booked" },
-    { sno: 9, refNo: "BK-2024-009", leadPaxName: "EMMA WILLIAMS", parkName: "Yas Waterworld", bookingDate: "2025-Dec-12", eventDate: "2025-Dec-17", status: "Booked" },
-    { sno: 10, refNo: "BK-2024-010", leadPaxName: "JAMES BROWN", parkName: "Legoland Dubai", bookingDate: "2025-Dec-11", eventDate: "2025-Dec-16", status: "Booked" },
+    { sno: 1, refNo: "BK-2024-001", leadPaxName: "VISHNU PRASATH", parkName: "Dubai Parks & Resorts", supplierName: "Dubai Parks Supplier", bookingDate: "2025-Dec-20", eventDate: "2025-Dec-25", status: "Booked" },
+    { sno: 2, refNo: "BK-2024-002", leadPaxName: "AHMED KHAN", parkName: "IMG Worlds of Adventure", supplierName: "IMG Adventures Ltd", bookingDate: "2025-Dec-19", eventDate: "2025-Dec-24", status: "Booked" },
+    { sno: 3, refNo: "BK-2024-003", leadPaxName: "SARA AHMED", parkName: "Atlantis Aquaventure", supplierName: "Atlantis Tours", bookingDate: "2025-Dec-18", eventDate: "2025-Dec-23", status: "Booked" },
+    { sno: 4, refNo: "BK-2024-004", leadPaxName: "JOHN MILLER", parkName: "Global Village", supplierName: "Global Events Co", bookingDate: "2025-Dec-17", eventDate: "2025-Dec-22", status: "Booked" },
+    { sno: 5, refNo: "BK-2024-005", leadPaxName: "FATIMA ALI", parkName: "Ferrari World Abu Dhabi", supplierName: "Ferrari World Tours", bookingDate: "2025-Dec-16", eventDate: "2025-Dec-21", status: "Booked" },
+    { sno: 6, refNo: "BK-2024-006", leadPaxName: "RAJESH KUMAR", parkName: "Ski Dubai", supplierName: "Ski Dubai Adventures", bookingDate: "2025-Dec-15", eventDate: "2025-Dec-20", status: "Booked" },
+    { sno: 7, refNo: "BK-2024-007", leadPaxName: "MARIA SANTOS", parkName: "Wild Wadi Waterpark", supplierName: "Wild Wadi Tours", bookingDate: "2025-Dec-14", eventDate: "2025-Dec-19", status: "Booked" },
+    { sno: 8, refNo: "BK-2024-008", leadPaxName: "MICHAEL CHEN", parkName: "Warner Bros. World", supplierName: "Warner Bros Entertainment", bookingDate: "2025-Dec-13", eventDate: "2025-Dec-18", status: "Booked" },
+    { sno: 9, refNo: "BK-2024-009", leadPaxName: "EMMA WILLIAMS", parkName: "Yas Waterworld", supplierName: "Yas Waterworld Tours", bookingDate: "2025-Dec-12", eventDate: "2025-Dec-17", status: "Booked" },
+    { sno: 10, refNo: "BK-2024-010", leadPaxName: "JAMES BROWN", parkName: "Legoland Dubai", supplierName: "Legoland Dubai Supplier", bookingDate: "2025-Dec-11", eventDate: "2025-Dec-16", status: "Booked" },
   ];
 
   const handleViewBooking = (booking: any) => {
@@ -703,6 +703,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Ref No</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Lead Pax Name</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Park Name</th>
+                <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Supplier Name</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Booking Date</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Event Date</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Status</th>
@@ -716,6 +717,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                   <td className="px-4 py-3 text-foreground font-medium">{booking.refNo}</td>
                   <td className="px-4 py-3 text-primary font-medium">{booking.leadPaxName}</td>
                   <td className="px-4 py-3 text-muted-foreground">{booking.parkName}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{booking.supplierName}</td>
                   <td className="px-4 py-3 text-primary">{booking.bookingDate}</td>
                   <td className="px-4 py-3 text-primary">{booking.eventDate}</td>
                 <td className="px-4 py-3">
