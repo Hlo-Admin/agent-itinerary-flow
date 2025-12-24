@@ -26,7 +26,10 @@ const Bookings = () => {
     if (data) {
       setBookingData({ ...bookingData, ...data });
     }
-    if (currentStep < 5) {
+    // If viewing a booking, skip directly to voucher view (step 5)
+    if (data?.viewBooking) {
+      setCurrentStep(5);
+    } else if (currentStep < 5) {
       setCurrentStep((prev) => (prev + 1) as BookingStep);
     }
   };

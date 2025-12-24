@@ -156,8 +156,40 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   ];
 
   const handleViewBooking = (booking: any) => {
-    setSelectedBookingForView(booking);
-    setShowBookingConfirmation(true);
+    // Instead of opening popup, navigate to voucher view (step 5)
+    // Create a mock tour object from the booking data
+    const mockTour = {
+      id: booking.sno,
+      name: booking.parkName,
+      location: "Dubai",
+      image: "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format",
+      price: 149,
+    };
+
+    // Create booking data structure for VoucherView
+    const bookingDataForVoucher = {
+      viewBooking: true, // Flag to skip to voucher view
+      tour: mockTour,
+      refNo: booking.refNo,
+      bookingDate: booking.bookingDate,
+      eventDate: booking.eventDate,
+      status: booking.status,
+      leadPaxName: booking.leadPaxName,
+      // Mock additional data that VoucherView might need
+      adults: [{ name: booking.leadPaxName, email: "", phone: "" }],
+      children: [],
+      tickets: { adult: 2, child: 0 },
+      selectedDate: booking.eventDate,
+      selectedTimeSlot: { label: "10:00 AM", type: "normal" },
+      supplier: {
+        adultPrice: 149,
+        childPrice: 99,
+        adultPremiumPrice: 179,
+        childPremiumPrice: 129,
+      },
+    };
+
+    onNext(bookingDataForVoucher);
   };
   
   // Mock time slots

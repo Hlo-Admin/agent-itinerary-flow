@@ -1448,13 +1448,13 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
             </div>
           </div>
 
-          <div className="space-y-2 pt-2 border-t border-border">
+          <div className="space-y-1 pt-1 border-t border-border">
             <Label className="text-xs font-semibold text-foreground">
               Ticket Quantity
             </Label>
 
             {/* Adult and Child in same row */}
-            <div className="grid grid-cols-2 gap-2">
+            <div className="flex items-center gap-3">
               {[
                 {
                   label: "Adult",
@@ -1469,15 +1469,15 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               ].map((ticket) => (
                 <div
                   key={ticket.label}
-                  className="flex flex-col items-center gap-1 py-2"
+                  className="flex items-center gap-1.5"
                 >
-                  <p className="font-medium text-foreground text-xs">
+                  <p className="font-medium text-foreground text-xs whitespace-nowrap">
                     {ticket.label}
                   </p>
                   <div className="flex items-center border rounded-md overflow-hidden">
                     <button
                       type="button"
-                      className="h-7 w-7 flex items-center justify-center text-muted-foreground hover:bg-muted/50 border-r"
+                      className="h-6 w-6 flex items-center justify-center text-muted-foreground hover:bg-muted/50 border-r"
                       onClick={() =>
                         ticket.setCount(Math.max(0, ticket.count - 1))
                       }
@@ -1489,7 +1489,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                     </span>
                     <button
                       type="button"
-                      className="h-7 w-7 flex items-center justify-center text-muted-foreground hover:bg-muted/50 border-l"
+                      className="h-6 w-6 flex items-center justify-center text-muted-foreground hover:bg-muted/50 border-l"
                       onClick={() => ticket.setCount(ticket.count + 1)}
                     >
                       +
@@ -1501,10 +1501,10 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           </div>
 
           {/* Trip Summary */}
-          <div className="space-y-3 border-t border-border pt-4">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
+          {/* <div className="space-y-3 border-t border-border pt-4"> */}
+            {/* <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
               Trip  
-            </h4>
+            </h4> */}
 
             {/* <div className="space-y-3">
               <div className="flex items-start justify-between gap-2 text-xs">
@@ -1601,7 +1601,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
             </div> */}
 
             {/* Ticket Count & Trip Type */}
-            <div className="flex justify-between items-center pt-2 border-t border-border/50">
+            {/* <div className="flex justify-between items-center pt-2 border-t border-border/50">
               <span className="text-sm text-foreground">
                 {totalTickets} Ticket(s)
               </span>
@@ -1609,7 +1609,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 Round Trip
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Fare Breakdown */}
           {selectedSupplierData && (
@@ -1807,21 +1807,21 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                   )}
 
                   {/* Pax Count Selection */}
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       Pax Count
                     </Label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-1.5">
                       {/* Adult Count */}
                       <div
                         className={cn(
-                          "p-2 rounded-lg border",
+                          "p-1.5 rounded-lg border",
                           isChildOnly
                             ? "bg-muted/50 border-muted opacity-50"
                             : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
                         )}
                       >
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium text-foreground">
                             Adults
                           </span>
@@ -1829,12 +1829,12 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             <AlertCircle className="h-3 w-3 text-amber-600" />
                           )}
                         </div>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1">
                           <Button
                             type="button"
                             variant="outline"
                             size="icon"
-                            className="h-7 w-7"
+                            className="h-6 w-6"
                             onClick={() =>
                               setPopupAdultCount(
                                 Math.max(0, popupAdultCount - 1)
@@ -1842,22 +1842,22 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             }
                             disabled={isChildOnly || popupAdultCount === 0}
                           >
-                            <Minus className="h-3.5 w-3.5" />
+                            <Minus className="h-3 w-3" />
                           </Button>
-                          <span className="flex-1 text-center text-base font-bold text-foreground">
+                          <span className="flex-1 text-center text-sm font-bold text-foreground">
                             {popupAdultCount}
                           </span>
                           <Button
                             type="button"
                             variant="outline"
                             size="icon"
-                            className="h-7 w-7"
+                            className="h-6 w-6"
                             onClick={() =>
                               setPopupAdultCount(popupAdultCount + 1)
                             }
                             disabled={isChildOnly}
                           >
-                            <Plus className="h-3.5 w-3.5" />
+                            <Plus className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
@@ -1865,13 +1865,13 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                       {/* Child Count */}
                       <div
                         className={cn(
-                          "p-2 rounded-lg border",
+                          "p-1.5 rounded-lg border",
                           isAdultOnly
                             ? "bg-muted/50 border-muted opacity-50"
                             : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
                         )}
                       >
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-1">
                           <span className="text-xs font-medium text-foreground">
                             Children
                           </span>
@@ -1879,12 +1879,12 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             <AlertCircle className="h-3 w-3 text-amber-600" />
                           )}
                         </div>
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1">
                           <Button
                             type="button"
                             variant="outline"
                             size="icon"
-                            className="h-7 w-7"
+                            className="h-6 w-6"
                             onClick={() =>
                               setPopupChildCount(
                                 Math.max(0, popupChildCount - 1)
@@ -1892,31 +1892,31 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             }
                             disabled={isAdultOnly || popupChildCount === 0}
                           >
-                            <Minus className="h-3.5 w-3.5" />
+                            <Minus className="h-3 w-3" />
                           </Button>
-                          <span className="flex-1 text-center text-base font-bold text-foreground">
+                          <span className="flex-1 text-center text-sm font-bold text-foreground">
                             {popupChildCount}
                           </span>
                           <Button
                             type="button"
                             variant="outline"
                             size="icon"
-                            className="h-7 w-7"
+                            className="h-6 w-6"
                             onClick={() =>
                               setPopupChildCount(popupChildCount + 1)
                             }
                             disabled={isAdultOnly}
                           >
-                            <Plus className="h-3.5 w-3.5" />
+                            <Plus className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-between items-center pt-1.5 border-t border-border/30">
+                    <div className="flex justify-between items-center pt-1 border-t border-border/30">
                       <span className="text-xs font-semibold text-foreground">
                         Total Pax
                       </span>
-                      <span className="text-base font-bold text-primary">
+                      <span className="text-sm font-bold text-primary">
                         {popupAdultCount + popupChildCount}
                       </span>
                     </div>
