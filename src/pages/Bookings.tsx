@@ -130,7 +130,7 @@ const Bookings = () => {
                                   <BreadcrumbItem>
                                     {isLast ? (
                                       <BreadcrumbPage className="flex items-center gap-2">
-                                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 text-muted-foreground" />
+                                        <Icon className="!h-6 !w-6 text-muted-foreground" />
                                         <span className="text-base sm:text-lg font-medium text-muted-foreground">{crumb.label}</span>
                                       </BreadcrumbPage>
                                     ) : (
@@ -141,7 +141,7 @@ const Bookings = () => {
                                         }}
                                         className="flex items-center gap-2 cursor-pointer hover:text-primary transition-colors"
                                       >
-                                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+                                        <Icon className="!h-6 !w-6 text-primary" />
                                         <span className="text-base sm:text-lg font-medium text-primary">{crumb.label}</span>
                                       </BreadcrumbLink>
                                     )}

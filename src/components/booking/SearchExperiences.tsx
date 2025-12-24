@@ -569,7 +569,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         <div className="flex items-center justify-between gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 w-full min-w-0">
           <div className="flex items-center gap-1.5 sm:gap-2">
           <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
-              <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple flex-shrink-0" />
+              <Sparkles className="!h-6 !w-6 text-accent-purple flex-shrink-0" />
             </div>
             <h4 className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-foreground">Quick Filters</h4>
           </div>
@@ -655,7 +655,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                     : "bg-muted/50 group-hover:bg-primary/10"
                 )}>
                   <Icon className={cn(
-                    "h-3 w-3 sm:h-3.5 sm:w-3.5 transition-all duration-300",
+                    "!h-6 !w-6 transition-all duration-300",
                     isSelected 
                       ? "text-white"
                       : "text-muted-foreground group-hover:text-primary"
@@ -795,7 +795,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
               <Card className="p-3 sm:p-4 lg:sticky lg:top-8 border border-primary/10 bg-gradient-to-br from-background to-muted/20">
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
                   <div className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                    <Sparkles className="!h-6 !w-6 text-primary" />
                     <h4 className="text-base sm:text-lg font-bold uppercase tracking-wider text-foreground">Filters</h4>
                   </div>
                   <Button

@@ -42,7 +42,7 @@ export function AppSidebar({ showExtendedSidebar, setShowExtendedSidebar }: { sh
       variant="sidebar"
       className="border-r border-sidebar-border bg-sidebar"
       style={{ 
-        "--sidebar-width": "5rem",
+        "--sidebar-width": "6rem",
         "--sidebar-width-icon": "5rem"
       } as React.CSSProperties}
     >
@@ -87,7 +87,7 @@ export function AppSidebar({ showExtendedSidebar, setShowExtendedSidebar }: { sh
                         <div className="flex flex-col items-center w-full gap-1">
                           <div className="transition-all duration-300 flex items-center justify-center w-full">
                             <item.icon 
-                              className={`h-4 w-4 transition-all duration-300 flex-shrink-0 ${isActive ? 'text-sidebar-foreground' : 'text-sidebar-foreground/70'}`}
+                              className={`!h-6 !w-6 transition-all duration-300 flex-shrink-0 ${isActive ? 'text-sidebar-foreground' : 'text-sidebar-foreground/70'}`}
                               strokeWidth={isActive ? 2.5 : 2} 
                             />
                           </div>
