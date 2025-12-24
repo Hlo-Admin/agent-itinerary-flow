@@ -108,14 +108,9 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
   
   // New filter states
-  const [departureTime, setDepartureTime] = useState([0, 24]);
-  const [arrivalTime, setArrivalTime] = useState([0, 24]);
-  const [stopFilters, setStopFilters] = useState({ noStop: true, oneStop: true });
   const [expandedSections, setExpandedSections] = useState({
-    price: true,
-    departure: true,
-    arrival: true,
-    stops: true
+    category: true,
+    price: true
   });
   
   const toggleSection = (section: keyof typeof expandedSections) => {
@@ -124,16 +119,21 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
   
   const clearFilters = () => {
     setPriceRange([0, 200]);
-    setDepartureTime([0, 24]);
-    setArrivalTime([0, 24]);
-    setStopFilters({ noStop: true, oneStop: true });
+    setCategoryFilter("all");
     setSortBy("price-low");
   };
-  
-  const formatTime = (hour: number) => {
-    const h = Math.floor(hour);
-    const m = Math.round((hour - h) * 60);
-    return `${h.toString().padStart(1, '0')}:${m.toString().padStart(2, '0')}:00`;
+
+  // Map category filter values to tour categories
+  const categoryFilterMap: Record<string, string[]> = {
+    all: [],
+    "themes-adventure": ["Outdoor", "Adventure", "Theme"],
+    "public-green": ["Park", "Nature"],
+    "landmarks-observation": ["Landmark", "Observation", "History"],
+    "family-entertainment": ["Food Tours", "Entertainment", "Food"],
+    "cultural-heritage": ["Museums", "History", "Cultural", "Museum"],
+    "animal-nature": ["Nature", "Wildlife", "Animal"],
+    cruises: ["Cruise", "Boat"],
+    "water-parks": ["Water"],
   };
 
   // Helper function to get alternate image from other tours
@@ -196,9 +196,21 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
     setShowBookingPopup(true);
   };
 
-  const filteredTours = mockTours.filter(
-    (tour) => tour.price >= priceRange[0] && tour.price <= priceRange[1]
-  );
+  const filteredTours = mockTours.filter((tour) => {
+    const priceMatch = tour.price >= priceRange[0] && tour.price <= priceRange[1];
+    
+    let categoryMatch = true;
+    if (categoryFilter !== "all") {
+      const mappedCategories = categoryFilterMap[categoryFilter] || [];
+      if (mappedCategories.length > 0) {
+        categoryMatch = mappedCategories.some((cat) =>
+          tour.category.toLowerCase().includes(cat.toLowerCase())
+        );
+      }
+    }
+    
+    return priceMatch && categoryMatch;
+  });
 
   const handleSelectTour = (tourId: number) => {
     setSelectedTour(tourId);
@@ -307,6 +319,37 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
               </Select>
             </div>
 
+            {/* Category Section */}
+            <div className="border-b border-border/30">
+              <button 
+                onClick={() => toggleSection('category')}
+                className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
+              >
+                <span className="text-sm font-semibold text-foreground">Category</span>
+                <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", expandedSections.category && "rotate-180")} />
+              </button>
+              {expandedSections.category && (
+                <div className="px-4 pb-4">
+                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <SelectTrigger className="h-10 text-sm">
+                      <SelectValue placeholder="All categories" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All categories</SelectItem>
+                      <SelectItem value="themes-adventure">Themes & Adventure Parks</SelectItem>
+                      <SelectItem value="public-green">Public & Green Parks</SelectItem>
+                      <SelectItem value="landmarks-observation">Land Marks & Observation Decks</SelectItem>
+                      <SelectItem value="family-entertainment">Family Entertainment + Food Shows & Malls</SelectItem>
+                      <SelectItem value="cultural-heritage">Cultural + Heritage Museums</SelectItem>
+                      <SelectItem value="animal-nature">Animal & Nature Parks</SelectItem>
+                      <SelectItem value="cruises">Cruises</SelectItem>
+                      <SelectItem value="water-parks">Water Parks</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+
             {/* Price Section */}
             <div className="border-b border-border/30">
               <button 
@@ -342,120 +385,6 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
             </div>
 
             {/* Departure Time Section */}
-            <div className="border-b border-border/30">
-              <button 
-                onClick={() => toggleSection('departure')}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
-              >
-                <span className="text-sm font-semibold text-foreground">Departure time</span>
-                <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", expandedSections.departure && "rotate-180")} />
-              </button>
-              {expandedSections.departure && (
-                <div className="px-4 pb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs text-foreground">{formatTime(departureTime[0])}</span>
-                    <span className="text-xs text-foreground">{formatTime(departureTime[1])}</span>
-                  </div>
-                  <Slider 
-                    value={departureTime} 
-                    onValueChange={setDepartureTime} 
-                    min={0} 
-                    max={24} 
-                    step={0.5} 
-                    className="w-full" 
-                  />
-                  <div className="flex items-center justify-between mt-2 text-[10px] text-muted-foreground">
-                    <span>0:00:00</span>
-                    <span>5:30:00</span>
-                    <span>12:00:00</span>
-                    <span>18:30:00</span>
-                    <span>24:00:00</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Arrival Time Section */}
-            <div className="border-b border-border/30">
-              <button 
-                onClick={() => toggleSection('arrival')}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
-              >
-                <span className="text-sm font-semibold text-foreground">Arrival Time</span>
-                <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", expandedSections.arrival && "rotate-180")} />
-              </button>
-              {expandedSections.arrival && (
-                <div className="px-4 pb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs text-foreground">{formatTime(arrivalTime[0])}</span>
-                    <span className="text-xs text-foreground">{formatTime(arrivalTime[1])}</span>
-                  </div>
-                  <Slider 
-                    value={arrivalTime} 
-                    onValueChange={setArrivalTime} 
-                    min={0} 
-                    max={24} 
-                    step={0.5} 
-                    className="w-full" 
-                  />
-                  <div className="flex items-center justify-between mt-2 text-[10px] text-muted-foreground">
-                    <span>0:00:00</span>
-                    <span>5:30:00</span>
-                    <span>12:00:00</span>
-                    <span>18:30:00</span>
-                    <span>24:00:00</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Stops Section */}
-            <div>
-              <button 
-                onClick={() => toggleSection('stops')}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors"
-              >
-                <span className="text-sm font-semibold text-foreground">Stops</span>
-                <ChevronDown className={cn("h-4 w-4 text-muted-foreground transition-transform", expandedSections.stops && "rotate-180")} />
-              </button>
-              {expandedSections.stops && (
-                <div className="px-4 pb-4 space-y-3">
-                  {/* 0 Stop */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        id="no-stop"
-                        checked={stopFilters.noStop}
-                        onCheckedChange={(checked) => setStopFilters(prev => ({ ...prev, noStop: !!checked }))}
-                        className="h-4 w-4 border-primary data-[state=checked]:bg-primary"
-                      />
-                      <label htmlFor="no-stop" className="text-sm text-foreground cursor-pointer">
-                        0 Stop(s)
-                      </label>
-                      <span className="text-xs text-primary font-medium">Only</span>
-                    </div>
-                    <span className="text-sm text-foreground">AED 905</span>
-                  </div>
-                  
-                  {/* 1 Stop */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Checkbox 
-                        id="one-stop"
-                        checked={stopFilters.oneStop}
-                        onCheckedChange={(checked) => setStopFilters(prev => ({ ...prev, oneStop: !!checked }))}
-                        className="h-4 w-4 border-primary data-[state=checked]:bg-primary"
-                      />
-                      <label htmlFor="one-stop" className="text-sm text-foreground cursor-pointer">
-                        1 Stop(s)
-                      </label>
-                      <span className="text-xs text-primary font-medium">Only</span>
-                    </div>
-                    <span className="text-sm text-foreground">AED 630</span>
-                  </div>
-                </div>
-              )}
-            </div>
           </Card>
         </div>
 

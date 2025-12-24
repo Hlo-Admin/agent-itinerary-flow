@@ -45,6 +45,14 @@ import {
   ChevronLeft,
   ChevronRight,
   Heart,
+  Ticket,
+  Trees,
+  Building2,
+  ShoppingBag,
+  BookOpen,
+  PawPrint,
+  Ship,
+  Waves,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -526,10 +534,10 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 : "hidden lg:block"
             )}
           >
-            <Card className="p-4 sm:p-6 lg:sticky lg:top-8 border border-primary/10 bg-gradient-to-br from-background to-muted/20">
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <Card className="p-3 sm:p-4 lg:sticky lg:top-8 border border-primary/10 bg-gradient-to-br from-background to-muted/20">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                  <Sparkles className="!h-6 !w-6 text-primary" />
                   <h4 className="text-base sm:text-lg font-bold uppercase tracking-wider text-foreground">
                     Filters
                   </h4>
