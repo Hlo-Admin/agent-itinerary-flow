@@ -177,19 +177,19 @@ const TravelerInfoForm = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left Side - Traveler Information */}
         <div className="lg:col-span-2 space-y-3">
-      <div className="space-y-1">
+          <div className="space-y-1">
             <h3 className="text-2xl font-semibold text-foreground">
               Lead passenger information
             </h3>
             <p className="text-sm text-muted-foreground">
               Enter details for the primary traveler
             </p>
-      </div>
+          </div>
 
           {/* Adult Passengers */}
           {adultCount > 0 && (
             <Card className="p-3">
-          <div className="space-y-2">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between pb-2 border-b border-border/30">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
@@ -199,155 +199,181 @@ const TravelerInfoForm = ({
                   </div>
                 </div>
                 <div className="space-y-3">
-                  {adults.map((adult, index) => {
-                    if (index === 0) {
-                      // First passenger: name, email, phone (all required)
-                      return (
-                        <div key={index} className="flex gap-3">
-                          {/* Number badge on left */}
-                          <div className="flex-shrink-0 pt-7">
-                            <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                              <span className="text-xs font-semibold text-primary">{index + 1}</span>
-                            </div>
-                          </div>
-                          
-                          {/* Form fields */}
-                          <div className="flex-1 space-y-2">
-                            <div className="grid gap-2 md:grid-cols-3">
-                              <div className="space-y-1">
-                                <Label
-                                  htmlFor={`adult-${index}-name`}
-                                  className="text-xs font-medium text-muted-foreground"
-                                >
-                                  Full name *
-                                </Label>
-                                <Input
-                                  id={`adult-${index}-name`}
-                                  placeholder="John Doe"
-                                  value={adult.name}
-                                  onChange={(e) =>
-                                    updateAdult(index, "name", e.target.value)
-                                  }
-                                  className="h-9 text-sm"
-                                  required
-                                />
-                              </div>
-                              <div className="space-y-1">
-                                <Label
-                                  htmlFor={`adult-${index}-email`}
-                                  className="text-xs font-medium text-muted-foreground"
-                                >
-                                  Email *
-                                </Label>
-                                <Input
-                                  id={`adult-${index}-email`}
-                                  type="email"
-                                  placeholder="john@example.com"
-                                  value={adult.email}
-                                  onChange={(e) =>
-                                    updateAdult(index, "email", e.target.value)
-                                  }
-                                  className="h-9 text-sm"
-                                  required
-                                />
-                              </div>
-                              <div className="space-y-1">
-                                <Label
-                                  htmlFor={`adult-${index}-phone`}
-                                  className="text-xs font-medium text-muted-foreground"
-                                >
-                                  Phone number *
-                                </Label>
-                                <Input
-                                  id={`adult-${index}-phone`}
-                                  placeholder="+1 (555) 000-0000"
-                                  value={adult.phone}
-                                  onChange={(e) =>
-                                    updateAdult(index, "phone", e.target.value)
-                                  }
-                                  className="h-9 text-sm"
-                                  required
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    } else {
-                      // Group remaining adults in pairs (2 per row)
-                      const isFirstInPair = (index - 1) % 2 === 0;
-                      const isSecondInPair = (index - 1) % 2 === 1;
-                      const isLastInPair = index === adults.length - 1 && isSecondInPair;
-                      
-                      if (isFirstInPair) {
-                        // Start a new row with border-top
+                  {adults
+                    .map((adult, index) => {
+                      if (index === 0) {
+                        // First passenger: name, email, phone (all required)
                         return (
-                          <div key={index} className={cn("flex gap-3 pt-2 border-t border-border/20")}>
-                            {/* First adult in pair */}
-                            <div className="flex gap-3 flex-1">
-                              <div className="flex-shrink-0 pt-7">
-                                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                  <span className="text-xs font-semibold text-primary">{index + 1}</span>
-                                </div>
-                              </div>
-                              <div className="space-y-1 flex-1 max-w-xs">
-                                <Label
-                                  htmlFor={`adult-${index}-name`}
-                                  className="text-xs font-medium text-muted-foreground"
-                                >
-                                  Full name *
-                                </Label>
-                                <Input
-                                  id={`adult-${index}-name`}
-                                  placeholder="Passenger name"
-                                  value={adult.name}
-                                  onChange={(e) =>
-                                    updateAdult(index, "name", e.target.value)
-                                  }
-                                  className="h-9 text-sm"
-                                  required
-                                />
+                          <div key={index} className="flex gap-3">
+                            {/* Number badge on left */}
+                            <div className="flex-shrink-0 pt-7">
+                              <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span className="text-xs font-semibold text-primary">
+                                  {index + 1}
+                                </span>
                               </div>
                             </div>
-                            
-                            {/* Second adult in pair (if exists) */}
-                            {index + 1 < adults.length && (
-                              <div className="flex gap-3 flex-1">
-                                <div className="flex-shrink-0 pt-7">
-                                  <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span className="text-xs font-semibold text-primary">{index + 2}</span>
-                                  </div>
-                                </div>
-                                <div className="space-y-1 flex-1 max-w-xs">
+
+                            {/* Form fields */}
+                            <div className="flex-1 space-y-2">
+                              <div className="grid gap-2 md:grid-cols-3">
+                                <div className="space-y-1">
                                   <Label
-                                    htmlFor={`adult-${index + 1}-name`}
+                                    htmlFor={`adult-${index}-name`}
                                     className="text-xs font-medium text-muted-foreground"
                                   >
                                     Full name *
                                   </Label>
                                   <Input
-                                    id={`adult-${index + 1}-name`}
-                                    placeholder="Passenger name"
-                                    value={adults[index + 1].name}
+                                    id={`adult-${index}-name`}
+                                    placeholder="John Doe"
+                                    value={adult.name}
                                     onChange={(e) =>
-                                      updateAdult(index + 1, "name", e.target.value)
+                                      updateAdult(index, "name", e.target.value)
+                                    }
+                                    className="h-9 text-sm"
+                                    required
+                                  />
+                                </div>
+                                <div className="space-y-1">
+                                  <Label
+                                    htmlFor={`adult-${index}-email`}
+                                    className="text-xs font-medium text-muted-foreground"
+                                  >
+                                    Email *
+                                  </Label>
+                                  <Input
+                                    id={`adult-${index}-email`}
+                                    type="email"
+                                    placeholder="john@example.com"
+                                    value={adult.email}
+                                    onChange={(e) =>
+                                      updateAdult(
+                                        index,
+                                        "email",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="h-9 text-sm"
+                                    required
+                                  />
+                                </div>
+                                <div className="space-y-1">
+                                  <Label
+                                    htmlFor={`adult-${index}-phone`}
+                                    className="text-xs font-medium text-muted-foreground"
+                                  >
+                                    Phone number *
+                                  </Label>
+                                  <Input
+                                    id={`adult-${index}-phone`}
+                                    placeholder="+1 (555) 000-0000"
+                                    value={adult.phone}
+                                    onChange={(e) =>
+                                      updateAdult(
+                                        index,
+                                        "phone",
+                                        e.target.value
+                                      )
                                     }
                                     className="h-9 text-sm"
                                     required
                                   />
                                 </div>
                               </div>
-                            )}
+                            </div>
                           </div>
                         );
                       } else {
-                        // This is the second in a pair, already rendered above
-                        return null;
+                        // Group remaining adults in pairs (2 per row)
+                        const isFirstInPair = (index - 1) % 2 === 0;
+                        const isSecondInPair = (index - 1) % 2 === 1;
+                        const isLastInPair =
+                          index === adults.length - 1 && isSecondInPair;
+
+                        if (isFirstInPair) {
+                          // Start a new row with border-top
+                          return (
+                            <div
+                              key={index}
+                              className={cn(
+                                "flex gap-3 pt-2 border-t border-border/20"
+                              )}
+                            >
+                              {/* First adult in pair */}
+                              <div className="flex gap-3 flex-1">
+                                <div className="flex-shrink-0 pt-7">
+                                  <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span className="text-xs font-semibold text-primary">
+                                      {index + 1}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="space-y-1 flex-1 max-w-xs">
+                                  <Label
+                                    htmlFor={`adult-${index}-name`}
+                                    className="text-xs font-medium text-muted-foreground"
+                                  >
+                                    Full name *
+                                  </Label>
+                                  <Input
+                                    id={`adult-${index}-name`}
+                                    placeholder="Passenger name"
+                                    value={adult.name}
+                                    onChange={(e) =>
+                                      updateAdult(index, "name", e.target.value)
+                                    }
+                                    className="h-9 text-sm"
+                                    required
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Second adult in pair (if exists) */}
+                              {index + 1 < adults.length && (
+                                <div className="flex gap-3 flex-1">
+                                  <div className="flex-shrink-0 pt-7">
+                                    <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                      <span className="text-xs font-semibold text-primary">
+                                        {index + 2}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="space-y-1 flex-1 max-w-xs">
+                                    <Label
+                                      htmlFor={`adult-${index + 1}-name`}
+                                      className="text-xs font-medium text-muted-foreground"
+                                    >
+                                      Full name *
+                                    </Label>
+                                    <Input
+                                      id={`adult-${index + 1}-name`}
+                                      placeholder="Passenger name"
+                                      value={adults[index + 1].name}
+                                      onChange={(e) =>
+                                        updateAdult(
+                                          index + 1,
+                                          "name",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="h-9 text-sm"
+                                      required
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        } else {
+                          // This is the second in a pair, already rendered above
+                          return null;
+                        }
                       }
-                    }
-                  }).filter(Boolean)}
-        </div>
-      </div>
+                    })
+                    .filter(Boolean)}
+                </div>
+              </div>
             </Card>
           )}
 
@@ -362,61 +388,69 @@ const TravelerInfoForm = ({
                       Child Passengers ({childCount})
                     </h3>
                   </div>
-          </div>
+                </div>
                 <div className="space-y-3">
                   {children.map((child, index) => (
-                    <div key={index} className={cn("flex gap-3", index > 0 && "pt-2 border-t border-border/20")}>
+                    <div
+                      key={index}
+                      className={cn(
+                        "flex gap-3",
+                        index > 0 && "pt-2 border-t border-border/20"
+                      )}
+                    >
                       {/* Number badge on left */}
                       <div className="flex-shrink-0 pt-7">
                         <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-xs font-semibold text-primary">{adultCount + index + 1}</span>
+                          <span className="text-xs font-semibold text-primary">
+                            {adultCount + index + 1}
+                          </span>
                         </div>
                       </div>
-                      
+
                       {/* Form fields */}
                       <div className="flex-1 space-y-2">
                         <div className="grid gap-2 md:grid-cols-2">
-                        <div className="space-y-1">
-                          <Label
-                            htmlFor={`child-${index}-name`}
-                            className="text-xs font-medium text-muted-foreground"
-                          >
-                            Full name *
-                          </Label>
-                          <Input
-                            id={`child-${index}-name`}
-                            placeholder="Child name"
-                            value={child.name}
-                            onChange={(e) =>
-                              updateChild(index, "name", e.target.value)
-                            }
-                            className="h-9 text-sm"
-                            required
-                          />
-                        </div>
-                        <div className="space-y-1">
-                          <Label
-                            htmlFor={`child-${index}-dob`}
-                            className="text-xs font-medium text-muted-foreground"
-                          >
-                            Date of birth *
-                          </Label>
-                          <Input
-                            id={`child-${index}-dob`}
-                            type="date"
-                            value={child.dob}
-                            onChange={(e) =>
-                              updateChild(index, "dob", e.target.value)
-                            }
-                            className="h-9 text-sm"
-                            required
-                          />
+                          <div className="space-y-1">
+                            <Label
+                              htmlFor={`child-${index}-name`}
+                              className="text-xs font-medium text-muted-foreground"
+                            >
+                              Full name *
+                            </Label>
+                            <Input
+                              id={`child-${index}-name`}
+                              placeholder="Child name"
+                              value={child.name}
+                              onChange={(e) =>
+                                updateChild(index, "name", e.target.value)
+                              }
+                              className="h-9 text-sm"
+                              required
+                            />
+                          </div>
+                          <div className="space-y-1">
+                            <Label
+                              htmlFor={`child-${index}-dob`}
+                              className="text-xs font-medium text-muted-foreground"
+                            >
+                              Date of birth *
+                            </Label>
+                            <Input
+                              id={`child-${index}-dob`}
+                              type="date"
+                              value={child.dob}
+                              onChange={(e) =>
+                                updateChild(index, "dob", e.target.value)
+                              }
+                              className="h-9 text-sm"
+                              required
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
                   ))}
-        </div>
+                </div>
               </div>
             </Card>
           )}
@@ -514,7 +548,7 @@ const TravelerInfoForm = ({
                     Participants are advised to follow all safety guidelines
                     provided.
                   </p>
-      </div>
+                </div>
 
                 <div className="space-y-2">
                   <h4 className="font-semibold text-foreground">
@@ -525,7 +559,7 @@ const TravelerInfoForm = ({
                     all participants meet the minimum age requirements specified
                     for the selected experience.
                   </p>
-          </div>
+                </div>
 
                 <div className="space-y-2">
                   <h4 className="font-semibold text-foreground">
@@ -536,7 +570,7 @@ const TravelerInfoForm = ({
                     the selected activity. Please inform us of any medical
                     conditions or special requirements.
                   </p>
-        </div>
+                </div>
 
                 <div className="space-y-2">
                   <h4 className="font-semibold text-foreground">
@@ -548,7 +582,7 @@ const TravelerInfoForm = ({
                     be offered at our discretion.
                   </p>
                 </div>
-                </div>
+              </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t">
                 <Button
@@ -575,8 +609,8 @@ const TravelerInfoForm = ({
                 Back
               </Button>
             )}
+          </div>
         </div>
-      </div>
 
         {/* Right Side - Destination Price Summary */}
         <div className="lg:col-span-1 space-y-2">
@@ -641,8 +675,8 @@ const TravelerInfoForm = ({
                                     day: "numeric",
                                   }
                                 )}
-          </p>
-        </div>
+                              </p>
+                            </div>
                           )}
                           {selectedTimeSlot && (
                             <div className="flex items-center gap-1.5">
@@ -700,8 +734,8 @@ const TravelerInfoForm = ({
                           </span>
                         </div>
                       )}
-        </div>
-      </div>
+                    </div>
+                  </div>
 
                   <div className="pt-2 border-t border-border space-y-1.5">
                     <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -782,7 +816,7 @@ const TravelerInfoForm = ({
             {/* Company Credit Header */}
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-foreground">
-                Company Credit
+                Available Company Credit
               </span>
               <span className="text-sm font-semibold text-destructive">
                 - AED {agentCreditLimit.toLocaleString()}
@@ -844,7 +878,10 @@ const TravelerInfoForm = ({
                       <button
                         type="button"
                         onClick={() => {
-                          if (termsAccepted && agentCreditLimit >= totalAmount) {
+                          if (
+                            termsAccepted &&
+                            agentCreditLimit >= totalAmount
+                          ) {
                             setSelectedPaymentMethod("credit");
                             handleSubmit();
                           }
