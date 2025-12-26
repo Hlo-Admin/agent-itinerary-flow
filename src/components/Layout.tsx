@@ -285,14 +285,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </header>
         )}
-        <main className="flex-1 overflow-y-auto w-full min-w-0 scrollbar-hide">
+        <main className="flex-1 overflow-y-auto w-full min-w-0 scrollbar-hide flex flex-col">
           <div className={cn(
-            "w-full mx-auto min-w-0 box-border animate-fade-in",
+            "w-full mx-auto min-w-0 box-border animate-fade-in flex-1",
             location.pathname === "/bookings" ? "" : "p-3 sm:p-4 md:p-5 lg:p-6"
           )}>
             {children}
           </div>
         </main>
+        
+        {/* Footer - Full Width */}
+        <footer className="w-full border-t border-border/30 bg-background px-6 sm:px-8 lg:px-10 py-3 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+            <p>© 2025. All rights reserved.</p>
+            <nav className="flex items-center gap-4 sm:gap-6">
+              <a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-foreground transition-colors">Terms & Conditions</a>
+              <a href="#" className="hover:text-foreground transition-colors">Contact Us</a>
+              <a href="#" className="hover:text-foreground transition-colors">Support</a>
+            </nav>
+          </div>
+        </footer>
       </SidebarInset>
     </SidebarProvider>
   );

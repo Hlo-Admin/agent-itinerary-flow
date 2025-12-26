@@ -571,7 +571,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
           <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-purple/20 to-accent-pink/20">
               <Sparkles className="!h-6 !w-6 text-accent-purple flex-shrink-0" />
             </div>
-            <h4 className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-foreground">Quick Filters</h4>
+            <h4 className="text-xs sm:text-sm font-semibold uppercase tracking-wide text-foreground">Category</h4>
           </div>
           {selectedCategories.length > 0 && (
             <Button
