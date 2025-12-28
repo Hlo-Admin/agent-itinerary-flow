@@ -150,7 +150,7 @@
   }
 
   /* Global icon size reduction - exclude ECharts SVGs */
-  svg:not([id*="echarts"]):not([class*="echarts"]) {
+  svg:not([id*="echarts"]):not([class*="echarts"]):not([style*="width"]) {
     width: 0.8125em;
     height: 0.8125em;
   }

@@ -1,5 +1,4 @@
 import { useState, Fragment } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Home, BarChart3, Search, Building2, Users, Ticket } from "lucide-react";
 import {
@@ -86,7 +85,7 @@ const Bookings = () => {
   return (
     <div className="relative flex flex-col h-full w-full min-w-0 max-w-full">
       {/* Fixed Header with Breadcrumb */}
-      <div className="sticky top-0 z-40 flex-shrink-0 bg-background">
+      <div className="sticky top-0 z-40 flex-shrink-0" style={{ backgroundColor: (currentStep === 2 || currentStep === 3 || currentStep === 4) ? '#f1f5f9' : undefined }}>
         <div className="w-full min-w-0 max-w-full pt-2 pl-3 pb-2 sm:pt-2 sm:pl-4 md:pt-2 md:pl-5 lg:pt-2 lg:pl-6">
             {currentStep === 5 ? (
               /* Final step - Show only Home button */
@@ -162,19 +161,17 @@ const Bookings = () => {
       </div>
 
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto w-full min-w-0 max-w-full min-h-0">
+      <div className="flex-1 overflow-y-auto w-full min-w-0 max-w-full min-h-0" style={{ backgroundColor: (currentStep === 2 || currentStep === 3 || currentStep === 4) ? '#f1f5f9' : undefined }}>
         <div className="w-full min-w-0 max-w-full p-2 sm:p-3 md:p-3 pt-2">
-          <Card className="p-3 sm:p-4 md:p-5 border border-border/20 w-full min-w-0 max-w-full box-border hover-lift" style={{ overflow: 'visible' }}>
-            <div className="space-y-3 sm:space-y-4 w-full min-w-0 max-w-full">
-              <div>
-                {currentStep === 1 && <SearchExperiences onNext={handleNext} searchData={bookingData} />}
-                {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
-                {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
-                {currentStep === 4 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
-                {currentStep === 5 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
-              </div>
+          <div className="space-y-3 sm:space-y-4 w-full min-w-0 max-w-full">
+            <div>
+              {currentStep === 1 && <SearchExperiences onNext={handleNext} searchData={bookingData} />}
+              {currentStep === 2 && <SearchResults onNext={handleNext} onBack={handleBack} searchData={bookingData} />}
+              {currentStep === 3 && <ProductDetail onNext={handleNext} onBack={handleBack} tourData={bookingData} />}
+              {currentStep === 4 && <TravelerInfoForm onNext={handleNext} onBack={handleBack} bookingData={bookingData} />}
+              {currentStep === 5 && <VoucherView onNext={handleNext} bookingData={bookingData} />}
             </div>
-          </Card>
+          </div>
         </div>
       </div>
     </div>

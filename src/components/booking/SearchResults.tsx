@@ -248,7 +248,7 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
   };
 
   return (
-    <div className="space-y-3 sm:space-y-6 w-full min-w-0 max-w-full overflow-hidden">
+    <div className="space-y-3 sm:space-y-6 w-full min-w-0 max-w-full overflow-hidden -mx-2 sm:-mx-3 md:-mx-3 px-2 sm:px-3 md:px-3 py-2 sm:py-3 md:py-3" style={{ backgroundColor: '#f1f5f9' }}>
       {/* Header Section */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between w-full min-w-0">
         <div className="space-y-1 sm:space-y-2 min-w-0 flex-1">

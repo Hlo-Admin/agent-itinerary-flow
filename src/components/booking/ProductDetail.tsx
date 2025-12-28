@@ -1097,7 +1097,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
 
   // Otherwise show the detail view (when tour is selected)
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fade-in">
+    <div className="space-y-6 sm:space-y-8 animate-fade-in -mx-2 sm:-mx-3 md:-mx-3 px-2 sm:px-3 md:px-3 py-2 sm:py-3 md:py-3" style={{ backgroundColor: '#f1f5f9' }}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-3xl font-semibold text-foreground tracking-tight">
@@ -1402,7 +1402,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           <div className="flex items-center gap-2 pb-2 border-b border-border">
             <Calendar className="h-5 w-5 text-primary" />
             <h4 className="text-xl font-semibold text-foreground">
-              Booking Summary
+              Trip Summary
             </h4>
           </div>
 

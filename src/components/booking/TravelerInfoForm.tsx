@@ -31,6 +31,7 @@ import {
   AlertCircle,
   FileText,
   Zap,
+  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -80,12 +81,12 @@ const TravelerInfoForm = ({
   });
 
   const [children, setChildren] = useState<
-    Array<{ name: string; dob: string }>
+    Array<{ name: string }>
   >(() => {
     if (childCount > 0) {
       return Array(childCount)
         .fill(null)
-        .map(() => ({ name: "", dob: "" }));
+        .map(() => ({ name: "" }));
     }
     return [];
   });
@@ -106,7 +107,7 @@ const TravelerInfoForm = ({
       setChildren(
         Array(newChildCount)
           .fill(null)
-          .map(() => ({ name: "", dob: "" }))
+          .map(() => ({ name: "" }))
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,7 +173,7 @@ const TravelerInfoForm = ({
   const totalAmount = basePrice + taxes + serviceFee;
 
   return (
-    <div>
+    <div className="-mx-2 sm:-mx-3 md:-mx-3 px-2 sm:px-3 md:px-3 py-2 sm:py-3 md:py-3" style={{ backgroundColor: '#f1f5f9' }}>
       {/* Main Content Grid - Left: Travelers, Right: Price Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left Side - Traveler Information */}
@@ -204,9 +205,9 @@ const TravelerInfoForm = ({
                       if (index === 0) {
                         // First passenger: name, email, phone (all required)
                         return (
-                          <div key={index} className="flex gap-3">
+                          <div key={index} className="flex gap-3 items-start">
                             {/* Number badge on left */}
-                            <div className="flex-shrink-0 pt-7">
+                            <div className="flex-shrink-0 pt-9">
                               <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
                                 <span className="text-xs font-semibold text-primary">
                                   {index + 1}
@@ -285,40 +286,25 @@ const TravelerInfoForm = ({
                           </div>
                         );
                       } else {
-                        // Group remaining adults in pairs (2 per row)
-                        const isFirstInPair = (index - 1) % 2 === 0;
-                        const isSecondInPair = (index - 1) % 2 === 1;
-                        const isLastInPair =
-                          index === adults.length - 1 && isSecondInPair;
+                        // Subsequent adults: name, email, phone (no placeholders)
+                        return (
+                          <div key={index} className="flex gap-3 pt-2 border-t border-border/20 items-center">
+                            {/* Number badge on left */}
+                            <div className="flex-shrink-0">
+                              <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span className="text-xs font-semibold text-primary">
+                                  {index + 1}
+                                </span>
+                              </div>
+                            </div>
 
-                        if (isFirstInPair) {
-                          // Start a new row with border-top
-                          return (
-                            <div
-                              key={index}
-                              className={cn(
-                                "flex gap-3 pt-2 border-t border-border/20"
-                              )}
-                            >
-                              {/* First adult in pair */}
-                              <div className="flex gap-3 flex-1">
-                                <div className="flex-shrink-0 pt-7">
-                                  <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span className="text-xs font-semibold text-primary">
-                                      {index + 1}
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="space-y-1 flex-1 max-w-xs">
-                                  <Label
-                                    htmlFor={`adult-${index}-name`}
-                                    className="text-xs font-medium text-muted-foreground"
-                                  >
-                                    Full name *
-                                  </Label>
+                            {/* Form fields */}
+                            <div className="flex-1 space-y-2">
+                              <div className="grid gap-2 md:grid-cols-3">
+                                <div>
                                   <Input
                                     id={`adult-${index}-name`}
-                                    placeholder="Passenger name"
+                                    placeholder="Full name"
                                     value={adult.name}
                                     onChange={(e) =>
                                       updateAdult(index, "name", e.target.value)
@@ -327,48 +313,43 @@ const TravelerInfoForm = ({
                                     required
                                   />
                                 </div>
-                              </div>
-
-                              {/* Second adult in pair (if exists) */}
-                              {index + 1 < adults.length && (
-                                <div className="flex gap-3 flex-1">
-                                  <div className="flex-shrink-0 pt-7">
-                                    <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                                      <span className="text-xs font-semibold text-primary">
-                                        {index + 2}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="space-y-1 flex-1 max-w-xs">
-                                    <Label
-                                      htmlFor={`adult-${index + 1}-name`}
-                                      className="text-xs font-medium text-muted-foreground"
-                                    >
-                                      Full name *
-                                    </Label>
-                                    <Input
-                                      id={`adult-${index + 1}-name`}
-                                      placeholder="Passenger name"
-                                      value={adults[index + 1].name}
-                                      onChange={(e) =>
-                                        updateAdult(
-                                          index + 1,
-                                          "name",
-                                          e.target.value
-                                        )
-                                      }
-                                      className="h-9 text-sm"
-                                      required
-                                    />
-                                  </div>
+                                <div>
+                                  <Input
+                                    id={`adult-${index}-email`}
+                                    type="email"
+                                    placeholder="Email"
+                                    value={adult.email}
+                                    onChange={(e) =>
+                                      updateAdult(
+                                        index,
+                                        "email",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="h-9 text-sm"
+                                    required
+                                  />
                                 </div>
-                              )}
+                                <div>
+                                  <Input
+                                    id={`adult-${index}-phone`}
+                                    placeholder="Phone number"
+                                    value={adult.phone}
+                                    onChange={(e) =>
+                                      updateAdult(
+                                        index,
+                                        "phone",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="h-9 text-sm"
+                                    required
+                                  />
+                                </div>
+                              </div>
                             </div>
-                          );
-                        } else {
-                          // This is the second in a pair, already rendered above
-                          return null;
-                        }
+                          </div>
+                        );
                       }
                     })
                     .filter(Boolean)}
@@ -390,105 +371,112 @@ const TravelerInfoForm = ({
                   </div>
                 </div>
                 <div className="space-y-3">
-                  {children.map((child, index) => (
-                    <div
-                      key={index}
-                      className={cn(
-                        "flex gap-3",
-                        index > 0 && "pt-2 border-t border-border/20"
-                      )}
-                    >
-                      {/* Number badge on left */}
-                      <div className="flex-shrink-0 pt-7">
-                        <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="text-xs font-semibold text-primary">
-                            {adultCount + index + 1}
-                          </span>
-                        </div>
-                      </div>
+                  {children
+                    .map((child, index) => {
+                      // Group children in pairs (2 per row)
+                      const isFirstInPair = index % 2 === 0;
+                      const isSecondInPair = index % 2 === 1;
 
-                      {/* Form fields */}
-                      <div className="flex-1 space-y-2">
-                        <div className="grid gap-2 md:grid-cols-2">
-                          <div className="space-y-1">
-                            <Label
-                              htmlFor={`child-${index}-name`}
-                              className="text-xs font-medium text-muted-foreground"
-                            >
-                              Full name *
-                            </Label>
-                            <Input
-                              id={`child-${index}-name`}
-                              placeholder="Child name"
-                              value={child.name}
-                              onChange={(e) =>
-                                updateChild(index, "name", e.target.value)
-                              }
-                              className="h-9 text-sm"
-                              required
-                            />
+                      if (isFirstInPair) {
+                        // Start a new row
+                        return (
+                          <div
+                            key={index}
+                            className={cn(
+                              "flex gap-3",
+                              index > 0 && "pt-2 border-t border-border/20"
+                            )}
+                          >
+                            {/* First child in pair */}
+                            <div className="flex gap-3 flex-1 items-center">
+                              <div className="flex-shrink-0">
+                                <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                  <span className="text-xs font-semibold text-primary">
+                                    {adultCount + index + 1}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex-1 max-w-xs">
+                                <Input
+                                  id={`child-${index}-name`}
+                                  placeholder="Full name"
+                                  value={child.name}
+                                  onChange={(e) =>
+                                    updateChild(index, "name", e.target.value)
+                                  }
+                                  className="h-9 text-sm"
+                                  required
+                                />
+                              </div>
+                            </div>
+
+                            {/* Second child in pair (if exists) */}
+                            {index + 1 < children.length && (
+                              <div className="flex gap-3 flex-1 items-center">
+                                <div className="flex-shrink-0">
+                                  <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span className="text-xs font-semibold text-primary">
+                                      {adultCount + index + 2}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="flex-1 max-w-xs">
+                                  <Input
+                                    id={`child-${index + 1}-name`}
+                                    placeholder="Full name"
+                                    value={children[index + 1].name}
+                                    onChange={(e) =>
+                                      updateChild(index + 1, "name", e.target.value)
+                                    }
+                                    className="h-9 text-sm"
+                                    required
+                                  />
+                                </div>
+                              </div>
+                            )}
                           </div>
-                          <div className="space-y-1">
-                            <Label
-                              htmlFor={`child-${index}-dob`}
-                              className="text-xs font-medium text-muted-foreground"
-                            >
-                              Date of birth *
-                            </Label>
-                            <Input
-                              id={`child-${index}-dob`}
-                              type="date"
-                              value={child.dob}
-                              onChange={(e) =>
-                                updateChild(index, "dob", e.target.value)
-                              }
-                              className="h-9 text-sm"
-                              required
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                        );
+                      } else {
+                        // This is the second in a pair, already rendered above
+                        return null;
+                      }
+                    })
+                    .filter(Boolean)}
                 </div>
               </div>
             </Card>
           )}
 
           {/* Terms and Conditions Checkbox */}
-          <Card className="p-4 border border-border/50">
-            <div className="flex items-start space-x-3">
-              <Checkbox
-                id="terms"
-                checked={termsAccepted}
-                onCheckedChange={(checked) =>
-                  setTermsAccepted(checked === true)
-                }
-              />
-              <div className="flex-1 space-y-1">
-                <Label
-                  htmlFor="terms"
-                  className="text-sm font-medium text-foreground cursor-pointer"
+          <div className="flex items-start space-x-3 py-3 px-2">
+            <Checkbox
+              id="terms"
+              checked={termsAccepted}
+              onCheckedChange={(checked) =>
+                setTermsAccepted(checked === true)
+              }
+              className="rounded-none"
+            />
+            <div className="flex-1">
+              <Label
+                htmlFor="terms"
+                className="text-sm font-medium text-foreground cursor-pointer"
+              >
+                I acknowledge and accept the{" "}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowTermsDialog(true);
+                  }}
+                  className="text-primary hover:underline font-semibold cursor-pointer"
                 >
-                  I agree to the{" "}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setShowTermsDialog(true);
-                    }}
-                    className="text-primary hover:underline font-semibold cursor-pointer"
-                  >
-                    Terms & Conditions
-                  </button>
-                </Label>
-                <p className="text-xs text-muted-foreground">
-                  By proceeding, you acknowledge that you have read and agree to
-                  the supplier's terms and conditions.
-                </p>
-              </div>
+                  Terms & Conditions
+                </button>
+                <span className="text-red-500">*</span>
+              </Label>
             </div>
-          </Card>
+          </div>
 
           {/* Terms and Conditions Dialog */}
           <Dialog open={showTermsDialog} onOpenChange={setShowTermsDialog}>
@@ -605,8 +593,13 @@ const TravelerInfoForm = ({
 
           <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:justify-between">
             {onBack && (
-              <Button onClick={onBack} variant="outline">
-                Back
+              <Button 
+                onClick={onBack} 
+                className="!bg-gray-500 hover:!bg-gray-600 !text-white border-0 shadow-none"
+                style={{ backgroundColor: '#6C757D', backgroundImage: 'none' }}
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Previous
               </Button>
             )}
           </div>
