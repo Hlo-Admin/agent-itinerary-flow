@@ -8,7 +8,8 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, CalendarClock, Heart, History, Eye, Users, ChevronRight, ChevronLeft, GripVertical, Pin, Grid2x2, Check, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, CalendarClock, Heart, History, Eye, Users, ChevronRight, ChevronLeft, GripVertical, Pin, Grid2x2, Check, ArrowUpDown, ArrowUp, ArrowDown, Globe, Mail, Download } from "lucide-react";
+import VoucherView from "./VoucherView";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -254,41 +255,9 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
 
 
   const handleViewBooking = useCallback((booking: any) => {
-    // Instead of opening popup, navigate to voucher view (step 5)
-    // Create a mock tour object from the booking data
-    const mockTour = {
-      id: booking.sno,
-      name: booking.parkName,
-      location: "Dubai",
-      image: "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format",
-      price: 149,
-    };
-
-    // Create booking data structure for VoucherView
-    const bookingDataForVoucher = {
-      viewBooking: true, // Flag to skip to voucher view
-      tour: mockTour,
-      refNo: booking.refNo,
-      bookingDate: booking.bookingDate,
-      eventDate: booking.eventDate,
-      status: booking.status,
-      leadPaxName: booking.leadPaxName,
-      // Mock additional data that VoucherView might need
-      adults: [{ name: booking.leadPaxName, email: "", phone: "" }],
-      children: [],
-      tickets: { adult: 2, child: 0 },
-      selectedDate: booking.eventDate,
-      selectedTimeSlot: { label: "10:00 AM", type: "normal" },
-      supplier: {
-        adultPrice: 149,
-        childPrice: 99,
-        adultPremiumPrice: 179,
-        childPremiumPrice: 129,
-      },
-    };
-
-    onNext(bookingDataForVoucher);
-  }, [onNext]);
+    setSelectedBookingForView(booking);
+    setShowBookingConfirmation(true);
+  }, []);
 
   // Memoize row model functions to prevent re-creation on every render
   const coreRowModel = useMemo(() => getCoreRowModel(), []);
@@ -911,10 +880,10 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
     : destinationSuggestions;
 
   const colorMap: Record<string, string> = {
-    "accent-blue": "from-accent-blue/90 to-accent-indigo/90",
-    "accent-cyan": "from-accent-cyan/90 to-accent-teal/90",
-    "accent-teal": "from-accent-teal/90 to-accent-emerald/90",
-    "accent-purple": "from-accent-purple/90 to-accent-pink/90",
+    "accent-blue": "bg-accent-blue",
+    "accent-cyan": "bg-accent-cyan",
+    "accent-teal": "bg-accent-teal",
+    "accent-purple": "bg-accent-purple",
   };
 
   return (
@@ -1303,7 +1272,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
               "lg:col-span-3",
               showFavoritesFilters ? "block fixed inset-0 z-50 lg:relative lg:inset-auto lg:z-auto bg-background/95 backdrop-blur-lg lg:bg-transparent lg:backdrop-blur-none p-4 lg:p-0 overflow-y-auto" : "hidden lg:block"
             )}>
-              <Card className="p-3 sm:p-4 lg:sticky lg:top-8 border border-primary/10 bg-gradient-to-br from-background to-muted/20">
+              <Card className="p-3 sm:p-4 lg:sticky lg:top-8 border border-primary/10 bg-background">
                 <div className="flex items-center justify-between mb-3 sm:mb-4">
                   <div className="flex items-center gap-2">
                     <Sparkles className="!h-6 !w-6 text-primary" />
@@ -1405,8 +1374,8 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                     style={{ animationDelay: `${index * 100}ms`, overflow: 'visible' }}
                   >
                     {/* Image Section */}
-                    <div className="relative w-28 sm:w-40 md:w-56 h-28 sm:h-40 md:h-56 flex-shrink-0 overflow-hidden rounded-l-xl bg-gradient-to-br from-muted to-muted/50">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+                    <div className="relative w-28 sm:w-40 md:w-56 h-28 sm:h-40 md:h-56 flex-shrink-0 overflow-hidden rounded-l-xl bg-muted">
+                      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                       <img 
                         src={tour.image} 
                         alt={tour.name} 
@@ -1424,17 +1393,17 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                       />
                       <div className={cn(
                         "absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[9px] sm:text-xs font-bold backdrop-blur-xl text-white shadow-xl border border-white/20 transition-all duration-300 group-hover:scale-105",
-                        `bg-gradient-to-r ${gradientClass}`
+                        `${gradientClass}`
                       )}>
                         {tour.category}
                       </div>
                       {isActive && (
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 z-20" />
+                        <div className="absolute inset-0 bg-primary/10 border-2 border-primary/30 z-20" />
                       )}
                     </div>
                     
                     {/* Content Section */}
-                    <div className="relative flex flex-1 flex-col justify-between p-2.5 sm:p-3 min-w-0 bg-gradient-to-b from-background to-muted/10">
+                    <div className="relative flex flex-1 flex-col justify-between p-2.5 sm:p-3 min-w-0 bg-background">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -1523,85 +1492,45 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
 
 
       {/* Booking Confirmation Popup - for viewing recent bookings */}
-      <Dialog open={showBookingConfirmation} onOpenChange={setShowBookingConfirmation}>
-        <DialogContent className="sm:max-w-[380px]">
-          <DialogHeader className="pb-2">
-            <DialogTitle className="text-base font-bold flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-              Booking Confirmation
-            </DialogTitle>
-            <DialogDescription className="text-xs">
-              Reference: {selectedBookingForView?.refNo}
-            </DialogDescription>
-          </DialogHeader>
-          
-          {selectedBookingForView && (
-            <div className="space-y-2">
-              {/* Booking Status Banner */}
-              <div className="flex items-center justify-center p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
-                <div className="text-center">
-                  <CheckCircle2 className="h-8 w-8 text-emerald-500 mx-auto mb-1" />
-                  <p className="text-base font-bold text-emerald-600">Booking Confirmed</p>
-                  <p className="text-xs text-muted-foreground">Successfully confirmed</p>
-                </div>
-              </div>
-
-              {/* Booking Details */}
-              <div className="space-y-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Reference No</p>
-                    <p className="text-xs font-bold text-foreground">{selectedBookingForView.refNo}</p>
-                  </div>
-                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Status</p>
-                    <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-1.5 py-0.5">
-                      {selectedBookingForView.status.toUpperCase()}
-                    </Badge>
-                  </div>
-                </div>
-
-                <div className="p-2 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-primary/10">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Park Name</p>
-                  <p className="text-xs font-bold text-foreground">{selectedBookingForView.parkName}</p>
-                </div>
-
-                <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Lead Passenger</p>
-                  <p className="text-xs font-bold text-primary">{selectedBookingForView.leadPaxName}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Booking Date</p>
-                    <p className="text-xs font-medium text-foreground">{selectedBookingForView.bookingDate}</p>
-                  </div>
-                  <div className="p-2 rounded-lg bg-muted/30 border border-border/30">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Event Date</p>
-                    <p className="text-xs font-medium text-foreground">{selectedBookingForView.eventDate}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-2 pt-1">
-        <Button 
-                  variant="outline"
-                  onClick={() => setShowBookingConfirmation(false)}
-                  className="flex-1 h-8 text-xs"
-                >
-                  Close
-                </Button>
-                <Button
-                  className="flex-1 h-8 text-xs bg-gradient-to-r from-primary to-primary/90"
-                >
-                  Download Voucher
-                </Button>
+      {selectedBookingForView && (
+        <Dialog open={showBookingConfirmation} onOpenChange={setShowBookingConfirmation}>
+          <DialogContent className="sm:max-w-[900px] max-w-[95vw] max-h-[95vh] overflow-hidden p-0 gap-0 [&>button]:hidden">
+            <div className="overflow-y-auto max-h-[95vh] custom-scrollbar">
+              <div className="w-full">
+                <VoucherView 
+                  bookingData={{
+                    refNo: selectedBookingForView.refNo,
+                    tour: {
+                      id: selectedBookingForView.sno,
+                      name: selectedBookingForView.parkName,
+                      location: "Dubai",
+                      image: "https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&h=600&fit=crop&auto=format",
+                    },
+                    adults: selectedBookingForView.leadPaxName ? [
+                      { 
+                        name: selectedBookingForView.leadPaxName,
+                        email: "",
+                        phone: ""
+                      }
+                    ] : [],
+                    children: [],
+                    tickets: { adult: 2, child: 0 },
+                    selectedDate: selectedBookingForView.eventDate,
+                    selectedTimeSlot: { label: "18:00 - 19:00 (Sunset Slot)", type: "normal" },
+                    supplier: {
+                      adultPrice: 149,
+                      childPrice: 99,
+                      adultPremiumPrice: 179,
+                      childPremiumPrice: 129,
+                    },
+                  }} 
+                  onNext={() => setShowBookingConfirmation(false)} 
+                />
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Booking Details Popup */}
       <Dialog open={showBookingPopup} onOpenChange={setShowBookingPopup}>
@@ -1622,8 +1551,8 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
             return (
               <div className="space-y-2 ">
                 {/* Selected Park */}
-                <div className="flex items-start gap-2 p-2 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
-                  <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                <div className="flex items-start gap-2 p-2 rounded-lg bg-accent-blue/10 border border-accent-blue/20">
+                  <div className="p-1.5 rounded-lg bg-accent-blue/20">
                     <MapPin className="h-4 w-4 text-accent-blue" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -1643,7 +1572,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                     </Label>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button
+        <Button 
                           variant="outline"
                           className={cn(
                             "h-9 w-full justify-start text-left font-normal text-sm",
@@ -1652,7 +1581,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                         >
                           <CalendarDays className="mr-2 h-3.5 w-3.5" />
                           {popupDate ? format(popupDate, "PPP") : <span>Pick a date</span>}
-                        </Button>
+        </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0" align="start">
                         <CalendarComponent
@@ -1664,7 +1593,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                         />
                       </PopoverContent>
                     </Popover>
-                  </div>
+      </div>
 
                   {/* Time Slot Selection */}
                   <div className="space-y-1.5">
@@ -1702,7 +1631,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                     {/* Adult Count */}
                     <div className={cn(
                       "p-2 rounded-lg border",
-                      isChildOnly ? "bg-muted/50 border-muted opacity-50" : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                      isChildOnly ? "bg-muted/50 border-muted opacity-50" : "bg-purple/10 border-purple/20"
                     )}>
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-xs font-medium text-foreground">Adults</span>
@@ -1738,7 +1667,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                     {/* Child Count */}
                     <div className={cn(
                       "p-2 rounded-lg border",
-                      isAdultOnly ? "bg-muted/50 border-muted opacity-50" : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                      isAdultOnly ? "bg-muted/50 border-muted opacity-50" : "bg-purple/10 border-purple/20"
                     )}>
                       <div className="flex items-center justify-between mb-1.5">
                         <span className="text-xs font-medium text-foreground">Children</span>
@@ -1778,7 +1707,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                 </div>
 
                 {/* Price Summary */}
-                <div className="p-2.5 rounded-lg bg-gradient-to-r from-emerald/10 to-emerald/5 border border-emerald/20">
+                <div className="p-2.5 rounded-lg bg-emerald/10 border border-emerald/20">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">Total Price</p>
@@ -1786,7 +1715,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                         ${selectedTourForPopup.price} per adult, ${(selectedTourForPopup.price * 0.7).toFixed(0)} per child
                       </p>
                     </div>
-                    <p className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">
+                    <p className="text-xl font-bold text-emerald-600">
                       ${bookingDetails.price.toFixed(2)}
                     </p>
                   </div>
@@ -1804,7 +1733,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
                   <Button
                     onClick={handleConfirmBooking}
                     disabled={(popupAdultCount === 0 && popupChildCount === 0) || !popupTimeSlot || !popupDate || !popupDate}
-                    className="flex-1 bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90"
+                    className="flex-1 bg-accent-blue hover:bg-accent-blue/90"
                   >
                     Continue
         </Button>

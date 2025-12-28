@@ -17,6 +17,7 @@ import {
   User,
   LogOut,
   List,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -109,6 +110,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {!showExtendedSidebar && (
           <header className="h-10 sm:h-11 border-b border-border/20 bg-background backdrop-blur-sm flex items-center justify-between px-3 sm:px-4 flex-shrink-0 z-50 shadow-sm">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-2xl">
+              {/* Logo */}
+              <div className="flex items-center gap-2">
+                <div className="relative h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-lg flex-shrink-0">
+                  <Sparkles className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-sm font-medium text-foreground hidden sm:block">LA</span>
+              </div>
               <SidebarMenuButton />
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
@@ -258,7 +266,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxpTZCmFkj1ydyZrkkxlyxEvijxB0aNtDCeQ&s"
                         alt="User"
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-white text-xs font-semibold">
+                      <AvatarFallback className="bg-primary text-white text-xs font-semibold">
                         U
                       </AvatarFallback>
                     </Avatar>

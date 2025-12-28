@@ -30,7 +30,7 @@ const Reports = () => {
       value: "$57,240",
       change: "+18.2%",
       icon: DollarSign,
-      color: "from-green-500/10 to-green-600/5",
+      color: "bg-green-500/10",
       borderColor: "border-green-500/20",
       iconColor: "text-green-500",
       iconBg: "bg-green-500/10",
@@ -122,7 +122,7 @@ const Reports = () => {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className={`kpi-card bg-gradient-to-br ${stat.color} ${stat.borderColor} hover-lift`}>
+            <Card key={stat.title} className={`kpi-card ${stat.color} ${stat.borderColor} hover-lift`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{stat.title}</CardTitle>
                 <div className={`h-10 w-10 rounded-lg ${stat.iconBg} flex items-center justify-center`}>
@@ -144,7 +144,7 @@ const Reports = () => {
 
       <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
         <Card className="hover-lift">
-          <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+          <CardHeader className="border-b border-border/20 bg-muted/30 pb-3 sm:pb-4">
             <CardTitle className="text-sm font-semibold">Top Clients</CardTitle>
             <CardDescription className="text-xs sm:text-sm">Highest revenue generating clients</CardDescription>
           </CardHeader>
@@ -186,7 +186,7 @@ const Reports = () => {
         </Card>
 
         <Card className="hover-lift">
-          <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+          <CardHeader className="border-b border-border/20 bg-muted/30 pb-3 sm:pb-4">
             <CardTitle className="text-sm font-semibold">Category Performance</CardTitle>
             <CardDescription className="text-xs sm:text-sm">Bookings by experience category</CardDescription>
           </CardHeader>
@@ -203,7 +203,7 @@ const Reports = () => {
                   </div>
                   <div className="h-1.5 bg-muted rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-500"
+                      className="h-full bg-primary rounded-full transition-all duration-500"
                       style={{ width: `${item.percentage}%` }}
                     />
                   </div>
@@ -240,11 +240,11 @@ const Reports = () => {
                 </div>
                 <div className="flex gap-2">
                   <div
-                    className="h-1.5 bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-500"
+                    className="h-1.5 bg-primary rounded-full transition-all duration-500"
                     style={{ width: `${(data.revenue / 60000) * 100}%` }}
                   />
                   <div
-                    className="h-1.5 bg-gradient-to-r from-green-500 to-green-400 rounded-full transition-all duration-500"
+                    className="h-1.5 bg-green-500 rounded-full transition-all duration-500"
                     style={{ width: `${(data.commission / 9000) * 100}%` }}
                   />
                 </div>

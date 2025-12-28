@@ -129,27 +129,40 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
   voucherData.scheduleInfo.timeSlot = selectedTimeSlot?.label || selectedTime || "18:00 - 19:00 (Sunset Slot)";
   voucherData.ticketLst = ticketList;
 
-  // Format dates
+  // Format dates (YYYYMMDD format)
   const formatDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    // Handle YYYYMMDD format
+    if (dateStr.length === 8 && /^\d+$/.test(dateStr)) {
+      const year = dateStr.substring(0, 4);
+      const month = dateStr.substring(4, 6);
+      const day = dateStr.substring(6, 8);
+      const date = new Date(`${year}-${month}-${day}`);
+      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    }
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   const formatShortDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    // Handle YYYYMMDD format
+    if (dateStr.length === 8 && /^\d+$/.test(dateStr)) {
+      const year = dateStr.substring(0, 4);
+      const month = dateStr.substring(4, 6);
+      const day = dateStr.substring(6, 8);
+      const date = new Date(`${year}-${month}-${day}`);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  // Get lead passenger
-  const leadPax = voucherData.ticketLst[0]?.paxLst?.find((p: any) => p.isLead) || 
-                  voucherData.ticketLst[0]?.paxLst?.[0] || 
-                  { firstName: "Guest", lastName: "" };
-
   return (
-    <div className="max-w-2xl mx-auto space-y-4">
-      <Card className="overflow-hidden border border-border/50 bg-white shadow-lg">
+    <div className="w-full space-y-4">
+      <Card className="overflow-hidden border-0 shadow-none bg-transparent rounded-none">
         {/* Header */}
-        <div className="bg-gradient-to-r from-primary to-primary/80 p-4 text-white">
+        <div className="bg-primary p-4 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -172,7 +185,6 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           {/* Status and Reference */}
           <div className="flex items-center justify-between pb-3 border-b border-border/50">
             <div>
-              <p className="text-xs text-muted-foreground">Hello, {leadPax.firstName}</p>
               <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                 Booking {voucherData.status}!
@@ -211,7 +223,7 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           </div>
 
           {/* Schedule Info */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 p-3 rounded-lg bg-muted/30 border border-border/30">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 p-3 rounded-lg bg-muted/30 border border-border/30">
             <div>
               <p className="text-[10px] text-muted-foreground uppercase flex items-center gap-1">
                 <Calendar className="h-3 w-3" /> Activity Date
@@ -229,12 +241,6 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
                 <Clock className="h-3 w-3" /> Duration
               </p>
               <p className="text-sm font-semibold text-foreground">{voucherData.scheduleInfo.duration}</p>
-            </div>
-            <div>
-              <p className="text-[10px] text-muted-foreground uppercase flex items-center gap-1">
-                <Users className="h-3 w-3" /> Total Guests
-              </p>
-              <p className="text-sm font-semibold text-foreground">{adultCount + childCount} Pax</p>
             </div>
           </div>
 
@@ -289,10 +295,10 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           </div>
 
           {/* Total Amount */}
-          <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-emerald-100 border border-emerald-200">
+          <div className="flex items-center justify-between p-3 rounded-lg bg-emerald-50 border border-emerald-200">
             <div>
               <p className="text-xs text-muted-foreground uppercase">Total Amount Paid</p>
-              <p className="text-[10px] text-muted-foreground">Booking Date: {formatShortDate(new Date().toISOString())}</p>
+              <p className="text-[10px] text-muted-foreground">Booking Date: {formatShortDate(voucherData.bookingDate)}</p>
             </div>
             <p className="text-2xl font-bold text-emerald-600">
               AED {voucherData.totalCost.toFixed(2)}
@@ -314,7 +320,7 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           {/* Footer */}
           <div className="flex items-center justify-between pt-3 border-t border-border/50">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                 <Globe className="h-4 w-4 text-white" />
               </div>
               <div>
@@ -334,8 +340,8 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
       </Card>
 
       {/* Action Buttons */}
-      <div className="flex gap-3 justify-center">
-        <Button className="flex items-center gap-2" onClick={() => window.print()}>
+      <div className="flex gap-3 justify-center pb-6 pt-4 bg-background border-t border-border/50">
+        <Button className="flex items-center gap-2 shadow-md" onClick={() => window.print()}>
           <Download className="h-4 w-4" />
           Download Voucher
         </Button>
@@ -344,7 +350,7 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
           Send Email
         </Button>
         <Button variant="outline" onClick={onNext}>
-          New Booking
+          Close
         </Button>
       </div>
     </div>

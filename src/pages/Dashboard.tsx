@@ -328,7 +328,7 @@ const Dashboard = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <Card className="kpi-card bg-gradient-to-br from-orange-500/10 to-orange-600/5 border-orange-500/20 hover-lift">
+        <Card className="kpi-card bg-orange-500/10 border-orange-500/20 hover-lift">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -342,7 +342,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="kpi-card bg-gradient-to-br from-green-500/10 to-green-600/5 border-green-500/20 hover-lift">
+        <Card className="kpi-card bg-green-500/10 border-green-500/20 hover-lift">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -356,7 +356,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="kpi-card bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20 hover-lift">
+        <Card className="kpi-card bg-blue-500/10 border-blue-500/20 hover-lift">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -370,7 +370,7 @@ const Dashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="kpi-card bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 hover-lift">
+        <Card className="kpi-card bg-purple-500/10 border-purple-500/20 hover-lift">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -389,7 +389,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
         {/* Top 10 Parks Sales Pie Chart */}
         <Card className="hover-lift">
-          <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+          <CardHeader className="border-b border-border/20 bg-muted/30 pb-3 sm:pb-4">
             <CardTitle className="text-sm font-semibold">Top 10 Parks Sales Pie Chart</CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5">
@@ -403,7 +403,7 @@ const Dashboard = () => {
 
         {/* Last 6 Fort Nights Bar Chart */}
         <Card className="hover-lift">
-          <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+          <CardHeader className="border-b border-border/20 bg-muted/30 pb-3 sm:pb-4">
             <CardTitle className="text-sm font-semibold">
               Last 6 Fort Nights - Tickets & Transaction Value
             </CardTitle>
@@ -470,7 +470,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Recent Booking - Transaction History */}
         <Card className="lg:col-span-2 hover-lift">
-          <CardHeader className="border-b border-border/20 bg-gradient-to-r from-primary/10 to-transparent pb-3 sm:pb-4">
+          <CardHeader className="border-b border-border/20 bg-primary/10 pb-3 sm:pb-4">
             <CardTitle className="text-sm font-semibold">Recent Booking - Transaction History</CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5">
@@ -514,7 +514,7 @@ const Dashboard = () => {
 
         {/* Annual Summary */}
         <Card className="hover-lift">
-          <CardHeader className="border-b border-border/20 bg-gradient-to-r from-primary/10 to-transparent pb-3 sm:pb-4">
+          <CardHeader className="border-b border-border/20 bg-primary/10 pb-3 sm:pb-4">
             <CardTitle className="text-sm font-semibold">Annual Summary</CardTitle>
           </CardHeader>
           <CardContent className="p-4 sm:p-5 pt-4 sm:pt-5">
@@ -567,7 +567,7 @@ const Dashboard = () => {
                     </div>
                     <div className="h-2 bg-muted rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-gradient-to-r from-primary to-primary/70 rounded-full transition-all duration-500"
+                        className="h-full bg-primary rounded-full transition-all duration-500"
                         style={{ width: `${(cat.value / 980000) * 100}%` }}
                       />
                     </div>

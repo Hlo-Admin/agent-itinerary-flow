@@ -608,10 +608,10 @@ const TravelerInfoForm = ({
         {/* Right Side - Destination Price Summary */}
         <div className="lg:col-span-1 space-y-2">
           {selectedTour && selectedSupplier && (
-            <Card className="space-y-2 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20 overflow-hidden">
+            <Card className="space-y-2 border-2 border-primary/10 bg-background overflow-hidden">
               {/* Destination Image */}
               {selectedTour && (
-                <div className="relative w-full h-36 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
+                <div className="relative w-full h-36 overflow-hidden bg-muted">
                   <img
                     src={
                       selectedTour.image ||
@@ -636,7 +636,7 @@ const TravelerInfoForm = ({
                       }
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-background/60" />
                 </div>
               )}
 

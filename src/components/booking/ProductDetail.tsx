@@ -425,10 +425,10 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     });
 
   const colorMap: Record<string, string> = {
-    "accent-blue": "from-accent-blue/90 to-accent-indigo/90",
-    "accent-cyan": "from-accent-cyan/90 to-accent-teal/90",
-    "accent-teal": "from-accent-teal/90 to-accent-emerald/90",
-    "accent-purple": "from-accent-purple/90 to-accent-pink/90",
+    "accent-blue": "bg-accent-blue",
+    "accent-cyan": "bg-accent-cyan",
+    "accent-teal": "bg-accent-teal",
+    "accent-purple": "bg-accent-purple",
   };
 
   // Popup handlers for results view
@@ -534,7 +534,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 : "hidden lg:block"
             )}
           >
-            <Card className="p-3 sm:p-4 lg:sticky lg:top-8 border border-primary/10 bg-gradient-to-br from-background to-muted/20">
+            <Card className="p-3 sm:p-4 lg:sticky lg:top-8 border border-primary/10 bg-background">
               <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <div className="flex items-center gap-2">
                   <Sparkles className="!h-6 !w-6 text-primary" />
@@ -655,8 +655,8 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                     }}
                   >
                     {/* Image Section */}
-                    <div className="relative w-28 sm:w-40 md:w-56 h-28 sm:h-40 md:h-56 flex-shrink-0 overflow-hidden rounded-l-xl bg-gradient-to-br from-muted to-muted/50">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
+                    <div className="relative w-28 sm:w-40 md:w-56 h-28 sm:h-40 md:h-56 flex-shrink-0 overflow-hidden rounded-l-xl bg-muted">
+                      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
                       <img
                         src={tour.image}
                         alt={tour.name}
@@ -680,18 +680,18 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                       <div
                         className={cn(
                           "absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[9px] sm:text-xs font-bold backdrop-blur-xl text-white shadow-xl border border-white/20 transition-all duration-300 group-hover:scale-105",
-                          `bg-gradient-to-r ${gradientClass}`
+                          `${gradientClass}`
                         )}
                       >
                         {tour.category}
                       </div>
                       {isActive && (
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-2 border-primary/30 z-20" />
+                        <div className="absolute inset-0 bg-primary/10 border-2 border-primary/30 z-20" />
                       )}
                     </div>
 
                     {/* Content Section */}
-                    <div className="relative flex flex-1 flex-col justify-between p-2.5 sm:p-3 min-w-0 bg-gradient-to-b from-background to-muted/10">
+                    <div className="relative flex flex-1 flex-col justify-between p-2.5 sm:p-3 min-w-0 bg-background">
                       {/* Favorite Button */}
                       <Button
                         variant="ghost"
@@ -834,8 +834,8 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                 return (
                   <div className="space-y-2 ">
                     {/* Selected Park */}
-                    <div className="flex items-start gap-2 p-2 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
-                      <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                    <div className="flex items-start gap-2 p-2 rounded-lg bg-accent-blue/10 border border-accent-blue/20">
+                      <div className="p-1.5 rounded-lg bg-accent-blue/20">
                         <MapPin className="h-4 w-4 text-accent-blue" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -942,7 +942,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             "p-2 rounded-lg border",
                             isChildOnly
                               ? "bg-muted/50 border-muted opacity-50"
-                              : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                              : "bg-purple/10 border-purple/20"
                           )}
                         >
                           <div className="flex items-center justify-between mb-1.5">
@@ -992,7 +992,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             "p-2 rounded-lg border",
                             isAdultOnly
                               ? "bg-muted/50 border-muted opacity-50"
-                              : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                              : "bg-purple/10 border-purple/20"
                           )}
                         >
                           <div className="flex items-center justify-between mb-1.5">
@@ -1047,7 +1047,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                     </div>
 
                     {/* Price Summary */}
-                    <div className="p-2.5 rounded-lg bg-gradient-to-r from-emerald/10 to-emerald/5 border border-emerald/20">
+                    <div className="p-2.5 rounded-lg bg-emerald/10 border border-emerald/20">
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">
@@ -1059,7 +1059,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                             child
                           </p>
                         </div>
-                        <p className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">
+                        <p className="text-xl font-bold text-emerald-600">
                           ${bookingDetails.price.toFixed(2)}
                         </p>
                       </div>
@@ -1081,7 +1081,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                           !popupTimeSlot ||
                           !popupDate
                         }
-                        className="flex-1 bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90"
+                        className="flex-1 bg-accent-blue hover:bg-accent-blue/90"
                       >
                         Continue
                       </Button>
@@ -1109,22 +1109,22 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
       <div className="grid gap-6 sm:gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6 animate-slide-in-right">
           <Tabs defaultValue="pricing" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 h-14 bg-gradient-to-r from-muted/80 via-muted/60 to-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
+            <TabsList className="grid w-full grid-cols-3 h-14 bg-muted/80 backdrop-blur-sm p-1.5 rounded-xl border border-border/30 shadow-sm">
               <TabsTrigger
                 value="pricing"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
+                className="data-[state=active]:bg-accent-emerald data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 Pricing
               </TabsTrigger>
               <TabsTrigger
                 value="overview"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-blue data-[state=active]:to-accent-indigo data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-semibold transition-all duration-300 rounded-lg"
+                className="data-[state=active]:bg-accent-blue data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 Overview
               </TabsTrigger>
               <TabsTrigger
                 value="included"
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
+                className="data-[state=active]:bg-accent-emerald data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-semibold transition-all duration-300 rounded-lg"
               >
                 What's Included
               </TabsTrigger>
@@ -1136,10 +1136,10 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-accent-emerald/20 to-accent-teal/20">
+                  <div className="p-2 rounded-xl bg-accent-emerald/20">
                     <BadgeIcon className="h-5 w-5 text-accent-emerald" />
                   </div>
-                  <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                  <h4 className="text-lg font-bold text-foreground">
                     Compare Supplier Prices
                   </h4>
                 </div>
@@ -1165,8 +1165,8 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                         className={cn(
                           "p-6 border transition-all duration-300 hover:shadow-md cursor-pointer",
                           isSelected
-                            ? "border-primary border-2 shadow-xl shadow-primary/20 ring-2 ring-primary/20 bg-gradient-to-br from-primary/5 to-primary/10"
-                            : "border-border/40 shadow-lg bg-gradient-to-br from-background to-muted/10 hover:border-primary/40"
+                            ? "border-primary border-2 shadow-xl shadow-primary/20 ring-2 ring-primary/20 bg-primary/5"
+                            : "border-border/40 shadow-lg bg-background hover:border-primary/40"
                         )}
                         onClick={() => setSelectedSupplier(supplier.id)}
                       >
@@ -1280,10 +1280,10 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               value="overview"
               className="mt-6 space-y-4 animate-fade-in"
             >
-              <Card className="overflow-hidden border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/20">
+              <Card className="overflow-hidden border border-border/40 shadow-xl bg-background">
                 {/* Image Carousel */}
-                <div className="relative h-80 sm:h-96 w-full overflow-hidden bg-gradient-to-br from-muted to-muted/50 group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-accent-purple/5 z-10 pointer-events-none" />
+                <div className="relative h-80 sm:h-96 w-full overflow-hidden bg-muted group">
+                  <div className="absolute inset-0 bg-accent-blue/5 z-10 pointer-events-none" />
 
                   {/* Carousel Images */}
                   <div className="relative h-full w-full">
@@ -1336,14 +1336,14 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                     ))}
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent z-10 pointer-events-none" />
+                  <div className="absolute inset-0 bg-background/40 z-10 pointer-events-none" />
                 </div>
-                <div className="p-6 sm:p-8 space-y-4 bg-gradient-to-b from-background to-muted/10">
+                <div className="p-6 sm:p-8 space-y-4 bg-background">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-xl bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                    <div className="p-2 rounded-xl bg-accent-blue/20">
                       <Sparkles className="h-5 w-5 text-accent-blue" />
                     </div>
-                    <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                    <h4 className="text-lg font-bold text-foreground">
                       About This Experience
                     </h4>
                   </div>
@@ -1359,13 +1359,13 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
             </TabsContent>
 
             <TabsContent value="included" className="mt-6 animate-fade-in">
-              <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-gradient-to-br from-background to-muted/10">
+              <Card className="p-6 sm:p-8 border border-border/40 shadow-xl bg-background">
                 <div className="space-y-6">
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="p-2 rounded-xl bg-gradient-to-br from-accent-emerald/20 to-accent-teal/20">
+                    <div className="p-2 rounded-xl bg-accent-emerald/20">
                       <CheckCircle2 className="h-5 w-5 text-accent-emerald" />
                     </div>
-                    <h4 className="text-lg font-bold text-foreground bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+                    <h4 className="text-lg font-bold text-foreground">
                       What's Included
                     </h4>
                   </div>
@@ -1380,7 +1380,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                     ].map((item, index) => (
                       <div
                         key={index}
-                        className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-emerald/10 via-emerald/5 to-transparent border border-emerald/20 group hover:border-emerald/40 hover:shadow-md transition-all duration-300 animate-fade-in"
+                        className="flex items-center gap-3 p-4 rounded-xl bg-emerald/10 border border-emerald/20 group hover:border-emerald/40 hover:shadow-md transition-all duration-300 animate-fade-in"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         <div className="p-1.5 rounded-lg bg-emerald/20 group-hover:bg-emerald/30 transition-colors">
@@ -1398,7 +1398,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
           </Tabs>
         </div>
 
-        <Card className="h-fit lg:sticky lg:top-8 p-8 space-y-6 border-2 border-primary/10 bg-gradient-to-br from-background to-muted/20">
+        <Card className="h-fit lg:sticky lg:top-8 p-8 space-y-6 border-2 border-primary/10 bg-background">
           <div className="flex items-center gap-2 pb-2 border-b border-border">
             <Calendar className="h-5 w-5 text-primary" />
             <h4 className="text-xl font-semibold text-foreground">
@@ -1754,8 +1754,8 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
               return (
                 <div className="space-y-2 ">
                   {/* Selected Park */}
-                  <div className="flex items-start gap-2 p-2 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
-                    <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                  <div className="flex items-start gap-2 p-2 rounded-lg bg-accent-blue/10 border border-accent-blue/20">
+                    <div className="p-1.5 rounded-lg bg-accent-blue/20">
                       <MapPin className="h-4 w-4 text-accent-blue" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -1860,7 +1860,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                           "p-1.5 rounded-lg border",
                           isChildOnly
                             ? "bg-muted/50 border-muted opacity-50"
-                            : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                            : "bg-purple/10 border-purple/20"
                         )}
                       >
                         <div className="flex items-center justify-between mb-1">
@@ -1910,7 +1910,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                           "p-1.5 rounded-lg border",
                           isAdultOnly
                             ? "bg-muted/50 border-muted opacity-50"
-                            : "bg-gradient-to-r from-purple/10 to-purple/5 border-purple/20"
+                            : "bg-purple/10 border-purple/20"
                         )}
                       >
                         <div className="flex items-center justify-between mb-1">
@@ -1965,7 +1965,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                   </div>
 
                   {/* Price Summary */}
-                  <div className="p-2.5 rounded-lg bg-gradient-to-r from-emerald/10 to-emerald/5 border border-emerald/20">
+                  <div className="p-2.5 rounded-lg bg-emerald/10 border border-emerald/20">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-0.5">
@@ -1977,7 +1977,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                           child
                         </p>
                       </div>
-                      <p className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">
+                      <p className="text-xl font-bold text-emerald-600">
                         ${bookingDetails.price.toFixed(2)}
                       </p>
                     </div>
@@ -1999,7 +1999,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                         !popupTimeSlot ||
                         !popupDate
                       }
-                      className="flex-1 bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90"
+                      className="flex-1 bg-accent-blue hover:bg-accent-blue/90"
                     >
                       Continue
                     </Button>

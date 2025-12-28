@@ -22,35 +22,35 @@ const Settings = () => {
         <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-10 sm:h-12 bg-muted/30 backdrop-blur-sm p-1 sm:p-1.5 rounded-lg sm:rounded-xl border border-border/20 shadow-sm">
           <TabsTrigger 
             value="agency" 
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-blue data-[state=active]:to-accent-indigo data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
+            className="data-[state=active]:bg-accent-blue data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-blue/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
           >
             <Building2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Agency
           </TabsTrigger>
           <TabsTrigger 
             value="account"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-purple data-[state=active]:to-accent-pink data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-purple/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
+            className="data-[state=active]:bg-accent-purple data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-purple/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
           >
             <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Account
           </TabsTrigger>
           <TabsTrigger 
             value="notifications"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-emerald data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
+            className="data-[state=active]:bg-accent-emerald data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-emerald/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
           >
             <Bell className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Notifications
           </TabsTrigger>
           <TabsTrigger 
             value="payment"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-amber data-[state=active]:to-accent-rose data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-amber/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
+            className="data-[state=active]:bg-accent-amber data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-amber/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
           >
             <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Payment
           </TabsTrigger>
           <TabsTrigger 
             value="security"
-            className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-accent-cyan data-[state=active]:to-accent-teal data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-cyan/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
+            className="data-[state=active]:bg-accent-cyan data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-accent-cyan/30 font-medium sm:font-semibold transition-all duration-300 rounded-md sm:rounded-lg text-xs sm:text-sm"
           >
             <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             Security
@@ -59,9 +59,9 @@ const Settings = () => {
 
         <TabsContent value="agency" className="space-y-4 sm:space-y-6 animate-fade-in">
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent pb-3 sm:pb-4">
+            <CardHeader className="border-b border-border/20 bg-muted/30 pb-3 sm:pb-4">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-gradient-to-br from-primary/10 to-primary/5">
+                <div className="p-1.5 sm:p-2 rounded-lg sm:rounded-xl bg-primary/10">
                   <Building2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 </div>
                 <div>
@@ -110,9 +110,9 @@ const Settings = () => {
           </Card>
 
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+                <div className="p-2 rounded-xl bg-purple-500/10">
                   <Sparkles className="h-5 w-5 text-purple-500" />
                 </div>
                 <div>
@@ -163,9 +163,9 @@ const Settings = () => {
 
         <TabsContent value="account" className="space-y-6 animate-fade-in">
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10">
+                <div className="p-2 rounded-xl bg-purple-500/10">
                   <User className="h-5 w-5 text-purple-500" />
                 </div>
                 <div>
@@ -198,9 +198,9 @@ const Settings = () => {
           </Card>
 
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500/10 to-teal-500/10">
+                <div className="p-2 rounded-xl bg-cyan-500/10">
                   <Shield className="h-5 w-5 text-cyan-500" />
                 </div>
                 <div>
@@ -222,16 +222,16 @@ const Settings = () => {
                 <Label htmlFor="confirm-password">Confirm New Password</Label>
                 <Input id="confirm-password" type="password" />
               </div>
-              <Button className="bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30">Update Password</Button>
+              <Button className="bg-accent-blue hover:bg-accent-blue/90 shadow-lg shadow-accent-blue/30">Update Password</Button>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="notifications" className="space-y-6 animate-fade-in">
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10">
+                <div className="p-2 rounded-xl bg-emerald-500/10">
                   <Bell className="h-5 w-5 text-emerald-500" />
                 </div>
                 <div>
@@ -241,35 +241,35 @@ const Settings = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 hover:shadow-sm transition-all duration-300">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-background hover:border-primary/30 hover:shadow-sm transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">New Booking Alerts</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Receive email when a new booking is created</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 hover:shadow-sm transition-all duration-300">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-background hover:border-primary/30 hover:shadow-sm transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Payment Alerts</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Get notified when payments are received</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 hover:shadow-sm transition-all duration-300">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-background hover:border-primary/30 hover:shadow-sm transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Booking Reminders</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Reminders for upcoming travel dates</p>
                 </div>
                 <Switch />
               </div>
-              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 hover:shadow-sm transition-all duration-300">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-background hover:border-primary/30 hover:shadow-sm transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Commission Updates</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Notifications about commission payments</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-gradient-to-br from-background to-muted/10 hover:border-primary/30 hover:shadow-sm transition-all duration-300">
+              <div className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-border/20 bg-background hover:border-primary/30 hover:shadow-sm transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">System Updates</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Important system announcements and updates</p>
@@ -282,9 +282,9 @@ const Settings = () => {
 
         <TabsContent value="payment" className="space-y-6 animate-fade-in">
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-amber-500/10 to-rose-500/10">
+                <div className="p-2 rounded-xl bg-amber-500/10">
                   <CreditCard className="h-5 w-5 text-amber-500" />
                 </div>
                 <div>
@@ -321,14 +321,14 @@ const Settings = () => {
                 <Label htmlFor="service-fee">Service Fee (%)</Label>
                 <Input id="service-fee" type="number" placeholder="0" defaultValue="2.5" />
               </div>
-              <Button className="bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30">Update Settings</Button>
+              <Button className="bg-accent-blue hover:bg-accent-blue/90 shadow-lg shadow-accent-blue/30">Update Settings</Button>
             </CardContent>
           </Card>
 
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10">
+                <div className="p-2 rounded-xl bg-emerald-500/10">
                   <CreditCard className="h-5 w-5 text-emerald-500" />
                 </div>
                 <div>
@@ -342,9 +342,9 @@ const Settings = () => {
                 <Label htmlFor="credit-limit">Current Credit Limit</Label>
                 <Input id="credit-limit" type="number" placeholder="50000" defaultValue="50000" />
               </div>
-              <div className="p-5 rounded-xl bg-gradient-to-br from-emerald/10 to-emerald/5 border border-emerald/20">
+              <div className="p-5 rounded-xl bg-emerald/10 border border-emerald/20">
                 <p className="text-sm text-muted-foreground mb-2 font-medium">Available Credit</p>
-                <p className="text-xl sm:text-2xl font-semibold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">$17,500.00</p>
+                <p className="text-xl sm:text-2xl font-semibold text-emerald-600">$17,500.00</p>
               </div>
               <Button variant="outline" className="border-accent-blue/50 hover:bg-accent-blue/5 hover:border-accent-blue">Request Credit Increase</Button>
             </CardContent>
@@ -353,9 +353,9 @@ const Settings = () => {
 
         <TabsContent value="security" className="space-y-6 animate-fade-in">
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500/10 to-teal-500/10">
+                <div className="p-2 rounded-xl bg-cyan-500/10">
                   <Shield className="h-5 w-5 text-cyan-500" />
                 </div>
                 <div>
@@ -365,7 +365,7 @@ const Settings = () => {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-gradient-to-r from-background to-muted/20 hover:border-accent-cyan/30 transition-all duration-300">
+              <div className="flex items-center justify-between p-4 rounded-xl border border-border/30 bg-background hover:border-accent-cyan/30 transition-all duration-300">
                 <div>
                   <p className="font-medium text-sm">Enable 2FA</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Require a verification code in addition to your password</p>
@@ -377,9 +377,9 @@ const Settings = () => {
           </Card>
 
           <Card className="hover-lift border-border/20">
-            <CardHeader className="border-b border-border/20 bg-gradient-to-r from-muted/30 to-transparent">
+            <CardHeader className="border-b border-border/20 bg-muted/30">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
+                <div className="p-2 rounded-xl bg-indigo-500/10">
                   <Shield className="h-5 w-5 text-indigo-500" />
                 </div>
                 <div>

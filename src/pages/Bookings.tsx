@@ -85,7 +85,7 @@ const Bookings = () => {
   return (
     <div className="relative flex flex-col h-full w-full min-w-0 max-w-full">
       {/* Fixed Header with Breadcrumb */}
-      <div className="sticky top-0 z-40 flex-shrink-0" style={{ backgroundColor: (currentStep === 2 || currentStep === 3 || currentStep === 4) ? '#f1f5f9' : undefined }}>
+      <div className="sticky top-0 z-40 flex-shrink-0" style={{ backgroundColor: '#f1f5f9' }}>
         <div className="w-full min-w-0 max-w-full pt-2 pl-3 pb-2 sm:pt-2 sm:pl-4 md:pt-2 md:pl-5 lg:pt-2 lg:pl-6">
             {currentStep === 5 ? (
               /* Final step - Show only Home button */

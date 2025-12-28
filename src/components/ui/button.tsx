@@ -9,11 +9,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-accent-blue to-accent-indigo text-white hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40 active:scale-[0.98] transition-all duration-300",
+        default: "bg-accent-blue text-white hover:bg-accent-blue/90 shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40 active:scale-[0.98] transition-all duration-300",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm hover:shadow-md active:scale-[0.98]",
-        outline: "border border-border/50 bg-background hover:bg-gradient-to-r hover:from-accent-blue/5 hover:to-accent-indigo/5 hover:text-accent-blue hover:border-accent-blue/50 transition-all duration-300",
+        outline: "border border-border/50 bg-background hover:bg-accent-blue/5 hover:text-accent-blue hover:border-accent-blue/50 transition-all duration-300",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-gradient-to-r hover:from-accent-blue/10 hover:to-accent-indigo/10 hover:text-accent-blue transition-all duration-300",
+        ghost: "hover:bg-accent-blue/10 hover:text-accent-blue transition-all duration-300",
         link: "text-accent-blue underline-offset-4 hover:underline hover:text-accent-indigo transition-colors",
       },
       size: {

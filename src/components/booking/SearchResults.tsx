@@ -394,10 +394,10 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
             {filteredTours.map((tour, index) => {
               const isActive = selectedTour === tour.id;
               const colorMap: Record<string, string> = {
-                "accent-blue": "from-accent-blue/90 to-accent-indigo/90",
-                "accent-cyan": "from-accent-cyan/90 to-accent-teal/90",
-                "accent-teal": "from-accent-teal/90 to-accent-emerald/90",
-                "accent-purple": "from-accent-purple/90 to-accent-pink/90",
+                "accent-blue": "bg-accent-blue",
+                "accent-cyan": "bg-accent-cyan",
+                "accent-teal": "bg-accent-teal",
+                "accent-purple": "bg-accent-purple",
               };
               const gradientClass = colorMap[tour.color] || colorMap["accent-blue"];
               
@@ -413,8 +413,8 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Image Section */}
-                  <div className="relative w-32 sm:w-48 md:w-64 h-32 sm:h-48 flex-shrink-0 overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-                    <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 via-transparent to-accent-purple/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+                  <div className="relative w-32 sm:w-48 md:w-64 h-32 sm:h-48 flex-shrink-0 overflow-hidden bg-muted">
+                    <div className="absolute inset-0 bg-accent-blue/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
                     <img 
                       src={tour.image} 
                       alt={tour.name} 
@@ -433,17 +433,17 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                     />
                     <div className={cn(
                       "absolute top-2 left-2 sm:top-3 sm:left-3 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[9px] sm:text-xs font-bold backdrop-blur-xl text-white shadow-xl border border-white/20 transition-all duration-300 group-hover:scale-105",
-                      `bg-gradient-to-r ${gradientClass}`
+                      `${gradientClass}`
                     )}>
                       {tour.category}
                     </div>
                     {isActive && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/10 via-accent-indigo/5 to-transparent border-2 border-accent-blue/50 z-20 animate-pulse-glow" />
+                      <div className="absolute inset-0 bg-accent-blue/10 border-2 border-accent-blue/50 z-20 animate-pulse-glow" />
                     )}
                   </div>
                   
                   {/* Content Section */}
-                  <div className="relative flex flex-1 flex-col justify-between p-4 sm:p-6 min-w-0 bg-gradient-to-b from-background to-muted/20">
+                  <div className="relative flex flex-1 flex-col justify-between p-4 sm:p-6 min-w-0 bg-background">
                     {/* Favorite Button */}
                     <Button
                       variant="ghost"
@@ -476,8 +476,8 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                     </div>
 
                     <div className="flex items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-border/30 mt-2 sm:mt-3 min-w-0">
-                      <div className="flex items-center gap-2 min-w-0 flex-1 px-2 py-1.5 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
-                        <div className="p-1 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20 flex-shrink-0">
+                      <div className="flex items-center gap-2 min-w-0 flex-1 px-2 py-1.5 rounded-lg bg-accent-blue/10 border border-accent-blue/20">
+                        <div className="p-1 rounded-lg bg-accent-blue/20 flex-shrink-0">
                           <TrendingUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-accent-blue" />
                         </div>
                         <p className="text-[10px] sm:text-xs text-muted-foreground truncate">
@@ -485,7 +485,7 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                         </p>
                       </div>
                       <div className="text-right flex-shrink-0">
-                        <p className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-accent-blue to-accent-indigo bg-clip-text text-transparent">${tour.price}</p>
+                        <p className="text-xl sm:text-2xl md:text-3xl font-bold text-accent-blue">${tour.price}</p>
                         <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold">per person</p>
                       </div>
                       <Button 
@@ -493,8 +493,8 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                           className={cn(
                             "h-8 sm:h-9 px-3 sm:px-4 font-bold text-[10px] sm:text-xs transition-all duration-300",
                             isActive
-                              ? "bg-gradient-to-r from-accent-blue to-accent-indigo shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40"
-                              : "bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90 shadow-md hover:shadow-lg"
+                              ? "bg-accent-blue shadow-lg shadow-accent-blue/30 hover:shadow-xl hover:shadow-accent-blue/40"
+                              : "bg-accent-blue hover:bg-accent-blue/90 shadow-md hover:shadow-lg"
                           )}
                           onClick={() => handleSelectTour(tour.id)}
                         >
@@ -522,8 +522,8 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
             return (
               <div className="space-y-3 py-2">
                 {/* Selected Park */}
-                <div className="flex items-start gap-2 p-3 rounded-lg bg-gradient-to-r from-accent-blue/10 to-accent-indigo/10 border border-accent-blue/20">
-                  <div className="p-1.5 rounded-lg bg-gradient-to-br from-accent-blue/20 to-accent-indigo/20">
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-accent-blue/10 border border-accent-blue/20">
+                  <div className="p-1.5 rounded-lg bg-accent-blue/20">
                     <MapPin className="h-4 w-4 text-accent-blue" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -636,7 +636,7 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                 </div>
 
                 {/* Price Summary */}
-                <div className="p-3 rounded-lg bg-gradient-to-r from-emerald/10 to-emerald/5 border border-emerald/20">
+                <div className="p-3 rounded-lg bg-emerald/10 border border-emerald/20">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">Total Price</p>
@@ -644,7 +644,7 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                         ${selectedTourForPopup.price} per adult, ${(selectedTourForPopup.price * 0.7).toFixed(0)} per child
                       </p>
                     </div>
-                    <p className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">
+                    <p className="text-2xl font-bold text-emerald-600">
                       ${bookingDetails.price.toFixed(2)}
                     </p>
                   </div>
@@ -662,7 +662,7 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
                   <Button
                     onClick={handleConfirmBooking}
                     disabled={(popupAdultCount === 0 && popupChildCount === 0) || !popupDate}
-                    className="flex-1 bg-gradient-to-r from-accent-blue to-accent-indigo hover:from-accent-blue/90 hover:to-accent-indigo/90"
+                    className="flex-1 bg-accent-blue hover:bg-accent-blue/90"
                   >
                     Continue
                   </Button>
