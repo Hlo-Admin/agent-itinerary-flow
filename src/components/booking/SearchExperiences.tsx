@@ -450,10 +450,10 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         return (
           <button 
             onClick={() => handleViewBooking(params.data)}
-            className="p-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors flex items-center justify-center"
+            className="p-1.5 rounded-full hover:bg-blue-50 transition-colors flex items-center justify-center h-8 w-8"
             title="View Booking"
           >
-            <Eye className="h-3.5 w-3.5" />
+            <span className="material-icons text-[#2196F3] text-[20px]">remove_red_eye</span>
           </button>
         );
       },
