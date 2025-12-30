@@ -609,38 +609,7 @@ const TravelerInfoForm = ({
         <div className="lg:col-span-1 space-y-2">
           {selectedTour && selectedSupplier && (
             <Card className="space-y-2 border-2 border-primary/10 bg-background overflow-hidden">
-              {/* Destination Image */}
-              {selectedTour && (
-                <div className="relative w-full h-36 overflow-hidden bg-muted">
-                  <img
-                    src={
-                      selectedTour.image ||
-                      selectedTour.imageUrl ||
-                      "https://images.unsplash.com/photo-1555430489-29f715d2c8b8?w=800&h=600&fit=crop&auto=format"
-                    }
-                    alt={selectedTour.name || "Destination"}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      // For specific tours, use other tour's image instead of placeholder
-                      if (
-                        selectedTour?.name === "Museum and Art Gallery Tour" ||
-                        selectedTour?.name ===
-                          "Historic Walking Tour of Old Town"
-                      ) {
-                        target.src = getAlternateImage(selectedTour.name);
-                      } else {
-                        target.src = `https://via.placeholder.com/400x300/6366f1/ffffff?text=${encodeURIComponent(
-                          selectedTour?.name || "Destination"
-                        )}`;
-                      }
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-background/60" />
-                </div>
-              )}
-
-              <div className="p-3 pt-0 space-y-1.5">
+              <div className="p-3 space-y-1.5">
                 <div className="space-y-2">
                   <div className="flex items-start gap-2">
                     <Building2 className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />

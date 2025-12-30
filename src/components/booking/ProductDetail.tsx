@@ -53,6 +53,7 @@ import {
   PawPrint,
   Ship,
   Waves,
+  ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -256,7 +257,7 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
     tourData?.bookingDetails?.childCount || tourData?.tickets?.child || 0
   );
   const [selectedSupplier, setSelectedSupplier] = useState<number | null>(
-    tourData?.supplier?.id || null
+    tourData?.supplier?.id || mockSuppliers[0]?.id || null
   );
 
   // Carousel state for overview images
@@ -1272,6 +1273,18 @@ const ProductDetail = ({ onNext, onBack, tourData }: ProductDetailProps) => {
                       </Card>
                     );
                   })}
+                </div>
+
+                {/* Previous Button */}
+                <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:justify-between mt-6">
+                  <Button 
+                    onClick={onBack} 
+                    className="!bg-gray-500 hover:!bg-gray-600 !text-white border-0 shadow-none"
+                    style={{ backgroundColor: '#6C757D', backgroundImage: 'none' }}
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Previous
+                  </Button>
                 </div>
               </div>
             </TabsContent>

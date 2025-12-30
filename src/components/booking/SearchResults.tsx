@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Star, Clock, MapPin, CheckCircle2, Sparkles, TrendingUp, Filter, X, Calendar, Users, DollarSign, Plus, Minus, AlertCircle, ChevronDown, Check, Heart } from "lucide-react";
+import { Star, Clock, MapPin, CheckCircle2, Sparkles, TrendingUp, Filter, X, Calendar, Users, DollarSign, Plus, Minus, AlertCircle, ChevronDown, Check, Heart, ArrowLeft } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -509,9 +509,21 @@ const SearchResults = ({ onNext, onBack, searchData }: SearchResultsProps) => {
         </div>
       </div>
 
+      {/* Previous Button */}
+      <div className="flex flex-col gap-3 pt-3 sm:flex-row sm:justify-between mt-6">
+        <Button 
+          onClick={onBack} 
+          className="!bg-gray-500 hover:!bg-gray-600 !text-white border-0 shadow-none"
+          style={{ backgroundColor: '#6C757D', backgroundImage: 'none' }}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Previous
+        </Button>
+      </div>
+
       {/* Booking Details Popup */}
       <Dialog open={showBookingPopup} onOpenChange={setShowBookingPopup}>
-        <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto">
+        <DialogContent className="sm:max-w-[500px] max-h-[85vh] overflow-y-auto booking-popup-dialog">
           {selectedTourForPopup && (() => {
             const bookingDetails = getBookingDetails(selectedTourForPopup);
             const restrictions = selectedTourForPopup.ticketRestrictions || "both";

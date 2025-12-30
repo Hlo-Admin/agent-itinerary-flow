@@ -15,36 +15,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  flexRender,
-  type ColumnDef,
-  type ColumnPinningState,
-  type ColumnOrderState,
-  type ColumnSizingState,
-  type SortingState,
-  type PaginationState,
-} from "@tanstack/react-table";
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef, ModuleRegistry, AllCommunityModule, themeQuartz, IHeaderParams } from 'ag-grid-community';
+
+// Register AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface SearchExperiencesProps {
   onNext: (data: any) => void;
@@ -165,6 +140,112 @@ const recentBookingsData = [
 
 type Booking = typeof recentBookingsData[0];
 
+// Custom Column Header Component
+const CustomColumnHeader = (params: IHeaderParams) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const column = params.column;
+  const api = params.api;
+
+  const handlePinColumn = (side: 'left' | 'right' | null) => {
+    // Column pinning might require Enterprise edition
+    // Using applyColumnState if available
+    if (api && 'applyColumnState' in api) {
+      (api as any).applyColumnState({
+        state: [{ colId: column.getColId(), pinned: side }],
+        defaultState: { pinned: null }
+      });
+    }
+    setMenuOpen(false);
+  };
+
+  const handleAutosizeThisColumn = () => {
+    if (api && column) {
+      const colId = column.getColId();
+      if (colId) {
+        api.autoSizeColumns([colId]);
+      }
+    }
+    setMenuOpen(false);
+  };
+
+  const handleAutosizeAllColumns = () => {
+    if (api) {
+      const allColumnIds = api.getColumns()?.map(col => col.getColId()).filter((id): id is string => id !== undefined) || [];
+      api.autoSizeColumns(allColumnIds);
+    }
+    setMenuOpen(false);
+  };
+
+  const handleResetColumns = () => {
+    if (api) {
+      // Reset column pinning if available
+      if ('applyColumnState' in api) {
+        const allColumnIds = api.getColumns()?.map(col => col.getColId()).filter((id): id is string => id !== undefined) || [];
+        (api as any).applyColumnState({
+          state: allColumnIds.map(colId => ({ colId, pinned: null })),
+          defaultState: { pinned: null }
+        });
+      }
+      // Reset to default widths - just trigger a resize
+      api.sizeColumnsToFit();
+    }
+    setMenuOpen(false);
+  };
+
+  const isPinned = column.getPinned ? column.getPinned() : null;
+  const displayName = params.displayName || column.getColDef().headerName || '';
+
+  return (
+    <div className="flex items-center justify-between w-full h-full">
+      <span className="flex-1">{displayName}</span>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+        <DropdownMenuTrigger asChild>
+          <button
+            className="ml-2 p-1 hover:bg-gray-200 rounded cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen(!menuOpen);
+            }}
+          >
+            <Grid2x2 className="h-4 w-4 text-gray-600" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48">
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              <Pin className="h-4 w-4 mr-2" />
+              Pin Column
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem onClick={() => handlePinColumn(null)} className={isPinned === null ? 'bg-accent' : ''}>
+                {isPinned === null && <Check className="h-4 w-4 mr-2" />}
+                No Pin
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handlePinColumn('left')} className={isPinned === 'left' ? 'bg-accent' : ''}>
+                {isPinned === 'left' && <Check className="h-4 w-4 mr-2" />}
+                Pin Left
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handlePinColumn('right')} className={isPinned === 'right' ? 'bg-accent' : ''}>
+                {isPinned === 'right' && <Check className="h-4 w-4 mr-2" />}
+                Pin Right
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+          <DropdownMenuItem onClick={handleAutosizeThisColumn}>
+            Autosize This Column
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleAutosizeAllColumns}>
+            Autosize All Columns
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleResetColumns}>
+            Reset Columns
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+};
+
 const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
   const [destination, setDestination] = useState(searchData?.destination || "");
   const [date, setDate] = useState<Date | undefined>(searchData?.date ? new Date(searchData.date) : undefined);
@@ -234,403 +315,155 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
     };
   }, [selectedCategoryFilter, checkScrollButtons]); // Recheck when selection changes in case layout shifts
 
-  // Table state
-  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({});
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([]);
-  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [openMenuColumn, setOpenMenuColumn] = useState<string | null>(null);
-
-  // DnD Kit sensors for drag and drop
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
+  // AG Grid ref
+  const gridRef = useRef<AgGridReact>(null);
 
   const handleViewBooking = useCallback((booking: any) => {
     setSelectedBookingForView(booking);
     setShowBookingConfirmation(true);
   }, []);
 
-  // Memoize row model functions to prevent re-creation on every render
-  const coreRowModel = useMemo(() => getCoreRowModel(), []);
-  const paginationRowModel = useMemo(() => getPaginationRowModel(), []);
-  const sortedRowModel = useMemo(() => getSortedRowModel(), []);
-
-  // Column definitions
-  const columns = useMemo<ColumnDef<Booking>[]>(() => [
+  // AG Grid column definitions
+  const columnDefs = useMemo<ColDef[]>(() => [
     {
-      accessorKey: "sno",
-      header: "S.No",
-      enablePinning: true,
-      enableSorting: true,
-      size: 80,
+      field: "sno",
+      headerName: "S.No",
+      width: 80,
+      minWidth: 70,
+      maxWidth: 100,
+      sortable: true,
+      resizable: true,
+      filter: true,
     },
     {
-      accessorKey: "refNo",
-      header: "Ref No",
-      enablePinning: true,
-      enableSorting: true,
-      size: 120,
+      field: "refNo",
+      headerName: "Ref No",
+      flex: 1,
+      minWidth: 120,
+      sortable: true,
+      resizable: true,
+      filter: true,
     },
     {
-      accessorKey: "leadPaxName",
-      header: "Lead Pax Name",
-      enablePinning: true,
-      enableSorting: true,
-      size: 150,
+      field: "leadPaxName",
+      headerName: "Lead Pax Name",
+      flex: 1.5,
+      minWidth: 150,
+      sortable: true,
+      resizable: true,
+      filter: true,
     },
     {
-      accessorKey: "parkName",
-      header: "Park Name",
-      enablePinning: true,
-      enableSorting: true,
-      size: 200,
+      field: "parkName",
+      headerName: "Park Name",
+      flex: 2,
+      minWidth: 180,
+      sortable: true,
+      resizable: true,
+      filter: 'agSetColumnFilter',
+      filterParams: {
+        buttons: ['reset', 'apply'],
+        closeOnApply: true,
+      },
     },
     {
-      accessorKey: "supplierName",
-      header: "Supplier Name",
-      enablePinning: true,
-      enableSorting: true,
-      size: 180,
+      field: "supplierName",
+      headerName: "Supplier",
+      flex: 1.5,
+      minWidth: 150,
+      sortable: true,
+      resizable: true,
+      filter: 'agSetColumnFilter',
+      filterParams: {
+        buttons: ['reset', 'apply'],
+        closeOnApply: true,
+      },
     },
     {
-      accessorKey: "bookingDate",
-      header: "Booking Date",
-      enablePinning: true,
-      enableSorting: true,
-      size: 130,
+      field: "bookingDate",
+      headerName: "From Date",
+      flex: 1,
+      minWidth: 120,
+      sortable: true,
+      resizable: true,
+      filter: 'agSetColumnFilter',
+      filterParams: {
+        buttons: ['reset', 'apply'],
+        closeOnApply: true,
+      },
     },
     {
-      accessorKey: "eventDate",
-      header: "Event Date",
-      enablePinning: true,
-      enableSorting: true,
-      size: 130,
+      field: "eventDate",
+      headerName: "To Date",
+      flex: 1,
+      minWidth: 120,
+      sortable: true,
+      resizable: true,
+      filter: 'agSetColumnFilter',
+      filterParams: {
+        buttons: ['reset', 'apply'],
+        closeOnApply: true,
+      },
     },
     {
-      accessorKey: "status",
-      header: "Status",
-      enablePinning: true,
-      enableSorting: true,
-      size: 120,
-      cell: ({ row }) => (
-        <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] px-2 py-0.5">
-          {row.original.status.toUpperCase()}
-        </Badge>
-      ),
+      field: "status",
+      headerName: "Status",
+      width: 120,
+      minWidth: 100,
+      maxWidth: 150,
+      sortable: true,
+      resizable: true,
+      filter: 'agSetColumnFilter',
+      filterParams: {
+        buttons: ['reset', 'apply'],
+        closeOnApply: true,
+      },
+      cellRenderer: (params: any) => {
+        const status = params.value?.toUpperCase() || '';
+        const isConfirmed = status === 'CONFIRMED' || status === 'BOOKED';
+        const isTicketed = status === 'TICKETED';
+        
+        // Light blue background with dark blue text for CONFIRMED/BOOKED
+        // Light green background with dark green text for TICKETED
+        const bgColor = isConfirmed ? 'bg-blue-100' : isTicketed ? 'bg-green-100' : 'bg-gray-100';
+        const textColor = isConfirmed ? 'text-blue-700' : isTicketed ? 'text-green-700' : 'text-gray-700';
+        
+        return (
+          <Badge className={`${bgColor} ${textColor} text-[10px] px-1.5 py-0 rounded-md font-medium inline-flex items-center leading-tight`}>
+            {status}
+          </Badge>
+        );
+      },
     },
     {
-      id: "action",
-      header: "Action",
-      enablePinning: true,
-      enableSorting: false,
-      size: 100,
-      cell: ({ row }) => (
-        <button 
-          onClick={() => handleViewBooking(row.original)}
-          className="p-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
-          title="View Booking"
-        >
-          <Eye className="h-3.5 w-3.5" />
-        </button>
-      ),
+      headerName: "Action",
+      width: 100,
+      minWidth: 80,
+      maxWidth: 120,
+      sortable: false,
+      resizable: false,
+      filter: false,
+      cellRenderer: (params: any) => {
+        return (
+          <button 
+            onClick={() => handleViewBooking(params.data)}
+            className="p-1.5 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors flex items-center justify-center"
+            title="View Booking"
+          >
+            <Eye className="h-3.5 w-3.5" />
+          </button>
+        );
+      },
     },
   ], [handleViewBooking]);
 
-  const table = useReactTable({
-    data: recentBookingsData,
-    columns,
-    getCoreRowModel: coreRowModel,
-    getPaginationRowModel: paginationRowModel,
-    getSortedRowModel: sortedRowModel,
-    enableColumnPinning: true,
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-    },
-    state: {
-      columnPinning,
-      columnOrder,
-      columnSizing,
-      sorting,
-      pagination,
-    },
-    onColumnPinningChange: setColumnPinning,
-    onColumnOrderChange: setColumnOrder,
-    onColumnSizingChange: setColumnSizing,
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
-  });
+  const defaultColDef = useMemo<ColDef>(() => ({
+    sortable: true,
+    resizable: true,
+    filter: true,
+    headerComponent: CustomColumnHeader,
+  }), []);
 
-  // Handle drag end for column reordering
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const allColumns = table.getAllLeafColumns();
-      const defaultOrder = allColumns.map(c => c.id);
-      const currentOrder = columnOrder.length > 0 ? columnOrder : defaultOrder;
-      
-      const oldIndex = currentOrder.indexOf(active.id as string);
-      const newIndex = currentOrder.indexOf(over.id as string);
-      
-      const newOrder = arrayMove(currentOrder, oldIndex, newIndex);
-      setColumnOrder(newOrder);
-    }
-  };
-
-  // Get column IDs for SortableContext
-  const columnIds = useMemo(() => {
-    const allColumns = table.getAllLeafColumns();
-    const defaultOrder = allColumns.map(c => c.id);
-    return columnOrder.length > 0 ? columnOrder : defaultOrder;
-  }, [table, columnOrder]);
-
-  // Sortable header component for drag and drop
-  const SortableHeader = ({ header, column, isPinnedLeft, isPinnedRight, pinState, menuOpen }: any) => {
-    const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-      isDragging,
-    } = useSortable({ id: column.id });
-
-    const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-      opacity: isDragging ? 0.5 : 1,
-    };
-
-    // Track if user is dragging vs clicking
-    const hasMovedRef = useRef(false);
-    const mouseDownPosRef = useRef<{ x: number; y: number } | null>(null);
-    const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    
-    // Handle mouse down to detect drag start
-    const handleMouseDown = (e: React.MouseEvent) => {
-      mouseDownPosRef.current = { x: e.clientX, y: e.clientY };
-      hasMovedRef.current = false;
-      
-      // Set a timeout to detect if it was just a click (no movement after 200ms)
-      clickTimeoutRef.current = setTimeout(() => {
-        if (!hasMovedRef.current && !isDragging && mouseDownPosRef.current) {
-          setOpenMenuColumn(menuOpen ? null : column.id);
-        }
-        mouseDownPosRef.current = null;
-      }, 200);
-      
-      // Call original listener
-      listeners?.onMouseDown?.(e as any);
-    };
-    
-    // Handle mouse move to detect if dragging
-    const handleMouseMove = (e: React.MouseEvent) => {
-      if (mouseDownPosRef.current && !hasMovedRef.current) {
-        const deltaX = Math.abs(e.clientX - mouseDownPosRef.current.x);
-        const deltaY = Math.abs(e.clientY - mouseDownPosRef.current.y);
-        if (deltaX > 5 || deltaY > 5) {
-          hasMovedRef.current = true;
-          if (clickTimeoutRef.current) {
-            clearTimeout(clickTimeoutRef.current);
-            clickTimeoutRef.current = null;
-          }
-        }
-      }
-      // Clear timeout if dragging started
-      if (isDragging && clickTimeoutRef.current) {
-        clearTimeout(clickTimeoutRef.current);
-        clickTimeoutRef.current = null;
-      }
-      listeners?.onMouseMove?.(e as any);
-    };
-    
-    // Handle mouse up - if it was a click (no movement), open menu
-    const handleMouseUp = (e: React.MouseEvent) => {
-      if (clickTimeoutRef.current) {
-        clearTimeout(clickTimeoutRef.current);
-        clickTimeoutRef.current = null;
-      }
-      // If mouse didn't move and we're not dragging, it was a click
-      if (!hasMovedRef.current && !isDragging && mouseDownPosRef.current) {
-        setOpenMenuColumn(menuOpen ? null : column.id);
-      }
-      mouseDownPosRef.current = null;
-      hasMovedRef.current = false;
-      listeners?.onMouseUp?.(e as any);
-    };
-    
-    // Combine listeners
-    const combinedListeners: any = {
-      ...listeners,
-      onMouseDown: handleMouseDown,
-      onMouseMove: handleMouseMove,
-      onMouseUp: handleMouseUp,
-  };
-
-  return (
-      <th
-        ref={setNodeRef}
-        style={{
-          ...style,
-          width: header.getSize(),
-          left: isPinnedLeft ? `${column.getStart('left')}px` : undefined,
-          right: isPinnedRight ? `${column.getAfter('right')}px` : undefined,
-        }}
-        className={cn(
-          "px-4 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider relative",
-          isPinnedLeft && "sticky left-0 z-20 bg-muted/30",
-          isPinnedRight && "sticky right-0 z-20 bg-muted/30"
-        )}
-      >
-        <div className="flex items-center gap-2">
-          {column.getCanSort() ? (
-            <button
-              className="flex items-center gap-1 hover:text-foreground"
-              onClick={column.getToggleSortingHandler()}
-            >
-              <span>{flexRender(column.columnDef.header, header.getContext())}</span>
-              {column.getIsSorted() === 'asc' ? (
-                <ArrowUp className="h-3.5 w-3.5" />
-              ) : column.getIsSorted() === 'desc' ? (
-                <ArrowDown className="h-3.5 w-3.5" />
-              ) : (
-                <ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
-              )}
-            </button>
-          ) : (
-            <span>{flexRender(column.columnDef.header, header.getContext())}</span>
-          )}
-          <DropdownMenu 
-            open={menuOpen} 
-            onOpenChange={(open) => {
-              if (!open) {
-                setOpenMenuColumn(null);
-              }
-            }}
-          >
-            {/* Combined drag handle and menu trigger */}
-            <DropdownMenuTrigger asChild>
-              <div
-                {...attributes}
-                {...combinedListeners}
-                className="ml-auto p-1 hover:bg-muted rounded cursor-grab active:cursor-grabbing"
-                style={{ touchAction: 'none' }}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (!hasMovedRef.current && !isDragging) {
-                    setOpenMenuColumn(menuOpen ? null : column.id);
-                  }
-                  if (clickTimeoutRef.current) {
-                    clearTimeout(clickTimeoutRef.current);
-                    clickTimeoutRef.current = null;
-                  }
-                  mouseDownPosRef.current = null;
-                  hasMovedRef.current = false;
-                }}
-              >
-                <GripVertical className="h-4 w-4 text-muted-foreground" />
-      </div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <Pin className="h-4 w-4 mr-2" />
-                  Pin Column
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                  <DropdownMenuItem
-                    onClick={() => column.pin(false)}
-                    className={cn(pinState === false && "bg-accent")}
-                  >
-                    {pinState === false && <Check className="h-4 w-4 mr-2" />}
-                    No Pin
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => column.pin('left')}
-                    className={cn(pinState === 'left' && "bg-accent")}
-                  >
-                    {pinState === 'left' && <Check className="h-4 w-4 mr-2" />}
-                    Pin Left
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => column.pin('right')}
-                    className={cn(pinState === 'right' && "bg-accent")}
-                  >
-                    {pinState === 'right' && <Check className="h-4 w-4 mr-2" />}
-                    Pin Right
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-              {(() => {
-                const allColumns = table.getAllLeafColumns();
-                const defaultOrder = allColumns.map(c => c.id);
-                const currentOrder = columnOrder.length > 0 ? columnOrder : defaultOrder;
-                const currentIndex = currentOrder.indexOf(column.id);
-                
-                if (currentIndex < 0) return null;
-                
-                return (
-                  <>
-                    {currentIndex > 0 && (
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const newOrder = [...currentOrder];
-                          const temp = newOrder[currentIndex];
-                          newOrder[currentIndex] = newOrder[currentIndex - 1];
-                          newOrder[currentIndex - 1] = temp;
-                          setColumnOrder(newOrder);
-                        }}
-                      >
-                        Move Left
-                      </DropdownMenuItem>
-                    )}
-                    {currentIndex < currentOrder.length - 1 && (
-                      <DropdownMenuItem
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const newOrder = [...currentOrder];
-                          const temp = newOrder[currentIndex];
-                          newOrder[currentIndex] = newOrder[currentIndex + 1];
-                          newOrder[currentIndex + 1] = temp;
-                          setColumnOrder(newOrder);
-                        }}
-                      >
-                        Move Right
-                      </DropdownMenuItem>
-                    )}
-                  </>
-                );
-              })()}
-              <DropdownMenuItem
-                onClick={() => {
-                  setColumnOrder([]);
-                  setColumnPinning({});
-                  setColumnSizing({});
-                  setSorting([]);
-                }}
-              >
-                Reset Columns
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          </div>
-      </th>
-    );
-  };
-  
   // Mock time slots
   const timeSlots = [
     { id: "09:00", label: "09:00 AM", type: "normal" },
@@ -1098,123 +931,24 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
           <h4 className="text-xl font-semibold text-foreground">Recent Bookings</h4>
         </div>
         
-        <Card className="border border-border/30 shadow-sm">
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
-            >
-              <table className="w-full text-sm">
-                <thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id} className="border-b border-border/30 bg-muted/30">
-                      <SortableContext
-                        items={columnIds}
-                        strategy={horizontalListSortingStrategy}
-                      >
-                        {headerGroup.headers.map((header) => {
-                          const column = header.column;
-                          const isPinnedLeft = column.getIsPinned() === 'left';
-                          const isPinnedRight = column.getIsPinned() === 'right';
-                          const pinState = column.getIsPinned();
-                          const menuOpen = openMenuColumn === column.id;
-                          
-                          return (
-                            <SortableHeader
-                              key={header.id}
-                              header={header}
-                              column={column}
-                              isPinnedLeft={isPinnedLeft}
-                              isPinnedRight={isPinnedRight}
-                              pinState={pinState}
-                              menuOpen={menuOpen}
-                            />
-                          );
-                        })}
-                      </SortableContext>
-                    </tr>
-                  ))}
-                </thead>
-                <tbody className="divide-y divide-border/20">
-                  {table.getRowModel().rows.length > 0 ? (
-                    table.getRowModel().rows.map((row) => (
-                      <tr key={row.id} className="hover:bg-muted/20 transition-colors">
-                        {row.getVisibleCells().map((cell) => {
-                          const column = cell.column;
-                          const isPinnedLeft = column.getIsPinned() === 'left';
-                          const isPinnedRight = column.getIsPinned() === 'right';
-                          
-                          return (
-                            <td
-                              key={cell.id}
-                              className={cn(
-                                "px-4 py-3",
-                                isPinnedLeft && "sticky left-0 z-10 bg-card",
-                                isPinnedRight && "sticky right-0 z-10 bg-card"
-                              )}
-                              style={{
-                                width: cell.column.getSize(),
-                                left: isPinnedLeft ? `${column.getStart('left')}px` : undefined,
-                                right: isPinnedRight ? `${column.getAfter('right')}px` : undefined,
-                              }}
-                            >
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={table.getAllLeafColumns().length} className="px-4 py-8 text-center text-muted-foreground">
-                        No data available
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </DndContext>
-          </div>
-          
-          {/* Pagination */}
-          <div className="flex items-center justify-between px-4 py-3 border-t border-border/30">
-            <div className="text-sm text-muted-foreground">
-              {table.getRowModel().rows.length > 0 ? (
-                <>
-                  Showing {pagination.pageIndex * pagination.pageSize + 1} to{' '}
-                  {Math.min(
-                    (pagination.pageIndex + 1) * pagination.pageSize,
-                    table.getCoreRowModel().rows.length
-                  )}{' '}
-                  of {table.getCoreRowModel().rows.length} results
-                </>
-              ) : (
-                <>No results</>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="text-sm text-muted-foreground">
-                Page {pagination.pageIndex + 1} of {table.getPageCount()}
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
+        <Card className="border border-border/30 shadow-sm overflow-hidden">
+          {/* AG Grid Table */}
+          <div className="ag-theme-quartz" style={{ height: '469px', width: '100%' }}>
+            <AgGridReact
+              ref={gridRef}
+              theme={themeQuartz}
+              rowData={recentBookingsData.slice(0, 10)}
+              columnDefs={columnDefs}
+              defaultColDef={defaultColDef}
+              pagination={false}
+              suppressCellFocus={true}
+              animateRows={true}
+              enableCellTextSelection={true}
+              rowHeight={42}
+              headerHeight={40}
+              suppressMenuHide={false}
+              suppressMovableColumns={true}
+            />
           </div>
         </Card>
       </div>
@@ -1494,8 +1228,8 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
       {/* Booking Confirmation Popup - for viewing recent bookings */}
       {selectedBookingForView && (
         <Dialog open={showBookingConfirmation} onOpenChange={setShowBookingConfirmation}>
-          <DialogContent className="sm:max-w-[900px] max-w-[95vw] max-h-[95vh] overflow-hidden p-0 gap-0 [&>button]:hidden">
-            <div className="overflow-y-auto max-h-[95vh] custom-scrollbar">
+          <DialogContent className="sm:max-w-[650px] max-w-[95vw] max-h-[95vh] overflow-hidden p-0 gap-0 [&>button]:bg-white [&>button]:shadow-md [&>button]:border [&>button]:border-border/50 [&>button]:hover:bg-accent [&>button]:text-foreground" style={{ backgroundColor: '#f1f5f9' }}>
+            <div className="overflow-y-auto max-h-[95vh] custom-scrollbar" style={{ backgroundColor: '#f1f5f9' }}>
               <div className="w-full">
                 <VoucherView 
                   bookingData={{

@@ -160,10 +160,10 @@ const VoucherView = ({ onNext, bookingData }: VoucherViewProps) => {
 
   return (
     <div className="w-full space-y-4">
-      <Card className="overflow-hidden border-0 shadow-none bg-transparent rounded-none">
+      <Card className="overflow-hidden border-0 shadow-md bg-white rounded-lg w-full">
         {/* Header */}
-        <div className="bg-primary p-4 text-white">
-          <div className="flex items-center justify-between">
+        <div className="bg-primary p-4 text-white relative">
+          <div className="flex items-center justify-between pr-12">
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
                 <Globe className="h-6 w-6 text-white" />
