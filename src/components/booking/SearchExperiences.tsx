@@ -196,8 +196,10 @@ const CustomColumnHeader = (params: IHeaderParams) => {
   const displayName = params.displayName || column.getColDef().headerName || '';
 
   return (
-    <div className="flex items-center justify-between w-full h-full group">
-      <span className="flex-1">{displayName}</span>
+    <div className="flex items-center justify-between w-full h-full group relative">
+      <span className="flex-1 pl-3">{displayName}</span>
+      {/* Divider line */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 h-4 w-[1px] bg-gray-400" />
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <button
@@ -428,11 +430,12 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         
         // Light blue background with dark blue text for CONFIRMED/BOOKED
         // Light green background with dark green text for TICKETED
-        const bgColor = isConfirmed ? 'bg-blue-100' : isTicketed ? 'bg-green-100' : 'bg-gray-100';
-        const textColor = isConfirmed ? 'text-blue-700' : isTicketed ? 'text-green-700' : 'text-gray-700';
+        const bgColor = isConfirmed ? 'bg-blue-50' : isTicketed ? 'bg-green-50' : 'bg-gray-50';
+        const textColor = isConfirmed ? 'text-blue-600' : isTicketed ? 'text-green-600' : 'text-gray-600';
+        const borderColor = isConfirmed ? 'border-blue-200' : isTicketed ? 'border-green-200' : 'border-gray-200';
         
         return (
-          <Badge className={`${bgColor} ${textColor} text-[10px] px-1.5 py-0 rounded-md font-medium inline-flex items-center leading-tight`}>
+          <Badge className={`${bgColor} ${textColor} border ${borderColor} text-[11px] px-3 py-0.5 rounded-md font-medium inline-flex items-center leading-tight shadow-none hover:bg-opacity-80`}>
             {status}
           </Badge>
         );
