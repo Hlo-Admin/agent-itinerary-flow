@@ -8,7 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, CalendarClock, Heart, History, Eye, Users, ChevronRight, ChevronLeft, GripVertical, Pin, Grid2x2, Check, ArrowUpDown, ArrowUp, ArrowDown, Globe, Mail, Download } from "lucide-react";
+import { Search, MapPin, Calendar, Sparkles, Ticket, Trees, Building2, Utensils, ShoppingBag, BookOpen, Landmark, PawPrint, Ship, Waves, Umbrella, Mountain, Compass, Star, Clock, CheckCircle2, TrendingUp, Filter, X, Plus, Minus, AlertCircle, CalendarDays, CalendarClock, Heart, History, Eye, Users, ChevronRight, ChevronLeft, GripVertical, Pin, Grid2x2, Check, ArrowUpDown, ArrowUp, ArrowDown, Globe, Mail, Download, Menu } from "lucide-react";
 import VoucherView from "./VoucherView";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -196,18 +196,21 @@ const CustomColumnHeader = (params: IHeaderParams) => {
   const displayName = params.displayName || column.getColDef().headerName || '';
 
   return (
-    <div className="flex items-center justify-between w-full h-full">
+    <div className="flex items-center justify-between w-full h-full group">
       <span className="flex-1">{displayName}</span>
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <button
-            className="ml-2 p-1 hover:bg-gray-200 rounded cursor-pointer"
+            className={cn(
+              "ml-2 p-1 hover:bg-gray-200 rounded cursor-pointer transition-opacity duration-200",
+              menuOpen ? "opacity-100 bg-gray-200" : "opacity-0 group-hover:opacity-100"
+            )}
             onClick={(e) => {
               e.stopPropagation();
               setMenuOpen(!menuOpen);
             }}
           >
-            <Grid2x2 className="h-4 w-4 text-gray-600" />
+            <Menu className="h-4 w-4 text-gray-600" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
@@ -932,6 +935,7 @@ const SearchExperiences = ({ onNext, searchData }: SearchExperiencesProps) => {
         </div>
         
         <Card className="border border-border/30 shadow-sm overflow-hidden">
+          {/* AG Grid Table */}
           {/* AG Grid Table */}
           <div className="ag-theme-quartz" style={{ height: '469px', width: '100%' }}>
             <AgGridReact

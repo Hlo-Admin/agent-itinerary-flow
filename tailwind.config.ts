@@ -85,16 +85,20 @@ export default {
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        montserrat: ['Montserrat', 'sans-serif'],
+        'ibm-plex': ['"IBM Plex Sans"', '-apple-system', 'BlinkMacSystemFont', 'Ubuntu', 'Cantarell', '"Helvetica Neue"', 'sans-serif'],
+        impact: ['Impact', 'sans-serif'],
       },
       fontSize: {
-        'xs': ['0.6875rem', { lineHeight: '1rem' }],
-        'sm': ['0.8125rem', { lineHeight: '1.125rem' }],
-        'base': ['0.875rem', { lineHeight: '1.375rem' }],
-        'lg': ['1rem', { lineHeight: '1.5rem' }],
-        'xl': ['1.125rem', { lineHeight: '1.625rem' }],
-        '2xl': ['1.375rem', { lineHeight: '1.75rem' }],
-        '3xl': ['1.625rem', { lineHeight: '2rem' }],
-        '4xl': ['2rem', { lineHeight: '2.5rem' }],
+        'xs': ['0.6875rem', { lineHeight: '1rem' }],      /* 11px */
+        'sm': ['0.75rem', { lineHeight: '1.125rem' }],    /* 12px - labels */
+        'base': ['0.8125rem', { lineHeight: '1.375rem' }], /* 13px - body text */
+        'lg': ['0.875rem', { lineHeight: '1.5rem' }],     /* 14px - emphasis */
+        'xl': ['1rem', { lineHeight: '1.625rem' }],       /* 16px - H5 */
+        '2xl': ['1.125rem', { lineHeight: '1.75rem' }],   /* 18px - H3 */
+        '3xl': ['1.5rem', { lineHeight: '2rem' }],        /* 24px - H2 */
+        '4xl': ['1.75rem', { lineHeight: '2.25rem' }],    /* 28px - H1 */
       },
       backdropBlur: {
         xs: '2px',
